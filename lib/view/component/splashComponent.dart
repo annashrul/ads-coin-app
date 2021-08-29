@@ -32,7 +32,7 @@ class _SplashComponentState extends State<SplashComponent> {
     super.initState();
     final auth = Provider.of<UserProvider>(context, listen: false);
     auth.getUser();
-    assetImage = AssetImage("${GeneralString.imgLocal}logo.png");
+    assetImage = AssetImage("${GeneralString.imgLocal}ic_launcher.png");
     checkingRoute();
 
   }
@@ -45,23 +45,13 @@ class _SplashComponentState extends State<SplashComponent> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(20),
-        child: Container(
-          height: 100,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: assetImage,
-
-            ),
-
-          ),
+        decoration: BoxDecoration(
+            image: DecorationImage(image: assetImage)
         ),
       ),
     );
-
   }
 }

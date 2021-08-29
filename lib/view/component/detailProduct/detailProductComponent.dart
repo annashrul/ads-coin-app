@@ -53,7 +53,10 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text("Copywriting untuk Website",style: Theme.of(context).textTheme.headline1),
-              Icon(AntDesign.heart,color: Colors.red,)
+              InkResponse(
+                onTap: (){},
+                child: Icon(AntDesign.heart,color: Colors.red,),
+              )
             ],
           ),
           SizedBox(height: scale.getHeight(0.5)),
@@ -74,26 +77,28 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           ),
           SizedBox(height: scale.getHeight(1)),
           FunctionalWidget.wrapContent(
-            child: ListTile(
-              leading: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  radius: 20,
-                  backgroundImage: NetworkImage(GeneralString.dummyImgUser)
-              ),
-              title: Text("Ari Yahya",style: Theme.of(context).textTheme.headline2,),
-              subtitle: Text("Digital Marketing di TulisTerus.id",style: Theme.of(context).textTheme.subtitle1,),
-              trailing: InTouchWidget(
-                radius: 10,
+            child: InTouchWidget(
                 callback: (){},
-                child: Container(
-                  padding: scale.getPadding(0.5, 1.5),
-                  decoration: BoxDecoration(
-                      color: ColorConfig.yellowColor,
-                      borderRadius:BorderRadius.circular(10)
+                child: ListTile(
+                  leading: CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      radius: 20,
+                      backgroundImage: NetworkImage(GeneralString.dummyImgUser)
                   ),
-                  child: Icon(FlutterIcons.share_alt_faw,color: Colors.white,),
-                ),
-              ),
+                  title: Text("Ari Yahya",style: Theme.of(context).textTheme.headline2,),
+                  subtitle: Text("Digital Marketing di TulisTerus.id",style: Theme.of(context).textTheme.subtitle1,),
+                  trailing:Container(
+                    padding: scale.getPadding(0.5, 1.5),
+                    decoration: BoxDecoration(
+                        color: ColorConfig.yellowColor,
+                        borderRadius:BorderRadius.circular(10)
+                    ),
+                    child:InkResponse(
+                      onTap: (){},
+                      child:  Icon(FlutterIcons.share_alt_faw,color: Colors.white,),
+                    ),
+                  ),
+                )
             )
           ),
 

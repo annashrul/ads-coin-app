@@ -2,7 +2,7 @@
     package="com.adscoin">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="adscoin"
+        android:label="Ads Coin"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

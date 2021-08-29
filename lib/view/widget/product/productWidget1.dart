@@ -74,7 +74,7 @@ class ProductWidget1 extends StatelessWidget {
                       shape: BoxShape.circle,
                       color: ColorConfig.graySecondaryColor
                   ),
-                  child: Icon(AntDesign.hearto,color:isFavorite?ColorConfig.redColor:Colors.white,),
+                  child: Icon(AntDesign.heart,color:isFavorite?ColorConfig.redColor:Colors.white,),
                 )
               ],
             ),

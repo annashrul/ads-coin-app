@@ -70,6 +70,7 @@ class FunctionalWidget{
   static appBarHelper({BuildContext context,String title, Function callback}){
     ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
     return AppBar(
+      backgroundColor: Colors.transparent,
       titleSpacing: 0.0,
       automaticallyImplyLeading: true,
       elevation: 0.0,

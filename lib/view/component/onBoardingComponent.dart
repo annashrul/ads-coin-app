@@ -1,7 +1,9 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/helper/svg/svg.dart';
 import 'package:adscoin/helper/transform/transform.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OnBoardingComponent extends StatefulWidget {
@@ -12,6 +14,7 @@ class OnBoardingComponent extends StatefulWidget {
 class _OnBoardingComponentState extends State<OnBoardingComponent> {
   @override
   Widget build(BuildContext context) {
+    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
     return Material(
         child: ClipRRect(
           borderRadius: BorderRadius.zero,
@@ -166,40 +169,62 @@ class _OnBoardingComponentState extends State<OnBoardingComponent> {
                               top: 9.381384558082573e-15,
                               right: null,
                               bottom: null,
-                              width: 177.0,
-                              height: 26.0,
+                              width: 300.0,
+                              // height: 26.0,
                               child: TransformHelper.rotate(
                                   a: 1.00,
                                   b: 0.00,
                                   c: -0.00,
                                   d: 1.00,
-                                  child:Text("Selamat datang di",style: Theme.of(context).textTheme.headline1)
+                                  child:Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Selamat datang di",style: Theme.of(context).textTheme.headline1),
+                                      Text("Ads coin",style: Theme.of(context).textTheme.headline1),
+                                      SizedBox(height: scale.getHeight(1)),
+                                      Text("Marketplace pertama & terbaik untuk belanja tulisan iklan. Kamu bisa pilih tulisan iklan yang paling menarik untuk meningkatkan enjualan produk dalam bisnis kamu.",style: Theme.of(context).textTheme.subtitle1),
+                                      SizedBox(height: scale.getHeight(1)),
+                                      Text("Urusan tulisan iklan, serahkan pada kami.",style: Theme.of(context).textTheme.subtitle1),
+                                      Text("Kamu tinggal posting, lalu terima orderan.",style: Theme.of(context).textTheme.subtitle1),
+                                    ],
+                                  )
                               ),
                             ),
-                            Positioned(
-                              left: 0.0,
-                              top: 27.0,
-                              right: null,
-                              bottom: null,
-                              width: 77.0,
-                              height: 26.0,
-                              child: TransformHelper.rotate(
-                                  a: 1.00,
-                                  b: 0.00,
-                                  c: -0.00,
-                                  d: 1.00,
-                                  child:Text("Ads coin",style: Theme.of(context).textTheme.headline1)
-                              ),
-                            ),
-                            Positioned(
-                              left: 0.0,
-                              top: 62.0,
-                              right: null,
-                              bottom: null,
-                              width: 225.0,
-                              height: 122.0,
-                              child:Text("Aplikasi terbaik jual beli tulisan bagi Semua bisnis dan perorangan untuk menarik perhatian pembeli atau client.Join For Free.",style: Theme.of(context).textTheme.subtitle1)
-                            )
+                            // Positioned(
+                            //   left: 0.0,
+                            //   top: 27.0,
+                            //   right: null,
+                            //   bottom: null,
+                            //   width: 77.0,
+                            //   height: 26.0,
+                            //   child: TransformHelper.rotate(
+                            //       a: 1.00,
+                            //       b: 0.00,
+                            //       c: -0.00,
+                            //       d: 1.00,
+                            //       child:Text("Ads coin",style: Theme.of(context).textTheme.headline1)
+                            //   ),
+                            // ),
+
+                            // Selamat datang di Ads Coin!
+                            //
+                            // Marketplace pertama & terbaik untuk belanja tulisan iklan.
+                            // Kamu bisa pilih tulisan iklan yang paling menarik untuk meningkatkan
+                            // penjualan produk dalam bisnis kamu.
+                            //
+                            // Urusan tulisan iklan, serahkan pada kami.
+                            // Kamu tinggal posting, lalu terima orderan.
+                            // Positioned(
+                            //   left: 0.0,
+                            //   top: 62.0,
+                            //   right: null,
+                            //   bottom: null,
+                            //   width: 300.0,
+                            //   height: 122.0,
+                            //   child:Text("Marketplace pertama & terbaik untuk belanja tulisan iklan. Kamu bisa pilih tulisan iklan yang paling menarik untuk meningkatkan enjualan produk dalam bisnis kamu.",style: Theme.of(context).textTheme.subtitle1)
+                            // ),
+
                           ]
                       ),
                     ),

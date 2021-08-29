@@ -100,24 +100,28 @@ class _HomeComponentState extends State<HomeComponent> {
               ),
               Padding(
                 padding: scale.getPadding(1,2.5),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Color(0xFF2D9CDB),
-                      borderRadius: BorderRadius.circular(10)
-                  ),
-                  padding: scale.getPadding(2, 2),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                          child: Text("Situs kami memberi jaminan jam kerja tepat waktu dan penulisan memuaskan",style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white,fontWeight: FontWeight.w400))
-                      ),
-                      CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          radius: 30,
-                          backgroundImage: NetworkImage('https://www.iconpacks.net/icons/1/free-user-group-icon-296-thumb.png')
-                      )
-                    ],
+                child: InTouchWidget(
+                  callback: (){},
+                  radius: 10,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Color(0xFF2D9CDB),
+                        borderRadius: BorderRadius.circular(10)
+                    ),
+                    padding: scale.getPadding(2, 2),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                            child: Text("Situs kami memberi jaminan jam kerja tepat waktu dan penulisan memuaskan",style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white,fontWeight: FontWeight.w400))
+                        ),
+                        CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            radius: 30,
+                            backgroundImage: NetworkImage('https://www.iconpacks.net/icons/1/free-user-group-icon-296-thumb.png')
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
