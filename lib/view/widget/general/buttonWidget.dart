@@ -13,14 +13,14 @@ class RedButtonWidget extends StatelessWidget {
     ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
     return  Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: ColorConfig.redColor
+          borderRadius: BorderRadius.circular(10),
+          color: ColorConfig.redColor
       ),
       child: InTouchWidget(
           callback:this.callback,
           child: Container(
-            padding: scale.getPadding(0.8, 3),
-            child: this.child
+              padding: scale.getPadding(0.8, 3),
+              child: this.child
           )
       ),
     );

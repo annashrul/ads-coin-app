@@ -1,7 +1,7 @@
 import 'package:adscoin/config/color_config.dart';
+import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
-import 'package:adscoin/view/widget/general/appBarWidget.dart';
 import 'package:adscoin/view/widget/general/titleSectionWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:adscoin/view/widget/home/cardSaldoWidget.dart';
@@ -39,10 +39,10 @@ class _HomeComponentState extends State<HomeComponent> {
                       children: [
                         Container(
                           padding: scale.getPadding(0, 0),
-                          width:scale.getWidth(71),
+                          width:scale.getWidth(72),
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Color(0xFFF8F8F8)
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color(0xFFF8F8F8)
                           ),
                           child: TextField(
                             controller: anyController,
@@ -51,18 +51,18 @@ class _HomeComponentState extends State<HomeComponent> {
                               hintStyle: Theme.of(context).textTheme.subtitle1,
                               hintText:"Ads copy, landingpage, caption",
                               border: InputBorder.none,
-                              suffixIcon: Icon(AntDesign.search1),
+                              suffixIcon: Icon(FlutterIcons.search_fea,color: Theme.of(context).textTheme.subtitle1.color,),
                             ),
                             keyboardType: TextInputType.text,
                             textInputAction: TextInputAction.search,
                           ),
                         ),
-                        InTouchWidget(
-                          callback: (){},
+                        InkResponse(
+                          onTap: (){},
                           child: Icon(
-                              AntDesign.sharealt,
-                              size: scale.getTextSize(15),
-                              color: ColorConfig.redColor
+                            FlutterIcons.share_alt_faw,
+                            size: scale.getTextSize(15),
+                            color: Colors.white
                           ),
                         )
                       ],
@@ -78,12 +78,12 @@ class _HomeComponentState extends State<HomeComponent> {
                 children: [
                   DecoratedBox(
                       decoration: BoxDecoration(
-                          color: ColorConfig.yellowColor,
+                        color: ColorConfig.yellowColor,
                         borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))
                       ),
                       child: Container(
                         width: double.infinity,
-                        height: scale.getHeight(5),
+                        height: scale.getHeight(3),
                       )
                   ),
                   Column(
@@ -91,16 +91,15 @@ class _HomeComponentState extends State<HomeComponent> {
                       children:<Widget>[
                         Container(height: scale.getHeight(0)),
                         Container(
-                          padding: scale.getPadding(0,2),
+                          padding: scale.getPadding(0,2.5),
                           child: CardSaldoWidget(),
                         ),
-
                       ]
                   )
                 ],
               ),
               Padding(
-                padding: scale.getPadding(1,2),
+                padding: scale.getPadding(1,2.5),
                 child: Container(
                   decoration: BoxDecoration(
                       color: Color(0xFF2D9CDB),
@@ -123,14 +122,14 @@ class _HomeComponentState extends State<HomeComponent> {
                 ),
               ),
               Padding(
-                padding: scale.getPadding(0,2),
+                padding: scale.getPadding(0,2.5),
                 child: TitleSectionWidget(
                   title: "Produk terlaris",
                   callback: (){},
                 ),
               ),
               Container(
-                padding: scale.getPadding(0.5,2),
+                padding: scale.getPadding(0.5,2.5),
                 height: scale.getHeight(23),
                 child: ListView.builder(
                   padding: EdgeInsets.all(0.0),
@@ -142,24 +141,25 @@ class _HomeComponentState extends State<HomeComponent> {
                     marginWidth: index==0?0:1,
                     heroTag: "produkTerlaris"+index.toString(),
                     isFavorite: index==0?true:false,
+                    id:"produkTerlaris"+index.toString(),
                     title: "Killer Content Writing",
                     price: "Rp 50.000",
                     productSale:"110 terjual" ,
-                    image: "https://png.pngitem.com/pimgs/s/43-434027_product-beauty-skin-care-personal-care-liquid-tree.png",
+                    image: GeneralString.dummyImgProduct,
                     isContributor: false,
                   ),
 
                 ),
               ),
               Padding(
-                padding: scale.getPadding(0,2),
+                padding: scale.getPadding(0,2.5),
                 child: TitleSectionWidget(
                   title: "Produk terbaru",
                   callback: (){},
                 ),
               ),
               Container(
-                padding: scale.getPadding(0.5,2),
+                padding: scale.getPadding(0.5,2.5),
                 child: new StaggeredGridView.countBuilder(
                   padding: EdgeInsets.all(0.0),
                   primary: false,
@@ -171,12 +171,13 @@ class _HomeComponentState extends State<HomeComponent> {
                   crossAxisSpacing: 10.0,
                   itemBuilder: (context,index)=>ProductWidget1(
                     marginWidth: index==0?0:0,
-                    heroTag: "produkTerlaris"+index.toString(),
+                    heroTag: "produkTerbaru"+index.toString(),
                     isFavorite: index==0?true:false,
+                    id:"produkTerbaru"+index.toString(),
                     title: "Killer Content Writing",
                     price: "Rp 50.000",
                     productSale:"110 terjual" ,
-                    image: "https://png.pngitem.com/pimgs/s/43-434027_product-beauty-skin-care-personal-care-liquid-tree.png",
+                    image: GeneralString.dummyImgProduct,
                     isContributor: true,
                   ),
                 ),

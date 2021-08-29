@@ -17,7 +17,7 @@ class CardSaldoWidget extends StatelessWidget {
       margin: EdgeInsets.all(0),
       child: Container(
         padding: scale.getPadding(0, 0),
-        height: scale.getHeight(8),
+        height: scale.getHeight(7),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(0),
         ),
@@ -29,18 +29,18 @@ class CardSaldoWidget extends StatelessWidget {
             Container(
               padding: scale.getPadding(0,0),
               decoration: BoxDecoration(
-                // color: ColorConfig.graySecondaryColor,
                 borderRadius: BorderRadius.circular(10),
               ),
               child:Row(
                 children: [
-                  Icon(AntDesign.wallet,color: ColorConfig.yellowColor,size: scale.getTextSize(12),),
+                  Icon(FlutterIcons.wallet_faw5s,color: ColorConfig.yellowColor,size: scale.getTextSize(17),),
                   SizedBox(width: 10),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text("1.230.0000",style: Theme.of(context).textTheme.headline1.copyWith(color: ColorConfig.blackSecondaryColor,fontWeight:FontWeight.w400)),
+                      SizedBox(height: scale.getHeight(0.2),),
                       Text("Saldo AdsCoin",style: Theme.of(context).textTheme.subtitle1),
                     ],
                   )
@@ -89,8 +89,8 @@ class CardSaldoWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(AntDesign.plussquare,color:ColorConfig.graySecondaryColor),
-            SizedBox(height: scale.getHeight(1),),
+            Icon(FlutterIcons.plus_box_mco,color:ColorConfig.graySecondaryColor),
+            SizedBox(height: scale.getHeight(0.2),),
             Text(title,style: Theme.of(context).textTheme.subtitle1,)
           ],
         )

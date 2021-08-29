@@ -1,20 +1,18 @@
 
 import 'package:adscoin/config/color_config.dart';
+import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/helper/ScreenScaleHelper.dart';
+import 'package:adscoin/view/widget/general/buttonWidget.dart';
+import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class FunctionalWidget{
-  static myPushRemove({BuildContext context, Widget widget}){
-    return  Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-        new CupertinoPageRoute(builder: (BuildContext context)=>widget), (Route<dynamic> route) => false
-    );
-  }
-  static myPush({BuildContext context, Widget widget}){
-    return Navigator.push(context, CupertinoPageRoute(builder: (context) => widget));
-  }
-  static myPushAndLoad({BuildContext context, Widget widget,Function callback}){
-    return Navigator.push(context, CupertinoPageRoute(builder: (context) => widget)).whenComplete(callback);
+
+  static backToHome(BuildContext context){
+    return Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
   }
 
   static loadingDialog(BuildContext context,{Color color=Colors.black,title='tunggu sebentar'}){
@@ -64,6 +62,77 @@ class FunctionalWidget{
           child: child
         );
       }
+    );
+  }
+
+
+
+  static appBarHelper({BuildContext context,String title, Function callback}){
+    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    return AppBar(
+      titleSpacing: 0.0,
+      automaticallyImplyLeading: true,
+      elevation: 0.0,
+      leadingWidth:scale.getWidth(7),
+      leading:InkResponse(
+        onTap: (){
+          callback!=null?callback():Navigator.of(context).pop();
+        },
+        child: Icon(Ionicons.ios_arrow_back),
+      ),
+      centerTitle: true,
+      title: Text(title,style: Theme.of(context).textTheme.headline1,textAlign: TextAlign.center),
+    );
+  }
+
+
+  static rating({BuildContext context}){
+    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    return Row(
+      children: [
+        Icon(AntDesign.star,size: scale.getTextSize(9),color: ColorConfig.yellowColor,),
+        SizedBox(width: scale.getWidth(1)),
+        Text("5.0",style: Theme.of(context).textTheme.subtitle1)
+      ],
+    );
+  }
+
+  static wrapContent({Widget child}){
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      elevation: 4,
+      shadowColor:Colors.white54,
+      margin: EdgeInsets.zero,
+      child: child,
+    );
+  }
+
+  static bottomBar({BuildContext context,String title,String desc,String btnText,Function callback}){
+    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    return Container(
+      padding: scale.getPadding(1, 2),
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor.withOpacity(0.9),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(title,style: Theme.of(context).textTheme.subtitle2,),
+              Text(desc,style: Theme.of(context).textTheme.headline1),
+            ],
+          ),
+          RedButtonWidget(
+              callback: ()=>callback(),
+              child: Text(btnText,style: Theme.of(context).textTheme.headline1.copyWith(color: ColorConfig.graySecondaryColor))
+          )
+        ],
+      ),
     );
   }
 

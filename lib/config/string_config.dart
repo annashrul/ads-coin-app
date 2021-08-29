@@ -5,9 +5,12 @@ class RouteString{
   static const signIn = "/signIn";
   static const signUp = "/signUp";
   static const otp = "/otp";
+  static const pin = "/pin";
   static const home = "/home";
   static const main = "/main";
   static const detailProduct = "/detailProduct";
+  static const checkout = "/checkout";
+  static const detailCheckout = "/detailCheckout";
 
 }
 
@@ -32,6 +35,8 @@ class SessionString{
 
 class GeneralString{
   static const String imgLocal = "assets/img/";
+  static const String dummyImgUser = "https://freepikpsd.com/media/2019/10/user-png-image-9.png";
+  static const String dummyImgProduct= "https://png.pngitem.com/pimgs/s/43-434027_product-beauty-skin-care-personal-care-liquid-tree.png";
 }
 
 class SiteString{

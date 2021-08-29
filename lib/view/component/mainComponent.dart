@@ -70,37 +70,45 @@ class _MainComponentState extends State<MainComponent> {
             },
             // this will be set when a new tab is tapped
             items: [
-              BottomNavigationBarItem(
-                icon: Icon(AntDesign.home),
-                title: new Container(
-                  child: Text("Beranda"),
-                ),
-                // label: "asd"
+              bottomBar(
+                context: context,
+                icon: AntDesign.home,
+                title: "Beranda"
               ),
-              BottomNavigationBarItem(
-                icon: Icon(AntDesign.gift),
-                title: new Container(
-                  child: Text("Produk"),
-                ),
+              bottomBar(
+                  context: context,
+                  icon: AntDesign.gift,
+                  title: "Produk"
               ),
-              BottomNavigationBarItem(
-                icon: new Icon(AntDesign.piechart),
-                title: new Container(
-                  child: Text("Library"),
-                ),
+              bottomBar(
+                  context: context,
+                  icon: AntDesign.piechart,
+                  title: "Library"
               ),
-              BottomNavigationBarItem(
-                icon: new Icon(AntDesign.profile),
-                title: new Container(
-                  child: Text("Profile"),
-                ),
+              bottomBar(
+                context: context,
+                icon: FlutterIcons.user_alt_faw5s,
+                title: "Profile"
               ),
+
             ],
           ),
         ),
         onWillPop: _onWillPop
     );
   }
+
+  BottomNavigationBarItem bottomBar({BuildContext context,IconData icon, String title}){
+    ScreenScaleHelper scaler = ScreenScaleHelper()..init(context);
+    return BottomNavigationBarItem(
+      icon: new Icon(icon),
+      title: new Container(
+        margin: scaler.getMarginLTRB(0,0.5,0,0),
+        child: Text(title),
+      ),
+    );
+  }
+
   Future<bool> _onWillPop() async {
     // return WidgetHelper().showFloatingFlushbar(context, "success", "desc");
     return (

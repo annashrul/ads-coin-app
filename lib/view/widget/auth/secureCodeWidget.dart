@@ -295,7 +295,7 @@ class CodePanel extends StatelessWidget {
             child: new Container(
               decoration: new BoxDecoration(
                 shape: BoxShape.circle,
-                border: new Border.all(color:  Theme.of(context).textTheme.subtitle1.color, width: 1.0),
+                border: new Border.all(color:  color, width: 1.0),
                 color: color,
               ),
             )

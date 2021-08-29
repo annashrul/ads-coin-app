@@ -2,7 +2,10 @@
 
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/view/component/auth/otpComponent.dart';
+import 'package:adscoin/view/component/auth/pinComponent.dart';
 import 'package:adscoin/view/component/auth/signInComponent.dart';
+import 'package:adscoin/view/component/checkout/checkoutComponent.dart';
+import 'package:adscoin/view/component/checkout/detailCheckoutComponent.dart';
 import 'package:adscoin/view/component/detailProduct/detailProductComponent.dart';
 import 'package:adscoin/view/component/home/homeComponent.dart';
 import 'package:adscoin/view/component/mainComponent.dart';
@@ -24,10 +27,16 @@ class RouteGenerator{
         return CupertinoPageRoute(builder: (_) => SignInComponent());
       case '${RouteString.otp}':
         return CupertinoPageRoute(builder: (_) => OtpComponent(data: args,));
+      case '${RouteString.pin}':
+        return CupertinoPageRoute(builder: (_) => PinComponent(callback: args));
       case '${RouteString.main}':
         return CupertinoPageRoute(builder: (_) => MainComponent(index: args));
       case '${RouteString.detailProduct}':
         return CupertinoPageRoute(builder: (_) => DetailProductComponent(data: args));
+      case '${RouteString.checkout}':
+        return CupertinoPageRoute(builder: (_) => CheckoutComponent());
+      case '${RouteString.detailCheckout}':
+        return CupertinoPageRoute(builder: (_) => DetailCheckoutComponent());
       default:
         return _errorRoute(callback: args);
     }

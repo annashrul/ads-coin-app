@@ -6,7 +6,6 @@ import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/service/provider/authProvider.dart';
 import 'package:adscoin/view/widget/auth/secureCodeWidget.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
-import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
