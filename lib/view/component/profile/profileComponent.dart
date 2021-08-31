@@ -3,6 +3,7 @@ import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
+import 'package:adscoin/view/widget/general/cardAction.dart';
 import 'package:adscoin/view/widget/general/titleSectionWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:adscoin/view/widget/home/cardSaldoWidget.dart';
@@ -37,7 +38,7 @@ class _ProfileComponentState extends State<ProfileComponent> {
                   children: [
                     // SizedBox(height: scale.getHeight(1)),
                     InTouchWidget(
-                      callback: (){},
+                      callback: ()=>Navigator.of(context).pushNamed(RouteString.formProfile),
                       child: Stack(
                         alignment: Alignment.bottomRight,
                         children: [
@@ -92,21 +93,21 @@ class _ProfileComponentState extends State<ProfileComponent> {
                   FunctionalWidget.wrapContent(
                     child:Column(
                       children: [
-                        titleSpaceBetween(
-                          context: context,
+                        CardAction(
                           icon: FlutterIcons.user_alt_faw5s,
-                          color: ColorConfig.bluePrimaryColor,
                           title: "Informasi pribadi",
-                            callback: (){}
+                          colorIcon: ColorConfig.bluePrimaryColor,
+                          callback: (){},
                         ),
+
                         divid(),
-                        titleSpaceBetween(
-                            context: context,
-                            icon: FlutterIcons.heart_faw5s,
-                            color: ColorConfig.redColor,
-                            title: "Favorit saya",
-                            callback: (){}
+                        CardAction(
+                          icon: FlutterIcons.heart_faw5s,
+                          title: "Favorite saya",
+                          colorIcon: ColorConfig.redColor,
+                          callback: (){},
                         ),
+
                       ],
                     )
                   ),
@@ -120,29 +121,29 @@ class _ProfileComponentState extends State<ProfileComponent> {
                   FunctionalWidget.wrapContent(
                       child:Column(
                         children: [
-                          titleSpaceBetween(
-                              context: context,
-                              icon: FlutterIcons.file_alt_faw5s,
-                              color: ColorConfig.yellowColor,
-                              title: "Daftar produk",
-                              callback: (){}
+                          CardAction(
+                            icon: FlutterIcons.file_alt_faw5s,
+                            title: "Daftar produk",
+                            colorIcon: ColorConfig.yellowColor,
+                            callback: (){},
                           ),
+
                           divid(),
-                          titleSpaceBetween(
-                              context: context,
-                              icon: FlutterIcons.chart_area_faw5s,
-                              color: ColorConfig.blueSecondaryColor,
-                              title: "Laporan pembelian",
-                              callback: (){}
+                          CardAction(
+                            icon: FlutterIcons.chart_area_faw5s,
+                            title: "Laporan pembelian",
+                            colorIcon: ColorConfig.blueSecondaryColor,
+                            callback: (){},
                           ),
+
                           divid(),
-                          titleSpaceBetween(
-                              context: context,
-                              icon: FlutterIcons.chart_area_faw5s,
-                              color: ColorConfig.purplePrimaryColor,
-                              title: "Laporan penjualan",
-                              callback: (){}
+                          CardAction(
+                            icon: FlutterIcons.chart_area_faw5s,
+                            title: "Laporan penjualan",
+                            colorIcon: ColorConfig.purplePrimaryColor,
+                            callback: (){},
                           ),
+
                         ],
                       )
                   ),
@@ -161,29 +162,7 @@ class _ProfileComponentState extends State<ProfileComponent> {
       ),
     );
   }
-  
-  Widget titleSpaceBetween({BuildContext context,IconData icon,String title,Function callback,Color color}){
-    ScreenScaleHelper scale= ScreenScaleHelper()..init(context);
-    return InTouchWidget(
-        callback: (){callback();},
-        child: Padding(
-          padding: scale.getPadding(1,2),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(icon,size: scale.getTextSize(10),color:color),
-                  SizedBox(width: scale.getWidth(3)),
-                  Text(title,style: Theme.of(context).textTheme.headline2),
-                ],
-              ),
-              Icon(Icons.arrow_forward_ios_outlined,size: scale.getTextSize(10),color: ColorConfig.graySecondaryColor,),
-            ],
-          ),
-        )
-    );
-  }
+
 
   Widget divid(){
     ScreenScaleHelper scale= ScreenScaleHelper()..init(context);

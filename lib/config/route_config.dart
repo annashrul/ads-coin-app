@@ -10,6 +10,7 @@ import 'package:adscoin/view/component/detailProduct/detailProductComponent.dart
 import 'package:adscoin/view/component/home/homeComponent.dart';
 import 'package:adscoin/view/component/mainComponent.dart';
 import 'package:adscoin/view/component/onBoardingComponent.dart';
+import 'package:adscoin/view/component/profile/formProfileComponent.dart';
 import 'package:adscoin/view/component/splashComponent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,8 @@ class RouteGenerator{
         return CupertinoPageRoute(builder: (_) => CheckoutComponent());
       case '${RouteString.detailCheckout}':
         return CupertinoPageRoute(builder: (_) => DetailCheckoutComponent());
+      case '${RouteString.formProfile}':
+        return CupertinoPageRoute(builder: (_) => FormProfileComponent());
       default:
         return _errorRoute(callback: args);
     }

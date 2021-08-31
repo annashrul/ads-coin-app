@@ -11,6 +11,7 @@ class RouteString{
   static const detailProduct = "/detailProduct";
   static const checkout = "/checkout";
   static const detailCheckout = "/detailCheckout";
+  static const formProfile = "/formProfile";
 
 }
 

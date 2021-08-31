@@ -14,7 +14,7 @@ class TitleSectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
     return InTouchWidget(
-        callback: ()=>callback,
+        callback: (){callback();},
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
