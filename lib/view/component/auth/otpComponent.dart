@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/service/provider/authProvider.dart';
 import 'package:adscoin/view/widget/auth/secureCodeWidget.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
 
 
@@ -55,7 +55,7 @@ class _OtpComponentState extends State<OtpComponent> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     final auth = Provider.of<AuthProvider>(context);
     print(auth.dataOtp);
     return Scaffold(

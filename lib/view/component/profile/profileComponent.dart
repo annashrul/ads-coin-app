@@ -1,6 +1,5 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/cardAction.dart';
@@ -11,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 
 class ProfileComponent extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class ProfileComponent extends StatefulWidget {
 class _ProfileComponentState extends State<ProfileComponent> {
   @override
   Widget build(BuildContext context) {
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -160,7 +160,7 @@ class _ProfileComponentState extends State<ProfileComponent> {
 
 
   Widget divid(){
-    ScreenScaleHelper scale= ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return Container(
         margin: scale.getMargin(0,2),
         height:1,

@@ -1,5 +1,4 @@
 import 'package:adscoin/config/color_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,6 @@ class TitleSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
     return InTouchWidget(
         callback: (){callback();},
         child: Row(

@@ -3,12 +3,12 @@ import 'dart:io';
 
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -72,7 +72,7 @@ class FunctionalWidget{
 
 
   static appBarHelper({BuildContext context,String title, Function callback}){
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return AppBar(
       backgroundColor: Colors.transparent,
       titleSpacing: 0.0,
@@ -90,7 +90,7 @@ class FunctionalWidget{
     );
   }
   static appBarWithFilterHelper({BuildContext context,String title, Function callback,List<Widget> action}){
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return AppBar(
       backgroundColor: Colors.transparent,
       titleSpacing: 0.0,
@@ -109,7 +109,7 @@ class FunctionalWidget{
     );
   }
   static iconAppbar({BuildContext context,Function callback,IconData icon,Color color,String image}){
-    ScreenScaleHelper scaler = ScreenScaleHelper()..init(context);
+    ScreenScaler scaler= ScreenScaler()..init(context);
     return Container(
       margin: scaler.getMarginLTRB(0, 0, 0, 0),
       child: InTouchWidget(
@@ -138,7 +138,7 @@ class FunctionalWidget{
 
 
   static rating({BuildContext context}){
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return Row(
       children: [
         Icon(AntDesign.star,size: scale.getTextSize(9),color: ColorConfig.yellowColor,),
@@ -161,7 +161,7 @@ class FunctionalWidget{
   }
 
   static bottomBar({BuildContext context,String title,String desc,String btnText,Function callback}){
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return Container(
       padding: scale.getPadding(1, 2),
       decoration: BoxDecoration(
@@ -199,7 +199,7 @@ class FunctionalWidget{
   }
 
   static spaceText({BuildContext context,String title, String desc}){
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,

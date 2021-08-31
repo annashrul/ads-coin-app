@@ -1,7 +1,7 @@
 import 'package:adscoin/config/color_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 
 // ignore: must_be_immutable
 class FieldWidget extends StatelessWidget {
@@ -19,7 +19,7 @@ class FieldWidget extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return Container(
       padding: scale.getPadding(0, 2),
       width: width==null?double.infinity:scale.getWidth(width),

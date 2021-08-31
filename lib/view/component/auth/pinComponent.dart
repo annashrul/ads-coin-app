@@ -1,7 +1,7 @@
 import 'package:adscoin/config/string_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/view/widget/auth/secureCodeWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 
 // ignore: must_be_immutable
 class PinComponent extends StatefulWidget {
@@ -14,7 +14,7 @@ class PinComponent extends StatefulWidget {
 class _PinComponentState extends State<PinComponent> {
   @override
   Widget build(BuildContext context) {
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return Scaffold(
       body:  Container(
         alignment: Alignment.center,

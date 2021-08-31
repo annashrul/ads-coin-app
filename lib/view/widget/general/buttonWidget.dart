@@ -1,5 +1,5 @@
 import 'package:adscoin/config/color_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'touchWidget.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +10,7 @@ class RedButtonWidget extends StatelessWidget {
   RedButtonWidget({@required this.callback,@required this.child});
   @override
   Widget build(BuildContext context) {
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return  Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -36,7 +36,7 @@ class BorderButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -68,7 +68,7 @@ class BackroundButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return Container(
       decoration: BoxDecoration(
         color: backgroundColor,

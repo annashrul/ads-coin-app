@@ -1,7 +1,7 @@
 import 'package:adscoin/config/color_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 
 // ignore: must_be_immutable
 class AppBarWithActionWidget extends StatefulWidget {
@@ -16,17 +16,19 @@ class _AppBarWithActionWidgetState extends State<AppBarWithActionWidget> {
   TextEditingController anyController;
   @override
   Widget build(BuildContext context) {
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return SliverAppBar(
+      titleSpacing: 0.0,
       toolbarHeight: scale.getHeight(7),
       backgroundColor: widget.color!=null? widget.color:Colors.white,
       pinned: true,
       title: Container(
+        margin: scale.getMarginLTRB(2.5, 0, 2.5, 0),
         child:Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              padding: scale.getPadding(0, 0),
+              padding: scale.getPadding(0, 2),
               width:scale.getWidth(72),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -35,11 +37,15 @@ class _AppBarWithActionWidgetState extends State<AppBarWithActionWidget> {
               child: TextField(
                 controller: anyController,
                 decoration: InputDecoration(
-                  contentPadding: scale.getPadding(1,2),
+                  contentPadding: scale.getPadding(1,0),
                   hintStyle: Theme.of(context).textTheme.subtitle1,
                   hintText:"Ads copy, landingpage, caption",
                   border: InputBorder.none,
                   suffixIcon: Icon(FlutterIcons.search_fea,color: Theme.of(context).textTheme.subtitle1.color,),
+                  suffixIconConstraints: BoxConstraints(
+                      minHeight: scale.getHeight(1),
+                      minWidth: scale.getWidth(1)
+                  ),
                 ),
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.search,

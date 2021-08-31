@@ -1,10 +1,10 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/helper/svg/svg.dart';
 import 'package:adscoin/helper/transform/transform.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 
 class OnBoardingComponent extends StatefulWidget {
   @override
@@ -14,7 +14,7 @@ class OnBoardingComponent extends StatefulWidget {
 class _OnBoardingComponentState extends State<OnBoardingComponent> {
   @override
   Widget build(BuildContext context) {
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return Material(
         child: ClipRRect(
           borderRadius: BorderRadius.zero,

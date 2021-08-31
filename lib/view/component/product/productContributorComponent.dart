@@ -1,12 +1,12 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/GeneralProvider.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
 
 class ProductContributorComponent extends StatefulWidget {
@@ -18,7 +18,7 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
   TextEditingController anyController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    ScreenScaleHelper scale= ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     final general = Provider.of<GeneralProvider>(context);
     print(general.conditionStatusProductContributor);
     return Scaffold(

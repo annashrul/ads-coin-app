@@ -1,11 +1,11 @@
 import 'package:adscoin/config/color_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/view/component/product/productComponent.dart';
 import 'package:adscoin/view/component/profile/profileComponent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'home/homeComponent.dart';
 
 // ignore: must_be_immutable
@@ -53,7 +53,7 @@ class _MainComponentState extends State<MainComponent> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenScaleHelper scaler = ScreenScaleHelper()..init(context);
+    ScreenScaler scaler= ScreenScaler()..init(context);
 
     return WillPopScope(
         child: Scaffold(
@@ -104,7 +104,7 @@ class _MainComponentState extends State<MainComponent> {
   }
 
   BottomNavigationBarItem bottomBar({BuildContext context,IconData icon, String title}){
-    ScreenScaleHelper scaler = ScreenScaleHelper()..init(context);
+    ScreenScaler scaler= ScreenScaler()..init(context);
     return BottomNavigationBarItem(
       icon: new Icon(icon),
       title: new Container(

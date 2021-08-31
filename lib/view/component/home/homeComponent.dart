@@ -1,6 +1,5 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/widget/general/appBarWithActionWidget.dart';
 import 'package:adscoin/view/widget/general/titleSectionWidget.dart';
@@ -10,6 +9,7 @@ import 'package:adscoin/view/widget/product/productWidget1.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +25,7 @@ class _HomeComponentState extends State<HomeComponent> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context);
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return Scaffold(
       body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxScrolled) {

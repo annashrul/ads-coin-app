@@ -1,6 +1,5 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/helper/validateFormHelper.dart';
 import 'package:adscoin/service/provider/profileProvider.dart';
@@ -12,6 +11,7 @@ import 'package:adscoin/view/widget/general/uploadWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
 
 
@@ -27,7 +27,7 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
   @override
   Widget build(BuildContext context) {
     final profle = Provider.of<ProfileProvider>(context);
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     return Scaffold(
       appBar:FunctionalWidget.appBarHelper(
         context: context,title: "Edit profile"

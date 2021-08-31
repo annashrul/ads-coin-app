@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:adscoin/config/color_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 
 typedef void DeleteCode();
 typedef Future<bool> PassCodeVerify(List<int> passcode);
@@ -101,10 +101,10 @@ class _SecureCodeWidgetState extends State<SecureCodeWidget> {
       widget.isTrue=false;
     }
     final height = MediaQuery.of(context).size.height;
-    ScreenScaleHelper scaler = ScreenScaleHelper()..init(context);
+    ScreenScaler scaler= ScreenScaler()..init(context);
     return Container(
       alignment: Alignment.center,
-      padding: scaler.getPadding(2,4),
+      padding: scaler.getPadding(1,0),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -119,7 +119,7 @@ class _SecureCodeWidgetState extends State<SecureCodeWidget> {
               status: _currentState,
             ),
             Container(
-              padding: EdgeInsets.only(left: 0, top: 10),
+              padding:scaler.getPaddingLTRB(0,1, 0, 0),
               child:
               NotificationListener<OverscrollIndicatorNotification>(
                 onNotification: (overscroll) {
@@ -131,9 +131,9 @@ class _SecureCodeWidgetState extends State<SecureCodeWidget> {
                   physics: ClampingScrollPhysics(),
                   shrinkWrap: true,
                   crossAxisCount: 3,
-                  childAspectRatio: 1.6,
-                  mainAxisSpacing: 10,
-                  padding: EdgeInsets.all(5),
+                  childAspectRatio: 1,
+                  mainAxisSpacing: 0,
+                  padding: EdgeInsets.all(0),
                   children: <Widget>[
                     buildContainerCircle(1),
                     buildContainerCircle(2),
@@ -303,14 +303,14 @@ class CodePanel extends StatelessWidget {
         );
       }
     }
-
+    ScreenScaler scale = ScreenScaler()..init(context);
     return new SizedBox.fromSize(
       size: new Size(MediaQuery.of(context).size.width, 30.0),
       child: new Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox.fromSize(
-                size: new Size(40.0 * codeLength, H),
+                size: new Size(scale.getWidth(9) * codeLength, H),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: circles,

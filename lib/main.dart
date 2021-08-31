@@ -8,6 +8,7 @@ import 'package:adscoin/service/provider/profileProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -65,8 +66,9 @@ class MyApp extends StatelessWidget {
       ),
       builder: (BuildContext context, Widget child){
         final MediaQueryData data = MediaQuery.of(context);
+        ScreenScaler scaler = ScreenScaler()..init(context);
         return MediaQuery(
-          data: data.copyWith(textScaleFactor: 0.8),
+          data: data.copyWith(textScaleFactor:scaler.getTextSize(2),viewPadding: scaler.getPadding(0, 0)),
           child: child,
         );
       },

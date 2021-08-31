@@ -1,12 +1,12 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
-import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/view/widget/general/appBarWithActionWidget.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:adscoin/view/widget/product/productWidget1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 
@@ -21,7 +21,7 @@ class _ProductComponentState extends State<ProductComponent> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    ScreenScaler scale= ScreenScaler()..init(context);
     List<Widget> historyTab = [];
     List<Widget> historyView = [];
     for(int i=0;i<10;i++){
@@ -52,40 +52,48 @@ class _ProductComponentState extends State<ProductComponent> {
         child: Scaffold(
           key: _scaffoldKey,
           appBar: AppBar(
+            titleSpacing: 0.0,
             automaticallyImplyLeading: false,
             elevation: 0,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: scale.getPadding(0, 0),
-                  width:scale.getWidth(72),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Color(0xFFF2F2F2)
-                  ),
-                  child: TextField(
-                    controller: anyController,
-                    decoration: InputDecoration(
-                      contentPadding: scale.getPadding(1,2),
-                      hintStyle: Theme.of(context).textTheme.subtitle1,
-                      hintText:"Ads copy, landingpage, caption",
-                      border: InputBorder.none,
-                      suffixIcon: Icon(FlutterIcons.search_fea,color: Theme.of(context).textTheme.subtitle1.color,),
+            title: Container(
+              margin: scale.getMarginLTRB(2.5, 0, 2.5, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: scale.getPadding(0, 2),
+                    width:scale.getWidth(72),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color(0xFFF2F2F2)
                     ),
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.search,
+                    child: TextField(
+                      controller: anyController,
+                      decoration: InputDecoration(
+                        contentPadding: scale.getPadding(1,0),
+                        hintStyle: Theme.of(context).textTheme.subtitle1,
+                        hintText:"Ads copy, landingpage, caption",
+                        border: InputBorder.none,
+                        suffixIcon: Icon(FlutterIcons.search_fea,color: Theme.of(context).textTheme.subtitle1.color,),
+                        suffixIconConstraints: BoxConstraints(
+                            minHeight: scale.getHeight(1),
+                            minWidth: scale.getWidth(1)
+                        ),
+                      ),
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.search,
+                    ),
                   ),
-                ),
-                InkResponse(
-                  onTap: (){},
-                  child: Icon(
-                      FlutterIcons.share_alt_faw,
-                      size: scale.getTextSize(15),
-                      color:ColorConfig.graySecondaryColor
-                  ),
-                )
-              ],
+                  InkResponse(
+                    onTap: (){},
+                    child: Icon(
+                        FlutterIcons.share_alt_faw,
+                        size: scale.getTextSize(15),
+                        color:ColorConfig.graySecondaryColor
+                    ),
+                  )
+                ],
+              ),
             ),
             bottom: TabBar(
               indicatorPadding: scale.getPadding(0,0),
@@ -119,7 +127,6 @@ class _ProductComponentState extends State<ProductComponent> {
 
 
   Widget buildContent(BuildContext context){
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
     return new StaggeredGridView.countBuilder(
       padding: EdgeInsets.all(0.0),
       primary: false,
