@@ -9,4 +9,8 @@ class ColorConfig{
   static const Color yellowColor = Color(0xFFFFC72C);
   static const Color grayPrimaryColor = Color(0xFF828282);
   static const Color graySecondaryColor = Color(0xFFE0E0E0);
+  static const Color bluePrimaryColor = Color(0xFF2D9CDB);
+  static const Color blueSecondaryColor = Color(0xFF56CCF2);
+  static const Color purplePrimaryColor = Color(0xFFBB6BD9);
+
 }

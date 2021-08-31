@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 class TitleSectionWidget extends StatelessWidget {
   final String title;
   final Function callback;
-  TitleSectionWidget({@required this.title, @required this.callback});
+  final String titleAction;
+  final bool isAction;
+  TitleSectionWidget({@required this.title, @required this.callback,this.titleAction,this.isAction=true});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class TitleSectionWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(title,style: Theme.of(context).textTheme.headline1),
-            Text("Lihat semua",style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.yellowColor)),
+            if(isAction)Text(titleAction==null?"Lihat semua":titleAction,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.yellowColor)),
           ],
         )
     );

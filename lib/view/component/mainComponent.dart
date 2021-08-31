@@ -2,6 +2,7 @@ import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/view/component/product/productComponent.dart';
+import 'package:adscoin/view/component/profile/profileComponent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -44,7 +45,7 @@ class _MainComponentState extends State<MainComponent> {
           currentWidget = HomeComponent();
           break;
         case 3:
-          currentWidget = HomeComponent();
+          currentWidget = ProfileComponent();
           break;
       }
     });
