@@ -12,6 +12,9 @@ class RouteString{
   static const checkout = "/checkout";
   static const detailCheckout = "/detailCheckout";
   static const formProfile = "/formProfile";
+  static const historyPurchase = "/historyPurchase";
+  static const productContributor = "/productContributor";
+
 
 }
 
@@ -36,6 +39,8 @@ class SessionString{
 
 class GeneralString{
   static const String imgLocal = "assets/img/";
+  static const String imgLocalPng = "assets/img/png/";
+  static const String imgLocalSvg = "assets/img/svg/";
   static const String dummyImgUser = "https://freepikpsd.com/media/2019/10/user-png-image-9.png";
   static const String dummyImgProduct= "https://png.pngitem.com/pimgs/s/43-434027_product-beauty-skin-care-personal-care-liquid-tree.png";
 }

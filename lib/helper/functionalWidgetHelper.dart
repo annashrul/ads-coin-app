@@ -5,6 +5,7 @@ import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
+import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -88,6 +89,52 @@ class FunctionalWidget{
       title: Text(title,style: Theme.of(context).textTheme.headline1,textAlign: TextAlign.center),
     );
   }
+  static appBarWithFilterHelper({BuildContext context,String title, Function callback,List<Widget> action}){
+    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      titleSpacing: 0.0,
+      automaticallyImplyLeading: true,
+      elevation: 0.0,
+      leadingWidth:scale.getWidth(7),
+      leading:InkResponse(
+        onTap: (){
+          callback!=null?callback():Navigator.of(context).pop();
+        },
+        child: Icon(Ionicons.ios_arrow_back),
+      ),
+      centerTitle: true,
+      title: Text(title,style: Theme.of(context).textTheme.headline1,textAlign: TextAlign.center),
+      actions:action,
+    );
+  }
+  static iconAppbar({BuildContext context,Function callback,IconData icon,Color color,String image}){
+    ScreenScaleHelper scaler = ScreenScaleHelper()..init(context);
+    return Container(
+      margin: scaler.getMarginLTRB(0, 0, 0, 0),
+      child: InTouchWidget(
+          radius: 100,
+          callback: (){callback();},
+          child: Container(
+            padding: scaler.getPadding(0,2),
+            child: Stack(
+              alignment: AlignmentDirectional.center,
+              children: <Widget>[
+                Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    // child: Icon(icon,color:color!=null?color:Theme.of(context).hintColor)
+                    child: icon!=null? Icon(icon,color:color!=null?color:Theme.of(context).hintColor):Image.asset(GeneralString.imgLocalPng+"$image.png",height: scaler.getHeight(1.5),color: color!=null?color:ColorConfig.blackPrimaryColor,filterQuality: FilterQuality.high,)
+                ),
+              ],
+            ),
+          )
+      ),
+    );
+  }
+
 
 
   static rating({BuildContext context}){
@@ -140,6 +187,34 @@ class FunctionalWidget{
     );
   }
 
+
+  static betweenText({BuildContext context,String title,String desc,Color color}){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(title,style: Theme.of(context).textTheme.headline2.copyWith(color: color==null?Theme.of(context).textTheme.subtitle1.color:Theme.of(context).textTheme.headline2.color)),
+        Text(desc,style: Theme.of(context).textTheme.headline2),
+      ],
+    );
+  }
+
+  static spaceText({BuildContext context,String title, String desc}){
+    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          child: Text(title,style: Theme.of(context).textTheme.headline2.copyWith(color: Theme.of(context).textTheme.subtitle1.color)),
+          width: scale.getWidth(20),
+        ),
+        Text(":",style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).textTheme.subtitle2.color)),
+        SizedBox(width: scale.getWidth(1)),
+        Text(desc,style: Theme.of(context).textTheme.headline2),
+      ],
+    );
+  }
+
   static modal({BuildContext context,Widget child}){
     return showModalBottomSheet(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(10.0))),
@@ -165,6 +240,14 @@ class FunctionalWidget{
     final pickedFile = await picker.getImage(source: imageSource);
     print(pickedFile.path);
     return File(pickedFile.path);
+  }
+  static toast({BuildContext context,msg}) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(msg),
+      ),
+    );
   }
 
 

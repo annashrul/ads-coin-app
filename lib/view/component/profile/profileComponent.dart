@@ -77,87 +77,82 @@ class _ProfileComponentState extends State<ProfileComponent> {
               )
             ],
           ),
-          Padding(
-            padding: scale.getPadding(1, 2.5),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TitleSectionWidget(
-                      title: "Akun",
-                      callback: (){},
-                    isAction: false,
-                  ),
-                  SizedBox(height: scale.getHeight(1)),
-                  FunctionalWidget.wrapContent(
-                    child:Column(
-                      children: [
-                        CardAction(
-                          icon: FlutterIcons.user_alt_faw5s,
-                          title: "Informasi pribadi",
-                          colorIcon: ColorConfig.bluePrimaryColor,
-                          callback: (){},
-                        ),
+         Expanded(
+             child: ListView(
+               padding: scale.getPadding(1, 2.5),
+               children: [
+                 TitleSectionWidget(
+                   title: "Akun",
+                   callback: (){},
+                   isAction: false,
+                 ),
+                 SizedBox(height: scale.getHeight(1)),
+                 FunctionalWidget.wrapContent(
+                     child:Column(
+                       children: [
+                         CardAction(
+                           img:"Profile" ,
+                           title: "Informasi pribadi",
+                           colorIcon: ColorConfig.bluePrimaryColor,
+                           callback: (){},
+                         ),
 
-                        divid(),
-                        CardAction(
-                          icon: FlutterIcons.heart_faw5s,
-                          title: "Favorite saya",
-                          colorIcon: ColorConfig.redColor,
-                          callback: (){},
-                        ),
+                         divid(),
+                         CardAction(
+                           img:"Heart" ,
+                           title: "Favorite saya",
+                           colorIcon: ColorConfig.redColor,
+                           callback: (){},
+                         ),
 
-                      ],
-                    )
-                  ),
-                  SizedBox(height: scale.getHeight(1)),
-                  TitleSectionWidget(
-                      title: "Produk",
-                      callback: (){},
-                    titleAction: "Tambah produk",
-                  ),
-                  SizedBox(height: scale.getHeight(1)),
-                  FunctionalWidget.wrapContent(
-                      child:Column(
-                        children: [
-                          CardAction(
-                            icon: FlutterIcons.file_alt_faw5s,
-                            title: "Daftar produk",
-                            colorIcon: ColorConfig.yellowColor,
-                            callback: (){},
-                          ),
+                       ],
+                     )
+                 ),
+                 SizedBox(height: scale.getHeight(1)),
+                 TitleSectionWidget(
+                   title: "Produk",
+                   callback: (){},
+                   titleAction: "Tambah produk",
+                 ),
+                 SizedBox(height: scale.getHeight(1)),
+                 FunctionalWidget.wrapContent(
+                     child:Column(
+                       children: [
+                         CardAction(
+                           img:"analytics1" ,
+                           title: "Daftar produk",
+                           colorIcon: ColorConfig.yellowColor,
+                           callback: (){
+                             Navigator.of(context).pushNamed(RouteString.productContributor);
+                           },
+                         ),
 
-                          divid(),
-                          CardAction(
-                            icon: FlutterIcons.chart_area_faw5s,
-                            title: "Laporan pembelian",
-                            colorIcon: ColorConfig.blueSecondaryColor,
-                            callback: (){},
-                          ),
-
-                          divid(),
-                          CardAction(
-                            icon: FlutterIcons.chart_area_faw5s,
-                            title: "Laporan penjualan",
-                            colorIcon: ColorConfig.purplePrimaryColor,
-                            callback: (){},
-                          ),
-
-                        ],
-                      )
-                  ),
-                  SizedBox(height: scale.getHeight(4)),
-                  BorderButtonWidget(
-                    borderColor: ColorConfig.redColor,
-                    title: "Keluar",
-                    callback: (){},
-                  ),
-                ],
-              ),
-            ),
-          ),
-
+                         divid(),
+                         CardAction(
+                           img:"Chart" ,
+                           title: "Laporan pembelian",
+                           colorIcon: ColorConfig.blueSecondaryColor,
+                           callback: ()=>Navigator.of(context).pushNamed(RouteString.historyPurchase),
+                         ),
+                         divid(),
+                         CardAction(
+                           img:"analytics" ,
+                           title: "Laporan penjualan",
+                           colorIcon: ColorConfig.purplePrimaryColor,
+                           callback: (){},
+                         ),
+                       ],
+                     )
+                 ),
+                 SizedBox(height: scale.getHeight(4)),
+                 BorderButtonWidget(
+                   borderColor: ColorConfig.redColor,
+                   title: "Keluar",
+                   callback: (){},
+                 ),
+               ],
+             )
+         ),
         ],
       ),
     );

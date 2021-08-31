@@ -2,6 +2,8 @@ import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/helper/validateFormHelper.dart';
+import 'package:adscoin/service/provider/profileProvider.dart';
 import 'package:adscoin/view/widget/general/appBarWithActionWidget.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/fieldWidget.dart';
@@ -10,6 +12,7 @@ import 'package:adscoin/view/widget/general/uploadWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:provider/provider.dart';
 
 
 class FormProfileComponent extends StatefulWidget {
@@ -18,13 +21,13 @@ class FormProfileComponent extends StatefulWidget {
 }
 
 class _FormProfileComponentState extends State<FormProfileComponent> {
-  TextEditingController nameController;
-  TextEditingController phoneController;
-  TextEditingController emailController;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final profle = Provider.of<ProfileProvider>(context);
     ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
-
     return Scaffold(
       appBar:FunctionalWidget.appBarHelper(
         context: context,title: "Edit profile"
@@ -66,7 +69,7 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
           TextFormField(
             style: Theme.of(context).textTheme.headline2,
             controller: nameController,
-            maxLength: 40,
+            maxLength: 20,
             buildCounter: (_, {currentLength, maxLength, isFocused}) => Padding(
               padding: const EdgeInsets.all(0),
               child: Container(alignment: Alignment.bottomRight,child: Text(currentLength.toString() + "/" + maxLength.toString())),
@@ -81,7 +84,7 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
           TextFormField(
             style: Theme.of(context).textTheme.headline2,
             controller: phoneController,
-            maxLength: 50,
+            maxLength: 14,
             buildCounter: (_, {currentLength, maxLength, isFocused}) => Padding(
               padding: const EdgeInsets.all(0),
               child: Container(alignment: Alignment.bottomRight,child: Text(currentLength.toString() + "/" + maxLength.toString())),
@@ -94,14 +97,14 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
             cursorColor: ColorConfig.yellowColor,
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[
-              LengthLimitingTextInputFormatter(13),
+              LengthLimitingTextInputFormatter(14),
               FilteringTextInputFormatter.digitsOnly
             ],
           ),
           TextFormField(
             style: Theme.of(context).textTheme.headline2,
             controller: emailController,
-            maxLength: 40,
+            maxLength: 20,
             buildCounter: (_, {currentLength, maxLength, isFocused}) => Padding(
               padding: const EdgeInsets.all(0),
               child: Container(alignment: Alignment.bottomRight,child: Text(currentLength.toString() + "/" + maxLength.toString())),
@@ -112,6 +115,7 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
                 focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ColorConfig.yellowColor))
             ),
             cursorColor: ColorConfig.yellowColor,
+            keyboardType: TextInputType.emailAddress,
           ),
         ],
       ),
@@ -119,8 +123,14 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
         height: scale.getHeight(7),
         padding: scale.getPadding(1, 2.5),
         child: BackroundButtonWidget(
-          callback: (){},
-          color: ColorConfig.redColor,
+          callback: ()async{
+            await profle.store(context: context,fields: {
+              "nama":nameController.text,
+              "nohp":phoneController.text,
+              "email":emailController.text,
+            });
+          },
+          backgroundColor: ColorConfig.redColor,
           title: "Simpan",
         ),
       ),

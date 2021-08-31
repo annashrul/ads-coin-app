@@ -47,7 +47,7 @@ class BorderButtonWidget extends StatelessWidget {
         callback: (){callback();},
         child: Container(
           width: scale.getWidth(100),
-          padding: scale.getPadding(0.8, 3),
+          padding: scale.getPadding(0.5, 3),
           child: Center(
             child: Text(title,style: Theme.of(context).textTheme.headline1.copyWith(color:borderColor)),
           ),
@@ -62,26 +62,27 @@ class BorderButtonWidget extends StatelessWidget {
 class BackroundButtonWidget extends StatelessWidget {
   final Function callback;
   final Color color;
+  final Color backgroundColor;
   final String title;
-  BackroundButtonWidget({this.callback,this.color,this.title});
+  BackroundButtonWidget({this.callback,this.color,this.title,this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
     ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
     return Container(
       decoration: BoxDecoration(
-        color: color,
+        color: backgroundColor,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color:color )
+          border: Border.all(color:backgroundColor )
       ),
       child: InTouchWidget(
         radius: 10,
         callback: (){callback();},
         child: Container(
           width: scale.getWidth(100),
-          padding: scale.getPadding(0.8, 3),
+          padding: scale.getPadding(0.5, 3),
           child: Center(
-            child: Text(title,style: Theme.of(context).textTheme.headline1.copyWith(color:ColorConfig.graySecondaryColor)),
+            child: Text(title,style: Theme.of(context).textTheme.headline1.copyWith(color:color==null?ColorConfig.graySecondaryColor:color)),
           ),
         ),
       ),

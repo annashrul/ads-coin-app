@@ -2,7 +2,9 @@
 
 import 'package:adscoin/config/route_config.dart';
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/service/provider/GeneralProvider.dart';
 import 'package:adscoin/service/provider/authProvider.dart';
+import 'package:adscoin/service/provider/profileProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,8 +13,10 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'config/color_config.dart';
 List<SingleChildWidget> providers = [
+  ChangeNotifierProvider<GeneralProvider>(create: (_) => GeneralProvider()),
   ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
   ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
+  ChangeNotifierProvider<ProfileProvider>(create: (_) => ProfileProvider()),
 ];
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

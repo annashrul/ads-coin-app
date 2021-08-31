@@ -14,7 +14,7 @@ class SignInComponent extends StatefulWidget {
 }
 
 class _SignInComponentState extends State<SignInComponent> {
-  TextEditingController phoneNumberController;
+  TextEditingController phoneNumberController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

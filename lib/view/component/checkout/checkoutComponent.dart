@@ -1,8 +1,10 @@
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/GeneralProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class CheckoutComponent extends StatefulWidget {
@@ -11,11 +13,20 @@ class CheckoutComponent extends StatefulWidget {
 }
 
 class _CheckoutComponentState extends State<CheckoutComponent> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<GeneralProvider>(context, listen: false);
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
+    final general = Provider.of<GeneralProvider>(context);
     return Scaffold(
-      appBar: FunctionalWidget.appBarHelper(context: context,title: "Checkout"),
+      appBar: FunctionalWidget.appBarHelper(context: context,title: general.conditionCheckoutAndDetail?"Checkout":"Detail pembelian"),
       body: ListView(
         padding: scale.getPadding(1,2),
         children: [
@@ -47,12 +58,12 @@ class _CheckoutComponentState extends State<CheckoutComponent> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Copywriting untuk Website",style: Theme.of(context).textTheme.headline2,),
-                          spaceText(
+                          FunctionalWidget.spaceText(
                               context: context,
                               title: "Pengerjaan",
                               desc: "2 hari"
                           ),
-                          spaceText(
+                          FunctionalWidget.spaceText(
                               context: context,
                               title: "Penulis",
                               desc: "Ari Yahya"
@@ -75,17 +86,17 @@ class _CheckoutComponentState extends State<CheckoutComponent> {
                 children: [
                   Text("Ringkasan belanja",style: Theme.of(context).textTheme.headline1),
                   SizedBox(height: scale.getHeight(1)),
-                  betweenText(title: "Harga produk",desc: "Rp 30,000"),
-                  betweenText(title: "Harga kebutuhan lain",desc: "Rp 30,000"),
+                  FunctionalWidget.betweenText(context:context,title: "Harga produk",desc: "Rp 30,000"),
+                  FunctionalWidget.betweenText(context:context,title: "Harga kebutuhan lain",desc: "Rp 30,000"),
                   SizedBox(height: scale.getHeight(0.5)),
-                  betweenText(title: "Subtotal",desc: "Rp 30,000",color: Colors.white54),
+                  FunctionalWidget.betweenText(context:context,title: "Subtotal",desc: "Rp 30,000",color: Colors.white54),
                 ],
               ),
             )
           )
         ],
       ),
-      bottomNavigationBar: FunctionalWidget.bottomBar(
+      bottomNavigationBar: general.conditionCheckoutAndDetail?FunctionalWidget.bottomBar(
         context: context,
         title: "Saldo anda",
         desc: "Rp 300,000",
@@ -96,37 +107,13 @@ class _CheckoutComponentState extends State<CheckoutComponent> {
             await Future.delayed(Duration(seconds: 2));
             Navigator.of(context).pop();
             Navigator.of(context).pushNamed(RouteString.detailCheckout);
-            
+
           });
         }
-      ),
-    );
-  }
-  Widget betweenText({String title,String desc,Color color}){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(title,style: Theme.of(context).textTheme.headline2.copyWith(color: color==null?Theme.of(context).textTheme.subtitle1.color:Theme.of(context).textTheme.headline2.color)),
-        Text(desc,style: Theme.of(context).textTheme.headline2),
-      ],
+      ):SizedBox(),
     );
   }
 
-  Widget spaceText({BuildContext context,String title, String desc}){
-    ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          child: Text(title,style: Theme.of(context).textTheme.headline2.copyWith(color: Theme.of(context).textTheme.subtitle1.color)),
-          width: scale.getWidth(20),
-        ),
-        Text(":",style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).textTheme.subtitle2.color)),
-        SizedBox(width: scale.getWidth(1)),
-        Text(desc,style: Theme.of(context).textTheme.headline2),
-      ],
-    );
-  }
+
 
 }

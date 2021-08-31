@@ -1,4 +1,5 @@
 import 'package:adscoin/config/color_config.dart';
+import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,8 +34,8 @@ class CardSaldoWidget extends StatelessWidget {
               ),
               child:Row(
                 children: [
-                  Icon(FlutterIcons.wallet_faw5s,color: ColorConfig.yellowColor,size: scale.getTextSize(17),),
-                  SizedBox(width: 10),
+                  Image.asset(GeneralString.imgLocalPng+"wallet.png",height: scale.getHeight(4),),
+                  SizedBox(width: 5),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,18 +57,21 @@ class CardSaldoWidget extends StatelessWidget {
                   cardWallet(
                       context: context,
                       title: "Top Up",
+                      image: "topup",
                       callback: (){}
                   ),
                   SizedBox(width: scale.getWidth(3)),
                   cardWallet(
                       context: context,
                       title: "Penarikan",
+                      image: "topup",
                       callback: (){}
                   ),
                   SizedBox(width: scale.getWidth(3)),
                   cardWallet(
                       context: context,
                       title: "Mutasi",
+                      image: "history",
                       callback: (){}
                   )
 
@@ -81,7 +85,7 @@ class CardSaldoWidget extends StatelessWidget {
   }
 
 
-  Widget cardWallet({BuildContext context,title,Function callback}){
+  Widget cardWallet({BuildContext context,title,Function callback,String image}){
     ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
     return InTouchWidget(
         callback: ()=>callback,
@@ -89,7 +93,8 @@ class CardSaldoWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(FlutterIcons.plus_box_mco,color:ColorConfig.graySecondaryColor),
+            Image.asset(GeneralString.imgLocalPng+"$image.png",height: scale.getHeight(1.5),),
+            // Icon(FlutterIcons.plus_box_mco,color:ColorConfig.graySecondaryColor),
             SizedBox(height: scale.getHeight(0.2),),
             Text(title,style: Theme.of(context).textTheme.subtitle1,)
           ],

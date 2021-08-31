@@ -2,12 +2,14 @@ import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/ScreenScaleHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/GeneralProvider.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:provider/provider.dart';
 
 
 // ignore: must_be_immutable
@@ -21,6 +23,7 @@ class DetailProductComponent extends StatefulWidget {
 class _DetailProductComponentState extends State<DetailProductComponent> {
   @override
   Widget build(BuildContext context) {
+    final general = Provider.of<GeneralProvider>(context);
     ScreenScaleHelper scale = ScreenScaleHelper()..init(context);
     String desc="Glory Perfume,parfum keluaran terbaru kami. Bahan 100% original dan penggunaannya tahan lama hingga 16 jam. For women only. Harga Rp 150.000 untuk 100ml. Desain botolnya juga unik dan cocok dibawa kemanapun.";
     String splitDesc = desc.split(". ")[0];
@@ -114,7 +117,10 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           title: "Saldo anda",
           desc: "Rp 300,000",
           btnText: "Beli sekarang",
-          callback: ()=>Navigator.of(context).pushNamed(RouteString.checkout)
+          callback: (){
+            general.setConditionCheckoutAndDetail(true);
+            Navigator.of(context).pushNamed(RouteString.checkout);
+          }
       ),
     );
   }
