@@ -15,6 +15,7 @@ class UserProvider with ChangeNotifier{
   dynamic referral="";
   dynamic status="";
   Future setStorage(data)async{
+    print(data);
     SharedPreferences myPrefs = await SharedPreferences.getInstance();
     myPrefs.setString(SessionString.sessIsLogin, data[SessionString.sessIsLogin]);
     myPrefs.setString(SessionString.sessId, data[SessionString.sessId]);

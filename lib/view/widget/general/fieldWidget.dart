@@ -1,6 +1,7 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 
 // ignore: must_be_immutable
@@ -10,12 +11,20 @@ class FieldWidget extends StatelessWidget {
   TextInputAction textInputAction = TextInputAction.done;
   String hintText;
   double width;
+  int maxLines;
+  bool readOnly;
+  bool isIcon;
+  Function onTap;
   FieldWidget({
     @required this.controller,
     this.textInputType,
     this.textInputAction,
     this.hintText,
     this.width,
+    this.maxLines,
+    this.readOnly=false,
+    this.isIcon=false,
+    this.onTap,
   });
   @override
   Widget build(BuildContext context) {
@@ -28,10 +37,17 @@ class FieldWidget extends StatelessWidget {
         color: ColorConfig.graySecondaryColor
       ),
       child: TextFormField(
+        maxLines: maxLines,
         controller: controller,
+        readOnly: readOnly,
         decoration: InputDecoration(
           hintText:hintText,
-          border: InputBorder.none
+          border: InputBorder.none,
+          suffixIcon: Icon(Icons.arrow_forward_ios_outlined,color:isIcon?ColorConfig.grayPrimaryColor:Colors.transparent,),
+          suffixIconConstraints: BoxConstraints(
+              minHeight: scale.getHeight(1),
+              minWidth: scale.getWidth(1)
+          ),
         ),
         keyboardType: textInputType,
         textInputAction: textInputAction,
@@ -39,6 +55,12 @@ class FieldWidget extends StatelessWidget {
           if(textInputType == TextInputType.number) LengthLimitingTextInputFormatter(13),
           if(textInputType == TextInputType.number) FilteringTextInputFormatter.digitsOnly
         ],
+        onTap: (){
+          if(onTap!=null){
+            onTap();
+            print("onTap");
+          }
+        },
       ),
     );
   }

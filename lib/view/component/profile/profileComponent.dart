@@ -111,7 +111,7 @@ class _ProfileComponentState extends State<ProfileComponent> {
                  SizedBox(height: scale.getHeight(1)),
                  TitleSectionWidget(
                    title: "Produk",
-                   callback: (){},
+                   callback: ()=>Navigator.of(context).pushNamed(RouteString.formProductContributor),
                    titleAction: "Tambah produk",
                  ),
                  SizedBox(height: scale.getHeight(1)),

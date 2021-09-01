@@ -14,6 +14,7 @@ class RouteString{
   static const formProfile = "/formProfile";
   static const historyPurchase = "/historyPurchase";
   static const productContributor = "/productContributor";
+  static const formProductContributor = "/formProductContributor";
 
 
 }

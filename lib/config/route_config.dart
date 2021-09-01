@@ -11,6 +11,7 @@ import 'package:adscoin/view/component/history/historyPurchaseComponent.dart';
 import 'package:adscoin/view/component/home/homeComponent.dart';
 import 'package:adscoin/view/component/mainComponent.dart';
 import 'package:adscoin/view/component/onBoardingComponent.dart';
+import 'package:adscoin/view/component/product/formProductComponent.dart';
 import 'package:adscoin/view/component/product/productContributorComponent.dart';
 import 'package:adscoin/view/component/profile/formProfileComponent.dart';
 import 'package:adscoin/view/component/splashComponent.dart';
@@ -46,6 +47,8 @@ class RouteGenerator{
         return CupertinoPageRoute(builder: (_) => HistoryPurchaseComponent());
       case '${RouteString.productContributor}':
         return CupertinoPageRoute(builder: (_) => ProductContributorComponent());
+      case '${RouteString.formProductContributor}':
+        return CupertinoPageRoute(builder: (_) => FormProductContributorComponent());
       default:
         return _errorRoute(callback: args);
     }

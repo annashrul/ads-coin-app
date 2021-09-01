@@ -25,6 +25,8 @@ dependencies:
   smooth_star_rating: 1.1.1
   image_picker: ^0.6.7+12
   flutter_screen_scaler: ^2.0.0
+  flutter_summernote: ^0.2.3
+  flutter_html:
 
 
 

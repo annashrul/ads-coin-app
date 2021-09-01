@@ -2,8 +2,10 @@ import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/GeneralProvider.dart';
+import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
+import 'package:adscoin/view/widget/product/optionActionProductWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
@@ -20,6 +22,7 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
     final general = Provider.of<GeneralProvider>(context);
+    final product = Provider.of<ProductProvider>(context);
     print(general.conditionStatusProductContributor);
     return Scaffold(
       appBar: FunctionalWidget.appBarWithFilterHelper(
@@ -69,7 +72,7 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
             Row(
               children: [
                 Container(
-                  width: scale.getWidth(20),
+                  width: scale.getWidth(30),
                   child: BackroundButtonWidget(
                     callback: (){
                       general.setConditionStatusProductContributor(true);
@@ -81,7 +84,7 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
                 ),
                 SizedBox(width: scale.getWidth(1)),
                 Container(
-                  width: scale.getWidth(20),
+                  width: scale.getWidth(30),
                   child: BackroundButtonWidget(
                     callback: (){
                       general.setConditionStatusProductContributor(false);
@@ -94,12 +97,18 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
               ],
             ),
             SizedBox(height: scale.getHeight(1)),
-            Row(
-              children: [
-                Image.asset(GeneralString.imgLocalPng+"PaperPlus.png",height: scale.getHeight(1.5),color:ColorConfig.bluePrimaryColor,),
-                SizedBox(width: scale.getWidth(1)),
-                Text("Tambah produk",style: Theme.of(context).textTheme.headline2.copyWith(color:ColorConfig.bluePrimaryColor))
-              ],
+            InTouchWidget(
+                callback: ()async{
+                  await product.setIsAdd(true);
+                  Navigator.of(context).pushNamed(RouteString.formProductContributor);
+                },
+                child: Row(
+                  children: [
+                    Image.asset(GeneralString.imgLocalPng+"PaperPlus.png",height: scale.getHeight(1.5),color:ColorConfig.bluePrimaryColor,),
+                    SizedBox(width: scale.getWidth(1)),
+                    Text("Tambah produk",style: Theme.of(context).textTheme.headline2.copyWith(color:ColorConfig.bluePrimaryColor))
+                  ],
+                )
             ),
             SizedBox(height: scale.getHeight(1)),
             Expanded(
@@ -161,27 +170,15 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text("Rp 50,000",style: Theme.of(context).textTheme.headline2),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                InTouchWidget(
-                                                  callback: (){},
-                                                  child: Container(
-                                                    padding: scale.getPadding(1,1),
-                                                    child: Image.asset(GeneralString.imgLocalPng+"Edit.png",height: scale.getHeight(1.5)),
-                                                  ),
-                                                  radius: 100,
-                                                ),
-                                                InTouchWidget(
-                                                  callback: (){},
-                                                  child: Container(
-                                                    padding: scale.getPadding(1,1),
-                                                    child: Image.asset(GeneralString.imgLocalPng+"Delete1.png",height: scale.getHeight(1.5)),
-                                                  ),
-                                                  radius: 100,
-                                                ),
-                                              ],
+                                            InTouchWidget(
+                                              callback: ()async{
+                                                FunctionalWidget.modal(
+                                                  context: context,
+                                                  child: OptionActionProductWidget()
+                                                );
+                                              },
+                                              child: Icon(FlutterIcons.ios_more_ion),
+                                              radius: 0,
                                             ),
                                           ],
                                         ),

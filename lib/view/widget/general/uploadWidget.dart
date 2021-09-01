@@ -11,7 +11,7 @@ import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 
 // ignore: must_be_immutable
 class UploadWidget extends StatefulWidget {
-  Function(String img) callback;
+  Function(dynamic data) callback;
   String title;
   UploadWidget({@required this.callback,this.title});
 
@@ -41,7 +41,7 @@ class _UploadWidgetState extends State<UploadWidget> {
                 fileName = _image.path.split("/").last;
                 var type = fileName.split('.');
                 base64Image = 'data:image/' + type[1] + ';base64,' + base64Encode(_image.readAsBytesSync());
-                widget.callback(base64Image);
+                widget.callback({"preview":_image,"base64":base64Image});
               }
             },
             isAction: true,

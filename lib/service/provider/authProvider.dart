@@ -80,7 +80,7 @@ class AuthProvider with ChangeNotifier{
               SessionString.sessReferral:dataUser.referral,
               SessionString.sessStatus:dataUser.status,
             });
-            Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
+            // Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
           }
           notifyListeners();
         },
