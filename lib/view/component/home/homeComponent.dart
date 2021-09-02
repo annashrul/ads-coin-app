@@ -44,7 +44,6 @@ class _HomeComponentState extends State<HomeComponent> {
                   DecoratedBox(
                       decoration: BoxDecoration(
                         color: ColorConfig.yellowColor,
-                        borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))
                       ),
                       child: Container(
                         width: double.infinity,

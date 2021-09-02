@@ -71,10 +71,10 @@ class FunctionalWidget{
 
 
 
-  static appBarHelper({BuildContext context,String title, Function callback}){
+  static appBarHelper({BuildContext context,String title, Function callback, Color backgroundColor = Colors.transparent,Color titleColor}){
     ScreenScaler scale= ScreenScaler()..init(context);
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: backgroundColor,
       titleSpacing: 0.0,
       automaticallyImplyLeading: true,
       elevation: 0.0,
@@ -83,10 +83,10 @@ class FunctionalWidget{
         onTap: (){
           callback!=null?callback():Navigator.of(context).pop();
         },
-        child: Icon(Ionicons.ios_arrow_back),
+        child: Icon(Ionicons.ios_arrow_back,color: titleColor==null?ColorConfig.blackPrimaryColor:titleColor),
       ),
       centerTitle: true,
-      title: Text(title,style: Theme.of(context).textTheme.headline1,textAlign: TextAlign.center),
+      title: Text(title,style: titleColor==null?Theme.of(context).textTheme.headline1:Theme.of(context).textTheme.headline1.copyWith(color: titleColor),textAlign: TextAlign.center),
     );
   }
   static appBarWithFilterHelper({BuildContext context,String title, Function callback,List<Widget> action}){

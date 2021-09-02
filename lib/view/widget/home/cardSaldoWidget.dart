@@ -27,26 +27,31 @@ class CardSaldoWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              padding: scale.getPadding(0,0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child:Row(
-                children: [
-                  Image.asset(GeneralString.imgLocalPng+"wallet.png",height: scale.getHeight(4),),
-                  SizedBox(width: 5),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+            InTouchWidget(
+                callback: (){
+                  Navigator.of(context).pushNamed(RouteString.indexFintechComponent);
+                },
+                child: Container(
+                  padding: scale.getPadding(0,0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child:Row(
                     children: [
-                      Text("1.230.0000",style: Theme.of(context).textTheme.headline1.copyWith(color: ColorConfig.blackSecondaryColor,fontWeight:FontWeight.w400)),
-                      SizedBox(height: scale.getHeight(0.2),),
-                      Text("Saldo AdsCoin",style: Theme.of(context).textTheme.subtitle1),
+                      Image.asset(GeneralString.imgLocalPng+"wallet.png",height: scale.getHeight(4),),
+                      SizedBox(width: 5),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("1.230.0000",style: Theme.of(context).textTheme.headline1.copyWith(color: ColorConfig.blackSecondaryColor,fontWeight:FontWeight.w400)),
+                          SizedBox(height: scale.getHeight(0.2),),
+                          Text("Saldo AdsCoin",style: Theme.of(context).textTheme.subtitle1),
+                        ],
+                      )
                     ],
-                  )
-                ],
-              ),
+                  ),
+                )
             ),
             Container(
               // padding: scale.getPadding(0,2),

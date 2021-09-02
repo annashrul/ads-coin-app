@@ -15,6 +15,8 @@ class RouteString{
   static const historyPurchase = "/historyPurchase";
   static const productContributor = "/productContributor";
   static const formProductContributor = "/formProductContributor";
+  static const indexFintechComponent = "/indexFintechComponent";
+  static const historyMutation = "/historyMutation";
 
 
 }

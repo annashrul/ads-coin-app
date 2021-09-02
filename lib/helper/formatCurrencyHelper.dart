@@ -228,6 +228,19 @@ class MoneyMaskedTextControllerQ extends TextEditingController {
 }
 
 class MoneyFormat{
+  static final formatter = new NumberFormat("#,###");
+
+
+  static toCurrency(x){
+    var forInts = new NumberFormat();
+    var forFractions = new NumberFormat();
+    forFractions.minimumFractionDigits = 2;
+    forFractions.maximumFractionDigits = 2;
+    format(num n) => n == n.truncate() ? forInts.format(n) : forFractions.format(n);
+    return format(x);
+  }
+
+
   moneyToLocal(int price){
     return NumberFormat.compact(locale: 'ID').format(price);
   }
