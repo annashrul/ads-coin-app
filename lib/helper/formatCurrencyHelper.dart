@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+
 class MaskedTextControllerQ extends TextEditingController {
   MaskedTextControllerQ({String text, this.mask, Map<String, RegExp> translator})
       : super(text: text) {
@@ -126,10 +127,10 @@ class MoneyMaskedTextControllerQ extends TextEditingController {
   MoneyMaskedTextControllerQ(
       {double initialValue = 0.0,
         this.decimalSeparator = ',',
-        this.thousandSeparator = '.',
+        this.thousandSeparator = '',
         this.rightSymbol = '',
         this.leftSymbol = '',
-        this.precision = 2}) {
+        this.precision = 0}) {
     _validateConfig();
 
     this.addListener(() {
@@ -182,7 +183,7 @@ class MoneyMaskedTextControllerQ extends TextEditingController {
   double get numberValue {
     List<String> parts = _getOnlyNumbers(this.text).split('').toList(growable: true);
 
-    parts.insert(parts.length - precision, '.');
+    parts.insert(parts.length - precision, '');
 
     return double.parse(parts.join());
   }
@@ -229,7 +230,7 @@ class MoneyMaskedTextControllerQ extends TextEditingController {
 
 class MoneyFormat{
   static final formatter = new NumberFormat("#,###");
-
+  static final dataNominal=["50000","100000","150000","250000","500000","1500000"];
 
   static toCurrency(x){
     var forInts = new NumberFormat();

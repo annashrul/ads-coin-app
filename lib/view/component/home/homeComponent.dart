@@ -1,6 +1,8 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
+import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/appBarWithActionWidget.dart';
 import 'package:adscoin/view/widget/general/titleSectionWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
@@ -19,12 +21,22 @@ class HomeComponent extends StatefulWidget {
 }
 
 class _HomeComponentState extends State<HomeComponent> {
-  TextEditingController anyController;
+  TextEditingController anyController = new TextEditingController();
 
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final product = Provider.of<ProductProvider>(context, listen: false);
+    product.getNew(context: context);
+    product.getBestSeller(context: context);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context);
+    final product = Provider.of<ProductProvider>(context);
+
     ScreenScaler scale= ScreenScaler()..init(context);
     return Scaffold(
       body: NestedScrollView(
@@ -104,19 +116,20 @@ class _HomeComponentState extends State<HomeComponent> {
                   physics: ClampingScrollPhysics(),
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: 15,
-                  itemBuilder: (BuildContext context, int index) => ProductWidget1(
-                    marginWidth: index==0?0:1,
-                    heroTag: "produkTerlaris"+index.toString(),
-                    isFavorite: index==0?true:false,
-                    id:"produkTerlaris"+index.toString(),
-                    title: "Killer Content Writing",
-                    price: "Rp 50.000",
-                    productSale:"110 terjual" ,
-                    image: GeneralString.dummyImgProduct,
-                    isContributor: false,
-                  ),
-
+                  itemCount: product.isLoadingBestSeller?15:product.productBestSellerModel.result.length,
+                  itemBuilder: (BuildContext context, int index){
+                    return product.isLoadingBestSeller?LoadingProduct():ProductWidget1(
+                      marginWidth: index==0?0:1,
+                      heroTag: "produkTerlaris"+index.toString(),
+                      isFavorite: index==0?true:false,
+                      id:"produkTerlaris"+index.toString(),
+                      title: product.productBestSellerModel.result[index].title,
+                      price: product.productBestSellerModel.result[index].price,
+                      productSale:"${product.productBestSellerModel.result[index].terjual} terjual" ,
+                      image: product.productBestSellerModel.result[index].image,
+                      isContributor: false,
+                    );
+                  },
                 ),
               ),
               Padding(
@@ -133,21 +146,26 @@ class _HomeComponentState extends State<HomeComponent> {
                   primary: false,
                   shrinkWrap: true,
                   crossAxisCount: 4,
-                  itemCount:10,
+                  itemCount:product.isLoadingNew?15:product.productNewModel.result.length,
                   staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
                   mainAxisSpacing: 10.0,
                   crossAxisSpacing: 10.0,
-                  itemBuilder: (context,index)=>ProductWidget1(
-                    marginWidth: index==0?0:0,
-                    heroTag: "produkTerbaru"+index.toString(),
-                    isFavorite: index==0?true:false,
-                    id:"produkTerbaru"+index.toString(),
-                    title: "Killer Content Writing",
-                    price: "Rp 50.000",
-                    productSale:"110 terjual" ,
-                    image: GeneralString.dummyImgProduct,
-                    isContributor: true,
-                  ),
+                  itemBuilder: (context,index){
+                    return product.isLoadingNew?LoadingProduct():ProductWidget1(
+                      marginWidth: index==0?0:0,
+                      heroTag: "produkTerbaru"+index.toString(),
+                      isFavorite: index==0?true:false,
+                      id:"produkTerbaru"+index.toString(),
+                      title: product.productNewModel.result[index].title,
+                      price: product.productNewModel.result[index].price,
+                      productSale:"${product.productNewModel.result[index].terjual} terjual" ,
+                      image: product.productNewModel.result[index].image,
+                      isContributor: true,
+                      nameContributor: product.productNewModel.result[index].seller,
+                      imageContributor: product.productNewModel.result[index].sellerFoto,
+                      rateContributor: double.parse(product.productNewModel.result[index].rating.toString()),
+                    );
+                  },
                 ),
               )
             ],

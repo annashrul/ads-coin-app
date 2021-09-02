@@ -183,7 +183,6 @@ class _FormProductContributorComponentState extends State<FormProductContributor
         ],
       ),
       bottomNavigationBar: Container(
-        height: scale.getHeight(8),
         padding: scale.getPadding(1,2.5),
         child:BackroundButtonWidget(
           backgroundColor: isValid?ColorConfig.redColor:ColorConfig.graySecondaryColor,

@@ -47,7 +47,7 @@ class BorderButtonWidget extends StatelessWidget {
         callback: (){callback();},
         child: Container(
           width: scale.getWidth(100),
-          padding: scale.getPadding(0.5, 3),
+          padding: scale.getPadding(1, 3),
           child: Center(
             child: Text(title,style: Theme.of(context).textTheme.headline1.copyWith(color:borderColor)),
           ),
@@ -80,10 +80,8 @@ class BackroundButtonWidget extends StatelessWidget {
         callback: (){callback();},
         child: Container(
           width: scale.getWidth(100),
-          padding: scale.getPadding(0.5, 3),
-          child: Center(
-            child: Text(title,style: Theme.of(context).textTheme.headline1.copyWith(color:color==null?ColorConfig.graySecondaryColor:color)),
-          ),
+          padding: scale.getPadding(1, 3),
+          child: Text(title,style: Theme.of(context).textTheme.headline1.copyWith(color:color==null?ColorConfig.graySecondaryColor:color),textAlign: TextAlign.center,),
         ),
       ),
     );

@@ -61,7 +61,7 @@ class _OtpComponentState extends State<OtpComponent> {
     return Scaffold(
       body:  Container(
         alignment: Alignment.center,
-        padding: scale.getPadding(1, 6),
+        padding: scale.getPadding(5, 6),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

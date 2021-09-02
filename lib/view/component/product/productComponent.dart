@@ -1,6 +1,8 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/productProvider.dart';
+import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/appBarWithActionWidget.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:adscoin/view/widget/product/productWidget1.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:provider/provider.dart';
 
 
 class ProductComponent extends StatefulWidget {
@@ -17,7 +20,15 @@ class ProductComponent extends StatefulWidget {
 
 class _ProductComponentState extends State<ProductComponent> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  TextEditingController anyController;
+  TextEditingController anyController = new TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final product = Provider.of<ProductProvider>(context, listen: false);
+    product.getNew(context: context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,26 +138,32 @@ class _ProductComponentState extends State<ProductComponent> {
 
 
   Widget buildContent(BuildContext context){
+    final product = Provider.of<ProductProvider>(context);
     return new StaggeredGridView.countBuilder(
       padding: EdgeInsets.all(0.0),
       primary: false,
       shrinkWrap: true,
       crossAxisCount: 4,
-      itemCount:10,
+      itemCount:product.isLoadingNew?10:product.productNewModel.result.length,
       staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
       mainAxisSpacing: 10.0,
       crossAxisSpacing: 10.0,
-      itemBuilder: (context,index)=>ProductWidget1(
-        marginWidth: index==0?0:0,
-        heroTag: "mainProduk"+index.toString(),
-        isFavorite: index==0?true:false,
-        id:"mainProduk"+index.toString(),
-        title: "Killer Content Writing",
-        price: "Rp 50.000",
-        productSale:"110 terjual" ,
-        image: GeneralString.dummyImgProduct,
-        isContributor: true,
-      ),
+      itemBuilder: (context,index){
+        return product.isLoadingNew?LoadingProduct():ProductWidget1(
+          marginWidth: index==0?0:0,
+          heroTag: "mainProduk"+index.toString(),
+          isFavorite: index==0?true:false,
+          id:"mainProduk"+index.toString(),
+          title:  product.productNewModel.result[index].title,
+          price:  product.productNewModel.result[index].price,
+          productSale:"${ product.productNewModel.result[index].terjual} terjual" ,
+          image:  product.productNewModel.result[index].image,
+          isContributor: true,
+          nameContributor: product.productNewModel.result[index].seller,
+          imageContributor: product.productNewModel.result[index].sellerFoto,
+          rateContributor: double.parse(product.productNewModel.result[index].rating.toString()),
+        );
+      },
     );
   }
 

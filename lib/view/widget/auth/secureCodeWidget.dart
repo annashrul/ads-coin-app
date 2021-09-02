@@ -104,7 +104,7 @@ class _SecureCodeWidgetState extends State<SecureCodeWidget> {
     ScreenScaler scaler= ScreenScaler()..init(context);
     return Container(
       alignment: Alignment.center,
-      padding: scaler.getPadding(1,0),
+      padding: scaler.getPadding(2,0),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -131,7 +131,7 @@ class _SecureCodeWidgetState extends State<SecureCodeWidget> {
                   physics: ClampingScrollPhysics(),
                   shrinkWrap: true,
                   crossAxisCount: 3,
-                  childAspectRatio: 1,
+                  childAspectRatio: 1.5,
                   mainAxisSpacing: 0,
                   padding: EdgeInsets.all(0),
                   children: <Widget>[

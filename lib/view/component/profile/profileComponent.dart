@@ -1,6 +1,7 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/cardAction.dart';
 import 'package:adscoin/view/widget/general/titleSectionWidget.dart';
@@ -11,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileComponent extends StatefulWidget {
   @override
@@ -18,9 +21,19 @@ class ProfileComponent extends StatefulWidget {
 }
 
 class _ProfileComponentState extends State<ProfileComponent> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final user = Provider.of<UserProvider>(context, listen: false);
+    user.getUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
+    final user  = Provider.of<UserProvider>(context);
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -45,7 +58,7 @@ class _ProfileComponentState extends State<ProfileComponent> {
                           CircleAvatar(
                               backgroundColor: Colors.transparent,
                               radius: 30,
-                              backgroundImage: NetworkImage(GeneralString.dummyImgUser)
+                              backgroundImage: NetworkImage(user.photo)
                           ),
                           Container(
                             padding: scale.getPadding(0.2,1),
@@ -59,9 +72,9 @@ class _ProfileComponentState extends State<ProfileComponent> {
                       )
                     ),
                     SizedBox(height: scale.getHeight(1)),
-                    Text("annashrul yusuf",style: Theme.of(context).textTheme.headline1.copyWith(color:Colors.white)),
-                    Text("0812 - 1504 - 6887",style: Theme.of(context).textTheme.subtitle1),
-                    Text("Kontributor",style: Theme.of(context).textTheme.subtitle2),
+                    Text(user.name,style: Theme.of(context).textTheme.headline1.copyWith(color:Colors.white)),
+                    Text(user.mobileNo,style: Theme.of(context).textTheme.subtitle1),
+                    Text(user.type,style: Theme.of(context).textTheme.subtitle2),
                   ],
                 ),
               ),
@@ -148,7 +161,11 @@ class _ProfileComponentState extends State<ProfileComponent> {
                  BorderButtonWidget(
                    borderColor: ColorConfig.redColor,
                    title: "Keluar",
-                   callback: (){},
+                   callback: ()async{
+                     SharedPreferences myPrefs = await SharedPreferences.getInstance();
+                     myPrefs.setString(SessionString.sessIsLogin, StatusRoleString.keluarAplikasi);
+                     Navigator.of(context).pushNamedAndRemoveUntil(RouteString.signIn, (route) => false);
+                   },
                  ),
                ],
              )

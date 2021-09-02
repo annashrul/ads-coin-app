@@ -63,21 +63,27 @@ class CardSaldoWidget extends StatelessWidget {
                       context: context,
                       title: "Top Up",
                       image: "topup",
-                      callback: (){}
+                      callback: (){
+                        Navigator.of(context).pushNamed(RouteString.topUp);
+                      }
                   ),
                   SizedBox(width: scale.getWidth(3)),
                   cardWallet(
                       context: context,
                       title: "Penarikan",
                       image: "topup",
-                      callback: (){}
+                      callback: (){
+                        Navigator.of(context).pushNamed(RouteString.withdraw);
+                      }
                   ),
                   SizedBox(width: scale.getWidth(3)),
                   cardWallet(
                       context: context,
                       title: "Mutasi",
                       image: "history",
-                      callback: (){}
+                      callback: (){
+                        Navigator.of(context).pushNamed(RouteString.historyMutation);
+                      }
                   )
 
                 ],
@@ -93,7 +99,7 @@ class CardSaldoWidget extends StatelessWidget {
   Widget cardWallet({BuildContext context,title,Function callback,String image}){
     ScreenScaler scale= ScreenScaler()..init(context);
     return InTouchWidget(
-        callback: ()=>callback,
+        callback: ()=>callback(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

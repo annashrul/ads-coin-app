@@ -137,13 +137,13 @@ class FunctionalWidget{
 
 
 
-  static rating({BuildContext context}){
+  static rating({BuildContext context,double rate}){
     ScreenScaler scale= ScreenScaler()..init(context);
     return Row(
       children: [
         Icon(AntDesign.star,size: scale.getTextSize(9),color: ColorConfig.yellowColor,),
         SizedBox(width: scale.getWidth(1)),
-        Text("5.0",style: Theme.of(context).textTheme.subtitle1)
+        Text(rate.toString(),style: Theme.of(context).textTheme.subtitle1)
       ],
     );
   }
@@ -245,7 +245,7 @@ class FunctionalWidget{
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
       SnackBar(
-        content: Text(msg),
+        content: Text(msg,style: Theme.of(context).textTheme.subtitle1.copyWith(color: Colors.white),),
       ),
     );
   }

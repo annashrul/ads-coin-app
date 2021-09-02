@@ -17,6 +17,11 @@ class RouteString{
   static const formProductContributor = "/formProductContributor";
   static const indexFintechComponent = "/indexFintechComponent";
   static const historyMutation = "/historyMutation";
+  static const topUp = "/topUp";
+  static const detailTopUp = "/detailTopUp";
+  static const withdraw = "/withdraw";
+  static const confirmWithdraw = "/confirmWithdraw";
+  static const success = "/success";
 
 
 }
@@ -27,6 +32,11 @@ class TabIndexString{
   static const int tabProfile = 2;
 }
 
+class StatusRoleString{
+  static const String baruInstall = "0";
+  static const String keluarAplikasi = "1";
+  static const String masukAplikasi = "2";
+}
 
 class SessionString{
   static const String sessIsLogin = "isLogin";
@@ -38,6 +48,7 @@ class SessionString{
   static const String sessMobileNo = "mobileNo";
   static const String sessReferral = "referral";
   static const String sessStatus = "status";
+  static const String sessType = "type";
 }
 
 class GeneralString{

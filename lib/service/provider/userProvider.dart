@@ -14,6 +14,7 @@ class UserProvider with ChangeNotifier{
   dynamic mobileNo="";
   dynamic referral="";
   dynamic status="";
+  dynamic type="";
   Future setStorage(data)async{
     print(data);
     SharedPreferences myPrefs = await SharedPreferences.getInstance();
@@ -26,6 +27,7 @@ class UserProvider with ChangeNotifier{
     myPrefs.setString(SessionString.sessMobileNo, data[SessionString.sessMobileNo]);
     myPrefs.setString(SessionString.sessReferral, data[SessionString.sessReferral]);
     myPrefs.setInt(SessionString.sessStatus, data[SessionString.sessStatus]);
+    myPrefs.setString(SessionString.sessType, data[SessionString.sessType]);
     notifyListeners();
   }
 
@@ -41,6 +43,7 @@ class UserProvider with ChangeNotifier{
     mobileNo = myPrefs.getString(SessionString.sessMobileNo);
     referral = myPrefs.getString(SessionString.sessReferral);
     status = myPrefs.getInt(SessionString.sessStatus);
+    type = myPrefs.getString(SessionString.sessType);
     notifyListeners();
   }
 

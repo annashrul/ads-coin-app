@@ -19,6 +19,9 @@ class ProductWidget1 extends StatelessWidget {
   String productSale;
   String image;
   bool isContributor;
+  String nameContributor;
+  String imageContributor;
+  double rateContributor;
   ProductWidget1({
     this.marginWidth,
     this.heroTag,
@@ -29,6 +32,9 @@ class ProductWidget1 extends StatelessWidget {
     this.productSale,
     this.image,
     this.isContributor,
+    this.nameContributor="",
+    this.imageContributor=GeneralString.dummyImgUser,
+    this.rateContributor=0.0,
   });
 
   @override
@@ -52,7 +58,7 @@ class ProductWidget1 extends StatelessWidget {
           });
         },
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Stack(
@@ -81,6 +87,7 @@ class ProductWidget1 extends StatelessWidget {
             Padding(
               padding: scale.getPaddingLTRB(1,1,1,0),
               child: Column(
+
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -88,7 +95,7 @@ class ProductWidget1 extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(price,overflow:TextOverflow.ellipsis,maxLines: 1,style: Theme.of(context).textTheme.headline1),
+                      Text(price+" coin",overflow:TextOverflow.ellipsis,maxLines: 1,style: Theme.of(context).textTheme.headline1),
                       Text(productSale,overflow:TextOverflow.ellipsis,maxLines: 1,style: Theme.of(context).textTheme.subtitle1),
                     ],
                   ),
@@ -98,15 +105,15 @@ class ProductWidget1 extends StatelessWidget {
                       CircleAvatar(
                           backgroundColor: Colors.transparent,
                           radius: 15,
-                          backgroundImage: NetworkImage(GeneralString.dummyImgUser)
+                          backgroundImage: NetworkImage(this.imageContributor)
                       ),
                       SizedBox(width: scale.getWidth(1)),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Gendis Langit",style: Theme.of(context).textTheme.headline2),
-                          FunctionalWidget.rating(context: context)
+                          Text(this.nameContributor,style: Theme.of(context).textTheme.headline2),
+                          FunctionalWidget.rating(context: context,rate: this.rateContributor)
                         ],
                       ),
                     ],

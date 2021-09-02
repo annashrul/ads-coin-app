@@ -27,6 +27,8 @@ dependencies:
   flutter_screen_scaler: ^2.0.0
   flutter_summernote: ^0.2.3
   flutter_html:
+  getwidget: ^2.0.3
+  shimmer: ^1.1.2
 
 
 

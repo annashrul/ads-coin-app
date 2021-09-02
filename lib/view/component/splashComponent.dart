@@ -16,9 +16,11 @@ class _SplashComponentState extends State<SplashComponent> {
   Future checkingRoute()async{
     await Future.delayed(Duration(seconds: 1));
     final userStorage = Provider.of<UserProvider>(context, listen: false);
-    print("STATUS LOGIN = ${userStorage.isLogin}");
-    if(userStorage.isLogin==null || userStorage.isLogin=="0"){
+    if(userStorage.isLogin==null || userStorage.isLogin==StatusRoleString.baruInstall){
       Navigator.of(context).pushNamed(RouteString.onBoarding);
+    }
+    else  if(userStorage.isLogin==StatusRoleString.keluarAplikasi){
+      Navigator.of(context).pushNamed(RouteString.signIn);
     }
     else{
       Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);

@@ -1,5 +1,6 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/view/component/product/libraryProductComponent.dart';
 import 'package:adscoin/view/component/product/productComponent.dart';
 import 'package:adscoin/view/component/profile/profileComponent.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class _MainComponentState extends State<MainComponent> {
           currentWidget = ProductComponent();
           break;
         case 2:
-          currentWidget = HomeComponent();
+          currentWidget = LibraryProductComponent();
           break;
         case 3:
           currentWidget = ProfileComponent();

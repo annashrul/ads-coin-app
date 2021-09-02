@@ -9,6 +9,10 @@ import 'package:adscoin/view/component/checkout/detailCheckoutComponent.dart';
 import 'package:adscoin/view/component/detailProduct/detailProductComponent.dart';
 import 'package:adscoin/view/component/fintech/historyMutation/historyMutationComponent.dart';
 import 'package:adscoin/view/component/fintech/indexFintechComponent.dart';
+import 'package:adscoin/view/component/fintech/topUp/detailTopUpComponent.dart';
+import 'package:adscoin/view/component/fintech/topUp/topUpComponent.dart';
+import 'package:adscoin/view/component/fintech/withdraw/confirmWithdrawComponent.dart';
+import 'package:adscoin/view/component/fintech/withdraw/withdrawComponent.dart';
 import 'package:adscoin/view/component/history/historyPurchaseComponent.dart';
 import 'package:adscoin/view/component/home/homeComponent.dart';
 import 'package:adscoin/view/component/mainComponent.dart';
@@ -17,12 +21,14 @@ import 'package:adscoin/view/component/product/formProductComponent.dart';
 import 'package:adscoin/view/component/product/productContributorComponent.dart';
 import 'package:adscoin/view/component/profile/formProfileComponent.dart';
 import 'package:adscoin/view/component/splashComponent.dart';
+import 'package:adscoin/view/component/successComponent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RouteGenerator{
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
+
     print(args);
     switch (settings.name) {
       case RouteString.splash:
@@ -55,6 +61,15 @@ class RouteGenerator{
         return CupertinoPageRoute(builder: (_) => IndexFintechComponent());
       case '${RouteString.historyMutation}':
         return CupertinoPageRoute(builder: (_) => HistoryMutationComponent());
+      case '${RouteString.topUp}':
+        return CupertinoPageRoute(builder: (_) => TopUpComponent());
+      case '${RouteString.detailTopUp}':
+        return CupertinoPageRoute(builder: (_) => DetailTopUpComponent());
+      case '${RouteString.withdraw}':
+        return CupertinoPageRoute(builder: (_) => WithdrawComponent());
+      case '${RouteString.confirmWithdraw}':
+        return CupertinoPageRoute(builder: (_) => ConfirmWithdrawComponent());
+
       default:
         return _errorRoute(callback: args);
     }

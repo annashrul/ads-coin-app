@@ -70,7 +70,7 @@ class AuthProvider with ChangeNotifier{
             final dataUser = result.result;
             final userStorage = Provider.of<UserProvider>(context, listen: false);
             userStorage.setStorage({
-              SessionString.sessIsLogin:"1",
+              SessionString.sessIsLogin:StatusRoleString.masukAplikasi,
               SessionString.sessId:dataUser.id,
               SessionString.sessToken:dataUser.token,
               SessionString.sessHavePin:dataUser.havePin,
@@ -79,8 +79,9 @@ class AuthProvider with ChangeNotifier{
               SessionString.sessMobileNo:dataUser.mobileNo,
               SessionString.sessReferral:dataUser.referral,
               SessionString.sessStatus:dataUser.status,
+              SessionString.sessType:dataUser.type,
             });
-            // Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
+            Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
           }
           notifyListeners();
         },

@@ -4,7 +4,6 @@ class GeneralProvider with ChangeNotifier{
   bool conditionCheckoutAndDetail = true;
   bool conditionFilterProductContributor = true;
   bool conditionStatusProductContributor = true; //draft or done
-
   setConditionCheckoutAndDetail(input){
     conditionCheckoutAndDetail=input;
     notifyListeners();
@@ -17,4 +16,8 @@ class GeneralProvider with ChangeNotifier{
     conditionStatusProductContributor=input;
     notifyListeners();
   }
+
+
+
+
 }
