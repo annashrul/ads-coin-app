@@ -1,3 +1,6 @@
+import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/model/product/detailProductModel.dart';
 import 'package:adscoin/model/product/productBestSellerModel.dart';
 import 'package:adscoin/model/product/productLibraryModel.dart';
 import 'package:adscoin/model/product/productNewModel.dart';
@@ -5,10 +8,11 @@ import 'package:adscoin/service/httpService.dart';
 import 'package:flutter/cupertino.dart';
 
 class ProductProvider with ChangeNotifier{
-  bool isAdd = true,isLoadingNew=true,isLoadingBestSeller=true,isLoadingLibrary=true,isLoadMoreLibrary=false;
+  bool isAdd = true,isLoadingNew=true,isLoadingBestSeller=true,isLoadingLibrary=true,isLoadMoreLibrary=false,isLoadingDetailProduct=true;
   ProductNewModel productNewModel;
   ProductBestSellerModel productBestSellerModel;
   ProductLibraryModel productLibraryModel;
+  DetailProductModel detailProductModel;
   int perPageLibrary=10;
   ScrollController controllerLibrary;
 
@@ -40,6 +44,39 @@ class ProductProvider with ChangeNotifier{
     productLibraryModel = result;
     isLoadingLibrary=false;
     notifyListeners();
+  }
+  Future getDetailProduct({BuildContext context,String id=""})async{
+    if(detailProductModel==null) isLoadingDetailProduct=true;
+    final res = await HttpService().get(url: "product/get/$id",context: context);
+    DetailProductModel result = DetailProductModel.fromJson(res);
+    detailProductModel = result;
+    isLoadingDetailProduct=false;
+    notifyListeners();
+  }
+
+  Future storeCheckoutProduct({BuildContext context,String pin})async{
+    dynamic data={
+      "member_pin":pin.toString(),
+      "id_product":detailProductModel.result.id
+    };
+    final res = await HttpService().post(url: "transaction/checkout",data: data,context: context);
+    print(res);
+    if(res!=null){
+      Navigator.of(context).pushNamed(RouteString.detailCheckout);
+    }
+    // if()
+  }
+  Future storeRateProduct({BuildContext context,int rate})async{
+    dynamic data={
+      "rate":"$rate",
+      "id_product":detailProductModel.result.id
+    };
+    final res = await HttpService().post(url: "review",data: data,context: context);
+    if(res!=null){
+      FunctionalWidget.nofitDialog(context: context,msg:"data berhasil disimpan",callback2: ()=>FunctionalWidget.backToHome(context));
+
+    }
+    // if()
   }
 
 

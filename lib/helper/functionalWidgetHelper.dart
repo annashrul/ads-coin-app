@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/helper/formatCurrencyHelper.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -198,7 +199,7 @@ class FunctionalWidget{
     );
   }
 
-  static spaceText({BuildContext context,String title, String desc}){
+  static spaceText({BuildContext context,String title, String desc,Widget child}){
     ScreenScaler scale= ScreenScaler()..init(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -210,7 +211,7 @@ class FunctionalWidget{
         ),
         Text(":",style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).textTheme.subtitle2.color)),
         SizedBox(width: scale.getWidth(1)),
-        Text(desc,style: Theme.of(context).textTheme.headline2),
+        child==null?Text(desc,style: Theme.of(context).textTheme.headline2):child,
       ],
     );
   }
@@ -251,5 +252,7 @@ class FunctionalWidget{
   }
 
 
-
+  static toCoin(double coin){
+    return "$coin coin";
+  }
 }

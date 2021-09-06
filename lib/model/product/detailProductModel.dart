@@ -1,0 +1,105 @@
+// To parse this JSON data, do
+//
+//     final detailProductModel = detailProductModelFromJson(jsonString);
+
+import 'dart:convert';
+
+DetailProductModel detailProductModelFromJson(String str) => DetailProductModel.fromJson(json.decode(str));
+
+String detailProductModelToJson(DetailProductModel data) => json.encode(data.toJson());
+
+class DetailProductModel {
+  DetailProductModel({
+    this.result,
+    this.meta,
+    this.total,
+    this.msg,
+    this.status,
+  });
+
+  Result result;
+  List<dynamic> meta;
+  List<dynamic> total;
+  String msg;
+  String status;
+
+  factory DetailProductModel.fromJson(Map<String, dynamic> json) => DetailProductModel(
+    result: Result.fromJson(json["result"]),
+    meta: List<dynamic>.from(json["meta"].map((x) => x)),
+    total: List<dynamic>.from(json["total"].map((x) => x)),
+    msg: json["msg"],
+    status: json["status"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "result": result.toJson(),
+    "meta": List<dynamic>.from(meta.map((x) => x)),
+    "total": List<dynamic>.from(total.map((x) => x)),
+    "msg": msg,
+    "status": status,
+  };
+}
+
+class Result {
+  Result({
+    this.id,
+    this.title,
+    this.seller,
+    this.sellerFoto,
+    this.sellerBio,
+    this.content,
+    this.idSeller,
+    this.status,
+    this.price,
+    this.rating,
+    this.terjual,
+    this.image,
+    this.createdAt,
+  });
+
+  String id;
+  String title;
+  String seller;
+  String sellerFoto;
+  String sellerBio;
+  String content;
+  String idSeller;
+  int status;
+  String price;
+  int rating;
+  String terjual;
+  String image;
+  DateTime createdAt;
+
+  factory Result.fromJson(Map<String, dynamic> json) => Result(
+    id: json["id"],
+    title: json["title"],
+    seller: json["seller"],
+    sellerFoto: json["seller_foto"],
+    sellerBio: json["seller_bio"],
+    content: json["content"],
+    idSeller: json["id_seller"],
+    status: json["status"],
+    price: json["price"],
+    rating: json["rating"],
+    terjual: json["terjual"],
+    image: json["image"],
+    createdAt: DateTime.parse(json["created_at"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "title": title,
+    "seller": seller,
+    "seller_foto": sellerFoto,
+    "seller_bio": sellerBio,
+    "content": content,
+    "id_seller": idSeller,
+    "status": status,
+    "price": price,
+    "rating": rating,
+    "terjual": terjual,
+    "image": image,
+    "created_at": createdAt.toIso8601String(),
+  };
+}

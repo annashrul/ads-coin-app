@@ -120,9 +120,9 @@ class _HomeComponentState extends State<HomeComponent> {
                   itemBuilder: (BuildContext context, int index){
                     return product.isLoadingBestSeller?LoadingProduct():ProductWidget1(
                       marginWidth: index==0?0:1,
-                      heroTag: "produkTerlaris"+index.toString(),
+                      heroTag: "produkTerlaris"+product.productBestSellerModel.result[index].id,
                       isFavorite: index==0?true:false,
-                      id:"produkTerlaris"+index.toString(),
+                      id:product.productBestSellerModel.result[index].id,
                       title: product.productBestSellerModel.result[index].title,
                       price: product.productBestSellerModel.result[index].price,
                       productSale:"${product.productBestSellerModel.result[index].terjual} terjual" ,
@@ -153,9 +153,9 @@ class _HomeComponentState extends State<HomeComponent> {
                   itemBuilder: (context,index){
                     return product.isLoadingNew?LoadingProduct():ProductWidget1(
                       marginWidth: index==0?0:0,
-                      heroTag: "produkTerbaru"+index.toString(),
+                      heroTag: "produkTerbaru"+product.productNewModel.result[index].id,
                       isFavorite: index==0?true:false,
-                      id:"produkTerbaru"+index.toString(),
+                      id:product.productNewModel.result[index].id,
                       title: product.productNewModel.result[index].title,
                       price: product.productNewModel.result[index].price,
                       productSale:"${product.productNewModel.result[index].terjual} terjual" ,

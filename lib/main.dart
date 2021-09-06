@@ -2,6 +2,7 @@
 
 import 'package:adscoin/config/route_config.dart';
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/database/databaseInit.dart';
 import 'package:adscoin/service/provider/GeneralProvider.dart';
 import 'package:adscoin/service/provider/authProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
@@ -34,7 +35,21 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final DatabaseInit _db = new DatabaseInit();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _db.openDB();
+  }
+
   @override
   Widget build(BuildContext context) {
     TextStyle style = GoogleFonts.poppins();
@@ -77,3 +92,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

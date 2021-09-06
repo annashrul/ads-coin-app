@@ -4,20 +4,15 @@ import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/formatCurrencyHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
-import 'package:adscoin/service/provider/authProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/fieldWidget.dart';
-import 'package:adscoin/view/widget/general/titleSectionWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:adscoin/view/widget/general/uploadWidget.dart';
-import 'package:adscoin/view/widget/product/formDescriptionProductWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/style.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
-import 'package:flutter_summernote/flutter_summernote.dart';
+import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:provider/provider.dart';
 
 class FormProductContributorComponent extends StatefulWidget {
@@ -25,23 +20,49 @@ class FormProductContributorComponent extends StatefulWidget {
   _FormProductContributorComponentState createState() => _FormProductContributorComponentState();
 }
 
-class _FormProductContributorComponentState extends State<FormProductContributorComponent> {
-
+class _FormProductContributorComponentState extends State<FormProductContributorComponent> with WidgetsBindingObserver  {
   TextEditingController nameController = new TextEditingController();
   TextEditingController descriptionController = new TextEditingController();
   TextEditingController categoryController = new TextEditingController();
-  var priceController = MoneyMaskedTextControllerQ(decimalSeparator: '.', thousandSeparator: ',');
   File _image;
-
-
+  MoneyMaskedTextControllerQ priceController = new MoneyMaskedTextControllerQ();
+  String result = "";
+  final HtmlEditorController contentController = HtmlEditorController();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     Provider.of<ProductProvider>(context, listen: false);
+    priceController = MoneyMaskedTextControllerQ(decimalSeparator: '', thousandSeparator: ',');
+    WidgetsBinding.instance.addObserver(this);
 
   }
 
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.inactive:
+        print('######################################### appLifeCycleState inactive');
+        break;
+      case AppLifecycleState.resumed:
+        print('######################################### appLifeCycleState resumed');
+        break;
+      case AppLifecycleState.paused:
+        print('######################################### appLifeCycleState paused');
+        break;
+
+      case AppLifecycleState.detached:
+        // TODO: Handle this case.
+        print('######################################### appLifeCycleState detached');
+        break;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale = ScreenScaler()..init(context);
@@ -50,6 +71,11 @@ class _FormProductContributorComponentState extends State<FormProductContributor
     if(_image!=null&&nameController.text!=""&&descriptionController.text!=""){
       isValid=true;
     }
+   Future.delayed(Duration(seconds: 1)).then((value){
+     contentController.resetHeight();
+   });
+
+
     return Scaffold(
       appBar: FunctionalWidget.appBarHelper(
         context: context,title: product.isAdd?"Tambah produk":"Edit produk"
@@ -134,50 +160,89 @@ class _FormProductContributorComponentState extends State<FormProductContributor
           FieldWidget(
             controller: priceController,
             maxLines: 1,
-            textInputType: TextInputType.text,
+            textInputType: TextInputType.number,
             textInputAction: TextInputAction.done,
+
           ),
           SizedBox(height: scale.getHeight(1)),
           Text("Deskripsi produk",style: Theme.of(context).textTheme.headline2),
+          Container(
+            height: scale.getHeight(50),
+            child: HtmlEditor(
+              controller: contentController,
+              hint: "Your text here...",
+              //value: "text content initial, if any",
+              callbacks: Callbacks(
+                onChange: (String changed) {
+                  print("content changed to $changed");
+                },
+                onEnter: () {
+                  print("enter/return pressed");
+                },
+                onFocus: () {
+                  print("editor focused");
+                },
+                onBlur: () {
+                  print("editor unfocused");
+                },
+                onBlurCodeview: () {
+                  print("codeview either focused or unfocused");
+                },
+                onKeyDown: (keyCode) {
+                  print("$keyCode key downed");
+                },
+                onKeyUp: (keyCode) {
+                  print("$keyCode key released");
+                },
+                onPaste: () {
+                  print("pasted into editor");
+                },
+              ),
+              toolbar: [
+                  Style(),
+                  Font(buttons: [FontButtons.bold, FontButtons.underline, FontButtons.italic])
+              ]
 
-          InTouchWidget(
-              callback: (){
-                FunctionalWidget.modal(
-                    context: context,
-                    child: FormDescriptionProductWidget(
-                      callback: (res){
-                        setState(() {
-                          descriptionController.text=res;
-                        });
-                        // Navigator.of(context).pop();
-                      },
-                      desc:descriptionController.text,
-                    )
-                );
-              },
-              child: Container(
-                height: descriptionController.text==""?scale.getHeight(10):null,
-                padding: scale.getPadding(1, 2),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: ColorConfig.graySecondaryColor
-                ),
-                child: Html(
-                  data: descriptionController.text,
-                  onLinkTap: (String url){
-                    print(url);
-                  },
-                  style: {
-                    "body": Style(
-                        fontSize: FontSize(16.0),
-                        fontWeight: FontWeight.w400,
-                        margin: EdgeInsets.zero,
-                        markerContent: "asasdasdasd"
-                    ),
-                  },
-                ),
-              )
+            ),
           )
+          // InTouchWidget(
+          //     callback: (){
+          //       FunctionalWidget.modal(
+          //           context: context,
+          //           child: FormDescriptionProductWidget(
+          //             callback: (res){
+          //               setState(() {
+          //                 descriptionController.text=res;
+          //               });
+          //               // Navigator.of(context).pop();
+          //             },
+          //             desc:descriptionController.text,
+          //           )
+          //       );
+          //     },
+          //     child: Container(
+          //       height: descriptionController.text==""?scale.getHeight(10):null,
+          //       padding: scale.getPadding(1, 2),
+          //       decoration: BoxDecoration(
+          //           borderRadius: BorderRadius.circular(10),
+          //           color: ColorConfig.graySecondaryColor
+          //       ),
+          //       child: Html(
+          //         data: descriptionController.text,
+          //         onLinkTap: (String url){
+          //           print(url);
+          //         },
+          //         style: {
+          //           "body": Style(
+          //               fontSize: FontSize(16.0),
+          //               fontWeight: FontWeight.w400,
+          //               margin: EdgeInsets.zero,
+          //               markerContent: "asasdasdasd"
+          //           ),
+          //         },
+          //       ),
+          //     )
+          // )
 
 
         ],

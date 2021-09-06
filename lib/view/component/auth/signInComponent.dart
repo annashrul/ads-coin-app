@@ -45,8 +45,8 @@ class _SignInComponentState extends State<SignInComponent> {
                   RedButtonWidget(
                     callback: ()async{
                       final data = {
-                        "nomor":"085711868825",
-                        "type":"sms",
+                        "nomor":phoneNumberController.text,
+                        "type":"otp",
                         "nama":"",
                         "islogin":"1"
                       };

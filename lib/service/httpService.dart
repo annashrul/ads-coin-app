@@ -44,14 +44,15 @@ class HttpService{
       if(response.statusCode==200){
         final jsonResponse =  json.decode(response.body);
         Navigator.pop(context);
-        if(jsonResponse is GeneralModel){
-          GeneralModel result = GeneralModel.fromJson(jsonResponse.toJson());
-          FunctionalWidget.nofitDialog(context: context,msg: result.msg,callback2: ()=>Navigator.of(context).pop());
+        print(jsonResponse);
+        if(jsonResponse["status"]=="failed"){
+          FunctionalWidget.nofitDialog(context: context,msg:jsonResponse["msg"],callback2: ()=>Navigator.of(context).pop());
           return null;
         }
         else{
           return jsonResponse;
         }
+
       }else{
         Navigator.pop(context);
         final jsonResponse = json.decode(response.body);

@@ -22,9 +22,28 @@ class RouteString{
   static const withdraw = "/withdraw";
   static const confirmWithdraw = "/confirmWithdraw";
   static const success = "/success";
+}
+
+
+class TableString{
+  static const String idProduct="idProduct";
+  static const String titleProduct="titleProduct";
+  static const String sellerProduct="sellerProduct";
+  static const String sellerFotoProduct="sellerFotoProduct";
+  static const String sellerBioProduct="sellerBioProduct";
+  static const String contentProduct="contentProduct";
+  static const String previewProduct="previewProduct";
+  static const String idSellerProduct="idSellerProduct";
+  static const String statusProduct="statusProduct";
+  static const String priceProduct="priceProduct";
+  static const String ratingProduct="ratingProduct";
+  static const String terjualProduct="terjualProduct";
+  static const String statusBeliProduct="statusBeliProduct";
+  static const String imageProduct="imageProduct";
 
 
 }
+
 
 class TabIndexString{
   static const int tabHome = 0;

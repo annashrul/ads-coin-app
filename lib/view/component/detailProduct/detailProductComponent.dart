@@ -2,6 +2,8 @@ import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/GeneralProvider.dart';
+import 'package:adscoin/service/provider/productProvider.dart';
+import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
@@ -21,14 +23,26 @@ class DetailProductComponent extends StatefulWidget {
 }
 
 class _DetailProductComponentState extends State<DetailProductComponent> {
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final product = Provider.of<ProductProvider>(context, listen: false);
+    product.getDetailProduct(context: context,id: widget.data["id"]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final general = Provider.of<GeneralProvider>(context);
+    final product = Provider.of<ProductProvider>(context);
+    print("product.detailProductModel ${product.detailProductModel}");
+    bool isLoading=product.isLoadingDetailProduct;
     ScreenScaler scale= ScreenScaler()..init(context);
     String desc="Glory Perfume,parfum keluaran terbaru kami. Bahan 100% original dan penggunaannya tahan lama hingga 16 jam. For women only. Harga Rp 150.000 untuk 100ml. Desain botolnya juga unik dan cocok dibawa kemanapun.";
     String splitDesc = desc.split(". ")[0];
     return Scaffold(
-      // backgroundColor:Color(0xFFE5E5E5),
       appBar: FunctionalWidget.appBarHelper(
         context: context,
         title: "Detail produk",
@@ -36,15 +50,18 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
       body: ListView(
         padding: scale.getPadding(1,2),
         children: [
-          Hero(
+          isLoading?BaseLoading(
+            height: 30,
+            width: 100,
+          ):Hero(
               tag: widget.data["heroTag"] + widget.data["id"],
               child:Container(
                 height: scale.getHeight(30),
-              decoration: BoxDecoration(
+                decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(GeneralString.dummyImgProduct)
+                    image: NetworkImage(product.detailProductModel.result.image)
                   )
               ),
 
@@ -55,8 +72,8 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("Copywriting untuk Website",style: Theme.of(context).textTheme.headline1),
-              InkResponse(
+              isLoading?BaseLoading(height: 1, width: 50):Text(product.detailProductModel.result.title,style: Theme.of(context).textTheme.headline1),
+              isLoading?BaseLoading(height: 1.5, width: 4,radius: 100,):InkResponse(
                 onTap: (){},
                 child: Icon(AntDesign.heart,color: Colors.red,),
               )
@@ -65,7 +82,7 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           SizedBox(height: scale.getHeight(0.5)),
           Row(
             children: [
-              FunctionalWidget.rating(context: context),
+              isLoading?BaseLoading(height: 1, width: 10):FunctionalWidget.rating(context: context,rate: double.parse(product.detailProductModel.result.rating.toString())),
               SizedBox(width: scale.getWidth(1)),
               Container(
                 width: 2,
@@ -73,9 +90,9 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
                 color: Colors.grey,
               ),
               SizedBox(width: scale.getWidth(1)),
-              Text("Terjual",style: Theme.of(context).textTheme.subtitle1),
+              isLoading?BaseLoading(height: 1, width: 10):Text("Terjual",style: Theme.of(context).textTheme.subtitle1),
               SizedBox(width: scale.getWidth(0.5)),
-              Text("100",style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.blackPrimaryColor,fontWeight: FontWeight.w400)),
+              isLoading?BaseLoading(height: 1, width: 10):Text(product.detailProductModel.result.terjual,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.blackPrimaryColor,fontWeight: FontWeight.w400)),
             ],
           ),
           SizedBox(height: scale.getHeight(1)),
@@ -83,14 +100,14 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
             child: InTouchWidget(
                 callback: (){},
                 child: ListTile(
-                  leading: CircleAvatar(
+                  leading: isLoading?BaseLoading(height: 4, width: 10,radius:100):CircleAvatar(
                       backgroundColor: Colors.transparent,
                       radius: 20,
-                      backgroundImage: NetworkImage(GeneralString.dummyImgUser)
+                      backgroundImage: NetworkImage(product.detailProductModel.result.sellerFoto)
                   ),
-                  title: Text("Ari Yahya",style: Theme.of(context).textTheme.headline2,),
-                  subtitle: Text("Digital Marketing di TulisTerus.id",style: Theme.of(context).textTheme.subtitle1,),
-                  trailing:Container(
+                  title: isLoading?BaseLoading(height: 1, width: 10):Text(product.detailProductModel.result.seller,style: Theme.of(context).textTheme.headline2,),
+                  subtitle: isLoading?BaseLoading(height: 1, width: 1):Text(product.detailProductModel.result.sellerBio,style: Theme.of(context).textTheme.subtitle1,maxLines: 1,overflow: TextOverflow.ellipsis,),
+                  trailing:isLoading?BaseLoading(height: 4, width: 10,radius:10):Container(
                     padding: scale.getPadding(0.5, 1.5),
                     decoration: BoxDecoration(
                         color: ColorConfig.yellowColor,
@@ -108,14 +125,15 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           SizedBox(height: scale.getHeight(1)),
           Text("Konten",style: Theme.of(context).textTheme.headline1),
           SizedBox(height: scale.getHeight(1)),
-          Text(splitDesc+".",style: Theme.of(context).textTheme.subtitle1.copyWith(color:ColorConfig.blackSecondaryColor)),
-          Text(desc.substring(splitDesc.length+2,desc.length),style: Theme.of(context).textTheme.subtitle1.copyWith(color: const Color(0xFF0E3311).withOpacity(0.1))),
+          isLoading?BaseLoading(height: 1, width: 100):Text(splitDesc+".",style: Theme.of(context).textTheme.subtitle1.copyWith(color:ColorConfig.blackSecondaryColor)),
+          if( isLoading)SizedBox(height: scale.getHeight(0.5)),
+          isLoading?BaseLoading(height: 1, width: 10):Text(desc.substring(splitDesc.length+2,desc.length),style: Theme.of(context).textTheme.subtitle1.copyWith(color: const Color(0xFF0E3311).withOpacity(0.1))),
         ],
       ),
       bottomNavigationBar: FunctionalWidget.bottomBar(
           context: context,
-          title: "Saldo anda",
-          desc: "Rp 300,000",
+          title:"Saldo anda",
+          desc: isLoading?"loading ......":"Rp 300,000",
           btnText: "Beli sekarang",
           callback: (){
             general.setConditionCheckoutAndDetail(true);
