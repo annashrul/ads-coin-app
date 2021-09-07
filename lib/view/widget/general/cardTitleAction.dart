@@ -11,12 +11,18 @@ class CardTitleAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale = ScreenScaler()..init(context);
+    bool isError=false;
     return Row(
       children: [
         CircleAvatar(
+          onBackgroundImageError: (e, _){
+            print(e);
+            isError=true;
+          },
+          foregroundImage: NetworkImage(GeneralString.dummyImgUser),
           backgroundColor: Colors.transparent,
           radius: 20,
-          backgroundImage: NetworkImage(this.image),
+          backgroundImage: NetworkImage(isError?GeneralString.dummyImgUser:this.image),
         ),
         SizedBox(width: scale.getWidth(2)),
         Text(this.title,style: Theme.of(context).textTheme.headline2),

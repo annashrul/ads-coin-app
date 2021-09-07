@@ -1,4 +1,11 @@
 
+
+class StatusString{
+
+}
+
+
+
 class RouteString{
   static const splash = "/";
   static const onBoarding = "/onBoarding";
@@ -13,6 +20,7 @@ class RouteString{
   static const detailCheckout = "/detailCheckout";
   static const formProfile = "/formProfile";
   static const historyPurchase = "/historyPurchase";
+  static const detailHistoryPurchase = "/detailHistoryPurchase";
   static const productContributor = "/productContributor";
   static const formProductContributor = "/formProductContributor";
   static const indexFintechComponent = "/indexFintechComponent";

@@ -12,9 +12,9 @@ import 'package:provider/provider.dart';
 
 class AuthProvider with ChangeNotifier{
   bool isTrue=false;
+  dynamic dataOtp;
   int timeCounter = 0;
   bool timeUpFlag = false;
-  dynamic dataOtp;
   Timer timer;
   timerUpdate() {
     timer = Timer(const Duration(seconds: 1), () async {

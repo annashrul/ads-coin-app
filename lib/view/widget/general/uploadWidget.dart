@@ -22,6 +22,18 @@ class UploadWidget extends StatefulWidget {
 class _UploadWidgetState extends State<UploadWidget> {
   File _image;
 
+  Future toImage(img)async{
+    if(img!=null){
+      String fileName;
+      String base64Image;
+      fileName = img["file"].path.split("/").last;
+      var type = fileName.split('.');
+      base64Image = 'data:image/' + type[1] + ';base64,' + base64Encode(img["file"].readAsBytesSync());
+      widget.callback({"path":img["path"],"preview":img["file"],"base64":base64Image});
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
@@ -35,14 +47,7 @@ class _UploadWidgetState extends State<UploadWidget> {
             title: widget.title==null?"Pilih foto":widget.title,
             callback: (){
               print("################################################################# $_image");
-              if(_image!=null){
-                String fileName;
-                String base64Image;
-                fileName = _image.path.split("/").last;
-                var type = fileName.split('.');
-                base64Image = 'data:image/' + type[1] + ';base64,' + base64Encode(_image.readAsBytesSync());
-                widget.callback({"preview":_image,"base64":base64Image});
-              }
+              toImage(_image);
             },
             isAction: true,
             titleAction: "Simpan gambar",
@@ -53,7 +58,8 @@ class _UploadWidgetState extends State<UploadWidget> {
           title: "Pilih dari kamera",
           callback: ()async{
             var img = await FunctionalWidget.getImage("kamera");
-            setState(()=>_image = img);
+            setState(()=>_image = img["file"]);
+            toImage(img);
           },
         ),
         CardAction(
@@ -61,7 +67,10 @@ class _UploadWidgetState extends State<UploadWidget> {
           title: "Pilih dari galeri",
           callback: ()async{
             var img = await FunctionalWidget.getImage("galeri");
-            setState(()=>_image = img);
+            setState(()=>_image = img["file"]);
+            toImage(img);
+            // print(img);
+
           },
         ),
         Container(

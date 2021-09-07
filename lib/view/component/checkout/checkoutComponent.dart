@@ -28,7 +28,7 @@ class _CheckoutComponentState extends State<CheckoutComponent> {
     final general = Provider.of<GeneralProvider>(context);
     final product = Provider.of<ProductProvider>(context);
     return Scaffold(
-      appBar: FunctionalWidget.appBarHelper(context: context,title: general.conditionCheckoutAndDetail?"Checkout":"Detail pembelian"),
+      appBar: FunctionalWidget.appBarHelper(context: context,title:"Checkout"),
       body: ListView(
         padding: scale.getPadding(1,2),
         children: [
@@ -99,22 +99,22 @@ class _CheckoutComponentState extends State<CheckoutComponent> {
           )
         ],
       ),
-      bottomNavigationBar: general.conditionCheckoutAndDetail?FunctionalWidget.bottomBar(
+      bottomNavigationBar:FunctionalWidget.bottomBar(
         context: context,
         title: "Saldo anda",
         desc: "Rp 300,000",
         btnText: "Bayar",
         callback: (){
-          Navigator.of(context).pushNamed(RouteString.detailCheckout);
+          // Navigator.of(context).pushNamed(RouteString.detailCheckout);
           //
-          // Navigator.of(context).pushNamed(RouteString.pin,arguments:(code)async{
-          //   product.storeCheckoutProduct(
-          //     context: context,
-          //     pin: code
-          //   );
-          // });
+          Navigator.of(context).pushNamed(RouteString.pin,arguments:(code)async{
+            product.storeCheckoutProduct(
+              context: context,
+              pin: code
+            );
+          });
         }
-      ):SizedBox(),
+      )
     );
   }
 

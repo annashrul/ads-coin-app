@@ -9,6 +9,8 @@ import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
@@ -123,11 +125,21 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           ),
 
           SizedBox(height: scale.getHeight(1)),
-          Text("Konten",style: Theme.of(context).textTheme.headline1),
+          isLoading?BaseLoading(height: 1, width: 100):Text(product.detailProductModel.result.statusBeli==1?"Konten":"Preview",style: Theme.of(context).textTheme.headline1),
           SizedBox(height: scale.getHeight(1)),
-          isLoading?BaseLoading(height: 1, width: 100):Text(splitDesc+".",style: Theme.of(context).textTheme.subtitle1.copyWith(color:ColorConfig.blackSecondaryColor)),
-          if( isLoading)SizedBox(height: scale.getHeight(0.5)),
-          isLoading?BaseLoading(height: 1, width: 10):Text(desc.substring(splitDesc.length+2,desc.length),style: Theme.of(context).textTheme.subtitle1.copyWith(color: const Color(0xFF0E3311).withOpacity(0.1))),
+          isLoading?BaseLoading(height: 1, width: 100):Html(
+            data: product.detailProductModel.result.statusBeli==1?product.detailProductModel.result.content:product.detailProductModel.result.preview,
+            onLinkTap: (String url){
+              print(url);
+            },
+            style: {
+              "body": Style(
+                  fontSize: FontSize(16.0),
+                  fontWeight: FontWeight.w400,
+                  margin: EdgeInsets.zero,
+              ),
+            },
+          ),
         ],
       ),
       bottomNavigationBar: FunctionalWidget.bottomBar(
@@ -136,6 +148,7 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           desc: isLoading?"loading ......":"Rp 300,000",
           btnText: "Beli sekarang",
           callback: (){
+
             general.setConditionCheckoutAndDetail(true);
             Navigator.of(context).pushNamed(RouteString.checkout);
           }

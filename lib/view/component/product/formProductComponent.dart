@@ -1,14 +1,18 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/formatCurrencyHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/authProvider.dart';
+import 'package:adscoin/service/provider/categoryProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/fieldWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:adscoin/view/widget/general/uploadWidget.dart';
+import 'package:adscoin/view/widget/product/modalCategoryWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
@@ -25,19 +29,33 @@ class _FormProductContributorComponentState extends State<FormProductContributor
   TextEditingController descriptionController = new TextEditingController();
   TextEditingController categoryController = new TextEditingController();
   File _image;
+  String base64Image="-";
   MoneyMaskedTextControllerQ priceController = new MoneyMaskedTextControllerQ();
-  String result = "";
+  String result = "-";
   final HtmlEditorController contentController = HtmlEditorController();
+  Future store(img)async{
+    final product = Provider.of<ProductProvider>(context, listen: false);
+    print("IMAGE ANJING $img");
+    product.autoSaveProduct({
+      TableString.contentProduct:"$result",
+      TableString.titleProduct:"${nameController.text}",
+      TableString.imageProduct:"$img",
+    });
+
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<ProductProvider>(context, listen: false);
+    final product = Provider.of<ProductProvider>(context, listen: false);
+    final category = Provider.of<CategoryProvider>(context, listen: false);
+    category.getCategoryProduct(context: context);
     priceController = MoneyMaskedTextControllerQ(decimalSeparator: '', thousandSeparator: ',');
     WidgetsBinding.instance.addObserver(this);
-
+    product.timerUpdate();
+    product.timeUpFlag = false;
+    product.timeCounter=10;
   }
-
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
@@ -45,218 +63,228 @@ class _FormProductContributorComponentState extends State<FormProductContributor
   }
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    int resumed=0;
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.inactive:
-        print('######################################### appLifeCycleState inactive');
+        // store();
         break;
       case AppLifecycleState.resumed:
-        print('######################################### appLifeCycleState resumed');
+        // store();
         break;
       case AppLifecycleState.paused:
-        print('######################################### appLifeCycleState paused');
+        // store();
         break;
-
       case AppLifecycleState.detached:
-        // TODO: Handle this case.
-        print('######################################### appLifeCycleState detached');
+        // store();
         break;
     }
   }
+  void setTime(){
+    final product = Provider.of<ProductProvider>(context, listen: false);
+    if(product.timeUpFlag){
+      product.setTimer(10);
+      product.timeUpFlag=false;
+      product.timerUpdate();
+    }
+  }
+
+
+  saveData(){
+    final product = Provider.of<ProductProvider>(context, listen: false);
+    FunctionalWidget.nofitDialog(
+      context: context,
+      msg: "simpan data sebagai draft ?",
+      callback1: (){
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+      callback2: ()async{
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        await product.storeAutoSaveProduct(context: context);
+
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale = ScreenScaler()..init(context);
-    bool isValid=false;
-    final product = Provider.of<ProductProvider>(context);
-    if(_image!=null&&nameController.text!=""&&descriptionController.text!=""){
+      bool isValid=false;
+      final product = Provider.of<ProductProvider>(context);
+      final category = Provider.of<CategoryProvider>(context);
+      int indexCategory=category.indexSelectedCategoryForm;
+      if(category.categoryProductModel!=null){
+        if(!category.isLoading){
+          categoryController.text = category.categoryProductModel.result[indexCategory].title;
+        }
+      }
+      if(_image!=null&&nameController.text!=""&&descriptionController.text!=""){
       isValid=true;
     }
-   Future.delayed(Duration(seconds: 1)).then((value){
-     contentController.resetHeight();
-   });
-
-
-    return Scaffold(
-      appBar: FunctionalWidget.appBarHelper(
-        context: context,title: product.isAdd?"Tambah produk":"Edit produk"
-      ),
-      body: ListView(
-        padding: scale.getPadding(1,2.5),
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+     Future.delayed(Duration(seconds: 1)).then((value){
+       contentController.resetHeight();
+     });
+    if(product.timeUpFlag){
+      store(base64Image);
+    }
+    return Listener(
+      onPointerDown: (_)=>setTime(), // best place to reset timer imo
+      onPointerMove: (_)=>setTime(),
+      onPointerUp: (_)=>setTime(),
+      child: WillPopScope(
+        onWillPop: () async{
+          return saveData() ?? false;
+        },
+        child: Scaffold(
+          appBar: FunctionalWidget.appBarHelper(context: context,title: product.isAdd?"Tambah produk ${product.timeCounter}":"Edit produk",callback: (){
+            saveData();
+          }),
+          body: ListView(
+            primary: true,
+            padding: scale.getPadding(1,2.5),
             children: [
-              Container(
-                child: InTouchWidget(
-                  radius: 10,
-                  callback: (){
-                    FunctionalWidget.modal(
-                        context: context,
-                        child: UploadWidget(
-                            callback: (res){
-                              print(res);
-                              setState(() {
-                                _image = res["preview"];
-                              });
-                              Navigator.of(context).pop();
-                            }
-                        )
-                    );
-                  },
-                  child: Container(
-                    padding: scale.getPadding(1,2),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: ColorConfig.bluePrimaryColor)
-                    ),
-                    child: Column(
-                      children: [
-                        Image.asset(GeneralString.imgLocalPng+"plus.png",height: scale.getHeight(2),),
-                        SizedBox(height: scale.getHeight(0.5)),
-                        Text("Gambar produk",style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.bluePrimaryColor),)
-                      ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    child: InTouchWidget(
+                      radius: 10,
+                      callback: (){
+                        setTime();
+                        FunctionalWidget.modal(
+                            context: context,
+                            child: UploadWidget(
+                                callback: (res)async{
+                                  setTime();
+                                  store(res["path"]);
+                                  setState((){
+                                    _image = res["preview"];
+                                    base64Image = res["path"];
+                                  });
+                                  Navigator.of(context).pop();
+                                }
+                            )
+                        );
+                      },
+                      child: Container(
+                        padding: scale.getPadding(1,2),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: ColorConfig.bluePrimaryColor)
+                        ),
+                        child: Column(
+                          children: [
+                            Image.asset(GeneralString.imgLocalPng+"plus.png",height: scale.getHeight(2),),
+                            SizedBox(height: scale.getHeight(0.5)),
+                            Text("Gambar produk",style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.bluePrimaryColor),)
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  if(_image!=null)Container(
+                    margin: scale.getMarginLTRB(1,0,0,0),
+                    width: scale.getWidth(30),
+                    height: scale.getHeight(8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: FileImage(_image)
+                        )
+                    ),
+                  ),
+                ],
               ),
-              if(_image!=null)Container(
-                margin: scale.getMarginLTRB(1,0,0,0),
-                width: scale.getWidth(30),
-                height: scale.getHeight(8),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                        image: FileImage(_image)
-                    )
-                ),
+              SizedBox(height: scale.getHeight(1)),
+              Text("Nama",style: Theme.of(context).textTheme.headline2),
+              FieldWidget(
+                controller: nameController,
+                maxLines: 1,
+                textInputType: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                onChange: (e){
+                  setTime();
+                },
               ),
+              SizedBox(height: scale.getHeight(1)),
+              Text("Kategori",style: Theme.of(context).textTheme.headline2),
+              FieldWidget(
+                controller: categoryController,
+                maxLines: 1,
+                textInputType: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                readOnly: true,
+                isIcon: true,
+                onTap: (){
+                  FunctionalWidget.modal(
+                      context: context,
+                      child: ModalCategoryWidget()
+                  );
+                },
+
+              ),
+              SizedBox(height: scale.getHeight(1)),
+              Text("Konten",style: Theme.of(context).textTheme.headline2),
+              Container(
+                height: scale.getHeight(51),
+                child: HtmlEditor(
+                    hint: "tulis konten disini ..",
+                    controller: contentController,
+                    callbacks: Callbacks(
+                      onChange: (String changed)async {
+                        setTime();
+                        setState(() {
+                          result = changed;
+                        });
+                      },
+                      onEnter: () {
+                        setTime();
+                      },
+                      onFocus: () {
+                        setTime();
+                      },
+                      onBlur: () {
+                        setTime();
+                      },
+                      onBlurCodeview: () {
+                        setTime();
+                      },
+                      onKeyDown: (keyCode) {
+                        setTime();
+                      },
+                      onKeyUp: (keyCode) {
+                        setTime();
+                      },
+                      onPaste: () {
+                        setTime();
+                      },
+                    ),
+                    toolbar: [
+                      Style(),
+                      Font(buttons: [FontButtons.bold, FontButtons.underline, FontButtons.italic])
+                    ]
+
+                ),
+              )
             ],
           ),
-          SizedBox(height: scale.getHeight(1)),
-          Text("Nama produk",style: Theme.of(context).textTheme.headline2),
-          FieldWidget(
-            controller: nameController,
-            maxLines: 1,
-            textInputType: TextInputType.text,
-            textInputAction: TextInputAction.done,
-          ),
-
-          SizedBox(height: scale.getHeight(1)),
-          Text("Kategori produk",style: Theme.of(context).textTheme.headline2),
-          FieldWidget(
-            controller: categoryController,
-            maxLines: 1,
-            textInputType: TextInputType.text,
-            textInputAction: TextInputAction.done,
-            readOnly: true,
-            isIcon: true,
-            onTap: (){
-            },
-          ),
-          SizedBox(height: scale.getHeight(1)),
-          Text("Harga produk",style: Theme.of(context).textTheme.headline2),
-          FieldWidget(
-            controller: priceController,
-            maxLines: 1,
-            textInputType: TextInputType.number,
-            textInputAction: TextInputAction.done,
-
-          ),
-          SizedBox(height: scale.getHeight(1)),
-          Text("Deskripsi produk",style: Theme.of(context).textTheme.headline2),
-          Container(
-            height: scale.getHeight(50),
-            child: HtmlEditor(
-              controller: contentController,
-              hint: "Your text here...",
-              //value: "text content initial, if any",
-              callbacks: Callbacks(
-                onChange: (String changed) {
-                  print("content changed to $changed");
-                },
-                onEnter: () {
-                  print("enter/return pressed");
-                },
-                onFocus: () {
-                  print("editor focused");
-                },
-                onBlur: () {
-                  print("editor unfocused");
-                },
-                onBlurCodeview: () {
-                  print("codeview either focused or unfocused");
-                },
-                onKeyDown: (keyCode) {
-                  print("$keyCode key downed");
-                },
-                onKeyUp: (keyCode) {
-                  print("$keyCode key released");
-                },
-                onPaste: () {
-                  print("pasted into editor");
-                },
-              ),
-              toolbar: [
-                  Style(),
-                  Font(buttons: [FontButtons.bold, FontButtons.underline, FontButtons.italic])
-              ]
-
+          bottomNavigationBar: Container(
+            padding: scale.getPadding(1,2.5),
+            child:BackroundButtonWidget(
+              backgroundColor: isValid?ColorConfig.redColor:ColorConfig.graySecondaryColor,
+              color: isValid?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,
+              title: "Simpan",
+              callback: (){},
             ),
-          )
-          // InTouchWidget(
-          //     callback: (){
-          //       FunctionalWidget.modal(
-          //           context: context,
-          //           child: FormDescriptionProductWidget(
-          //             callback: (res){
-          //               setState(() {
-          //                 descriptionController.text=res;
-          //               });
-          //               // Navigator.of(context).pop();
-          //             },
-          //             desc:descriptionController.text,
-          //           )
-          //       );
-          //     },
-          //     child: Container(
-          //       height: descriptionController.text==""?scale.getHeight(10):null,
-          //       padding: scale.getPadding(1, 2),
-          //       decoration: BoxDecoration(
-          //           borderRadius: BorderRadius.circular(10),
-          //           color: ColorConfig.graySecondaryColor
-          //       ),
-          //       child: Html(
-          //         data: descriptionController.text,
-          //         onLinkTap: (String url){
-          //           print(url);
-          //         },
-          //         style: {
-          //           "body": Style(
-          //               fontSize: FontSize(16.0),
-          //               fontWeight: FontWeight.w400,
-          //               margin: EdgeInsets.zero,
-          //               markerContent: "asasdasdasd"
-          //           ),
-          //         },
-          //       ),
-          //     )
-          // )
-
-
-        ],
-      ),
-      bottomNavigationBar: Container(
-        padding: scale.getPadding(1,2.5),
-        child:BackroundButtonWidget(
-          backgroundColor: isValid?ColorConfig.redColor:ColorConfig.graySecondaryColor,
-          color: isValid?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,
-          title: "Simpan",
-          callback: (){},
+          ),
         ),
       ),
     );
   }
+
 }
 

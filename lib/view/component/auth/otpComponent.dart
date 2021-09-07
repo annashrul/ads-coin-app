@@ -106,7 +106,6 @@ class _OtpComponentState extends State<OtpComponent> {
                 "islogin":auth.dataOtp["islogin"],
               };
               auth.sendOtp(context: context,data: sendData,isRedirect: false);
-
             }
           },
           child: Row(

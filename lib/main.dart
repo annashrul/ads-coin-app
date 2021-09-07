@@ -5,6 +5,8 @@ import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/database/databaseInit.dart';
 import 'package:adscoin/service/provider/GeneralProvider.dart';
 import 'package:adscoin/service/provider/authProvider.dart';
+import 'package:adscoin/service/provider/categoryProvider.dart';
+import 'package:adscoin/service/provider/historyProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/service/provider/profileProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
@@ -21,6 +23,8 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
   ChangeNotifierProvider<ProfileProvider>(create: (_) => ProfileProvider()),
   ChangeNotifierProvider<ProductProvider>(create: (_) => ProductProvider()),
+  ChangeNotifierProvider<HistoryProvider>(create: (_) => HistoryProvider()),
+  ChangeNotifierProvider<CategoryProvider>(create: (_) => CategoryProvider()),
 ];
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

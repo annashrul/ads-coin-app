@@ -13,6 +13,7 @@ import 'package:adscoin/view/component/fintech/topUp/detailTopUpComponent.dart';
 import 'package:adscoin/view/component/fintech/topUp/topUpComponent.dart';
 import 'package:adscoin/view/component/fintech/withdraw/confirmWithdrawComponent.dart';
 import 'package:adscoin/view/component/fintech/withdraw/withdrawComponent.dart';
+import 'package:adscoin/view/component/history/detailHistoryPurchaseComponent.dart';
 import 'package:adscoin/view/component/history/historyPurchaseComponent.dart';
 import 'package:adscoin/view/component/home/homeComponent.dart';
 import 'package:adscoin/view/component/mainComponent.dart';
@@ -53,6 +54,8 @@ class RouteGenerator{
         return CupertinoPageRoute(builder: (_) => FormProfileComponent());
       case '${RouteString.historyPurchase}':
         return CupertinoPageRoute(builder: (_) => HistoryPurchaseComponent());
+      case '${RouteString.detailHistoryPurchase}':
+        return CupertinoPageRoute(builder: (_) => DetailHistoryPurchaseComponent(id: args));
       case '${RouteString.productContributor}':
         return CupertinoPageRoute(builder: (_) => ProductContributorComponent());
       case '${RouteString.formProductContributor}':

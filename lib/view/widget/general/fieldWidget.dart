@@ -15,6 +15,7 @@ class FieldWidget extends StatelessWidget {
   bool readOnly;
   bool isIcon;
   Function onTap;
+  Function(String e) onChange;
   FieldWidget({
     @required this.controller,
     this.textInputType,
@@ -25,6 +26,7 @@ class FieldWidget extends StatelessWidget {
     this.readOnly=false,
     this.isIcon=false,
     this.onTap,
+    this.onChange,
   });
   @override
   Widget build(BuildContext context) {
@@ -60,6 +62,9 @@ class FieldWidget extends StatelessWidget {
             onTap();
             print("onTap");
           }
+        },
+        onChanged: (e){
+          onChange(e);
         },
       ),
     );

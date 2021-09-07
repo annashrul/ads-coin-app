@@ -1,4 +1,5 @@
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:adscoin/config/color_config.dart';
@@ -202,7 +203,7 @@ class FunctionalWidget{
   static spaceText({BuildContext context,String title, String desc,Widget child}){
     ScreenScaler scale= ScreenScaler()..init(context);
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
@@ -228,7 +229,6 @@ class FunctionalWidget{
     );
   }
 
-
   static Future getImage(param) async {
     ImageSource imageSource;
     if(param == 'kamera'){
@@ -240,7 +240,11 @@ class FunctionalWidget{
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: imageSource);
     print(pickedFile.path);
-    return File(pickedFile.path);
+    // return File(pickedFile.path);
+    return {
+      "file" : File(pickedFile.path),
+      "path" : pickedFile.path
+    };
   }
   static toast({BuildContext context,msg}) {
     final scaffold = ScaffoldMessenger.of(context);
@@ -250,9 +254,15 @@ class FunctionalWidget{
       ),
     );
   }
-
-
   static toCoin(double coin){
     return "$coin coin";
   }
+  static btoa(val){
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    return stringToBase64.encode(val);
+  }
+
+
+
+
 }

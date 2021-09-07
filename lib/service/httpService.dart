@@ -32,10 +32,10 @@ class HttpService{
     }
   }
 
-  Future post({String url,dynamic data,BuildContext context}) async {
+  Future post({String url,dynamic data,BuildContext context,bool isLoading=true}) async {
     final res = isNotError(context: context,callback: (){});
     if(res){
-      FunctionalWidget.loadingDialog(context);
+      if(isLoading)FunctionalWidget.loadingDialog(context);
       final userStorage = Provider.of<UserProvider>(context, listen: false);
       await userStorage.getUser();
       ApiString.head["Authorization"] = "Bearer ${userStorage.token}";
@@ -43,22 +43,21 @@ class HttpService{
       print("=================== POST DATA $url ${response.statusCode} ============================");
       if(response.statusCode==200){
         final jsonResponse =  json.decode(response.body);
-        Navigator.pop(context);
+        if(isLoading)Navigator.pop(context);
         print(jsonResponse);
         if(jsonResponse["status"]=="failed"){
-          FunctionalWidget.nofitDialog(context: context,msg:jsonResponse["msg"],callback2: ()=>Navigator.of(context).pop());
+          if(isLoading)FunctionalWidget.nofitDialog(context: context,msg:jsonResponse["msg"],callback2: ()=>Navigator.of(context).pop());
           return null;
         }
         else{
           return jsonResponse;
         }
-
       }else{
-        Navigator.pop(context);
+        if(isLoading)Navigator.pop(context);
         final jsonResponse = json.decode(response.body);
         print("jsonResponse = $jsonResponse");
         GeneralModel result = GeneralModel.fromJson(jsonResponse);
-        FunctionalWidget.nofitDialog(context: context,msg: result.msg,callback2: ()=>Navigator.of(context).pop());
+        if(isLoading)FunctionalWidget.nofitDialog(context: context,msg: result.msg,callback2: ()=>Navigator.of(context).pop());
         return null;
       }
     }
