@@ -6,27 +6,74 @@ import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/database/databaseInit.dart';
 import 'package:adscoin/database/table.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/model/generalModel.dart';
 import 'package:adscoin/model/product/detailProductModel.dart';
 import 'package:adscoin/model/product/productBestSellerModel.dart';
+import 'package:adscoin/model/product/productContributorModel.dart';
 import 'package:adscoin/model/product/productLibraryModel.dart';
 import 'package:adscoin/model/product/productNewModel.dart';
 import 'package:adscoin/service/httpService.dart';
 import 'package:flutter/cupertino.dart';
 
 class ProductProvider with ChangeNotifier{
-  bool isAdd = true,isLoadingNew=true,isLoadingBestSeller=true,isLoadingLibrary=true,isLoadMoreLibrary=false,isLoadingDetailProduct=true;
+  bool isNoDataProductContributor=false;
+  bool isAdd =true,isLoadingNew=true,isLoadingBestSeller=true,isLoadingLibrary=true,isLoadMoreLibrary=false,isLoadingDetailProduct=true;
+  bool isLoadingProductContributor=true,isLoadMoreProductContributor=false;
   ProductNewModel productNewModel;
   ProductBestSellerModel productBestSellerModel;
   ProductLibraryModel productLibraryModel;
+  ProductContributorModel productContributorModel;
   DetailProductModel detailProductModel;
   int perPageLibrary=10;
+  int perPageProductContributor=10;
   ScrollController controllerLibrary;
+  ScrollController controllerProductContributor;
   DatabaseInit db = new DatabaseInit();
+  int statusProduct=0;
+  int filterStatusProduct=0;
+  String anyProductContributor="";
 
+  setAnyProductContributor(BuildContext context,input){
+    anyProductContributor=input;
+    isLoadingProductContributor=true;
+    getProductContributor(context: context);
+    notifyListeners();
+  }
 
+  dynamic dataEditProductContributor;
+  setStatusProduct(input){
+    statusProduct=input;
+    notifyListeners();
+  }
+  setFilterStatusProductContributor({BuildContext context,input}){
+    filterStatusProduct=input;
+    getProductContributor(context: context);
+    notifyListeners();
+  }
   setIsAdd(input){
     isAdd=input;
     notifyListeners();
+  }
+  setDataEditProductContributor(input){
+    dataEditProductContributor = input;
+    notifyListeners();
+  }
+  Future getProductContributor({BuildContext context})async{
+    if(productContributorModel==null) isLoadingProductContributor=true;
+    String url = "product/list/crud?page=1&perpage=$perPageProductContributor&status=$filterStatusProduct";
+    if(anyProductContributor!="") url+="&q=$anyProductContributor";
+    print("GET DATA CONTRIBUTOR $url");
+    final res = await HttpService().get(url: url,context: context);
+    isLoadingProductContributor=false;
+    isLoadMoreProductContributor=false;
+    if(res["result"].length>0){
+      ProductContributorModel result = ProductContributorModel.fromJson(res);
+      productContributorModel = result;
+      notifyListeners();
+    }else{
+      productContributorModel=null;
+      notifyListeners();
+    }
   }
   Future getBestSeller({BuildContext context})async{
     if(productBestSellerModel==null) isLoadingBestSeller=true;
@@ -36,9 +83,11 @@ class ProductProvider with ChangeNotifier{
     isLoadingBestSeller=false;
     notifyListeners();
   }
-  Future getNew({BuildContext context})async{
+  Future getNew({BuildContext context,String where=""})async{
     if(productNewModel==null) isLoadingNew=true;
-    final res = await HttpService().get(url: "product?page=1",context: context);
+    String url  =  "product?page=1";
+    if(where!="") url+="&$where";
+    final res = await HttpService().get(url: url,context: context);
     ProductNewModel result = ProductNewModel.fromJson(res);
     productNewModel = result;
     isLoadingNew=false;
@@ -60,7 +109,6 @@ class ProductProvider with ChangeNotifier{
     isLoadingDetailProduct=false;
     notifyListeners();
   }
-
   Future storeCheckoutProduct({BuildContext context,String pin})async{
     dynamic data={
       "member_pin":pin.toString(),
@@ -85,9 +133,9 @@ class ProductProvider with ChangeNotifier{
     }
     // if()
   }
-
-  Future storeAutoSaveProduct({BuildContext context})async{
+  Future storeAutoSaveProduct({BuildContext context,loading=false})async{
     final get = await db.getData(ProductTable.TABLE_NAME);
+    print("####################### GET DATA IN LOCAL DB $get");
     if(get.length>0){
       File image;
       String fileName;
@@ -101,64 +149,101 @@ class ProductProvider with ChangeNotifier{
       }
       final data= {
         "title":get[0][TableString.titleProduct]==null?"-":get[0][TableString.titleProduct],
-        "content":get[0][TableString.contentProduct]==null?"-":get[0][TableString.contentProduct],
+        "content":get[0][TableString.contentProduct],
         "preview":get[0][TableString.previewProduct]==null?"-":get[0][TableString.previewProduct],
         "id_category":get[0][TableString.idProduct]==null?"-":get[0][TableString.idProduct],
-        "status":"0",
-        "image":get[0][TableString.imageProduct]==null?"-":base64Image,
-
+        "status":"${get[0][TableString.statusProduct]}",
+        "image":base64Image,
       };
-      final res = await HttpService().post(url: "product",data: data,context: context,isLoading: false);
+      print("DATA INSER TO SERVER $data");
+      dynamic res;
+      if(isAdd){
+        res = await HttpService().post(url: "product",data: data,context: context,isLoading: loading);
+      }else{
+        res = await HttpService().put(url: "product/${dataEditProductContributor["id"]}",data: data,context: context,isLoading: loading);
+      }
       if(res!=null){
         await db.delete(ProductTable.TABLE_NAME);
+        if(loading){
+          FunctionalWidget.nofitDialog(context: context,msg:"Data berhasil disimpan",callback2: ()=>Navigator.of(context).pushNamed(RouteString.productContributor));
+        }
         print("SAVE PRODUCT TO SERVER $data");
       }
     }
   }
-
   Future autoSaveProduct(Map<String, Object> data)async{
-    print("###################### autoSaveProduct = $data");
     final get = await db.getData(ProductTable.TABLE_NAME);
-    // File image = File(get[0][TableString.imageProduct]);
-    // String fileName;
-    // String base64Image;
-    // fileName = image.path.split("/").last;
-    // var type = fileName.split('.');
-    // base64Image = 'data:image/' + type[1] + ';base64,' + base64Encode(image.readAsBytesSync());
-    // print("TO BASE 64 = $base64Image");
     if(get.length>0){
-      final res= await db.update(ProductTable.TABLE_NAME,get[0]["id"],data);
-      print("###################### UPDATE = $res");
-      final gets = await db.getData(ProductTable.TABLE_NAME);
-      print("###################### GET DATA = $gets");
+      await db.update(ProductTable.TABLE_NAME,get[0]["id"],data);
     }
     else{
-      final res = await db.insert(ProductTable.TABLE_NAME, data);
-      print("###################### INSERT = $res");
+      await db.insert(ProductTable.TABLE_NAME, data);
     }
-    // print("###################### GET DATA = $get");
   }
+  Future updateToDraft({BuildContext context})async{
+    FunctionalWidget.nofitDialog(
+        context: context,
+        msg: "Anda yakin akan mengubah status produk ini ?",
+        callback1: ()=>Navigator.of(context).pop(),
+        callback2: ()async{
+          Navigator.of(context).pop();
+          await HttpService().put(url: "product/${dataEditProductContributor["id"]}",data: {"status":"0"},context: context);
+          Navigator.of(context).pop();
+          getProductContributor(context: context);
+          FunctionalWidget.toast(context: context,msg: "produk berhasil disimpan ke draft");
+          notifyListeners();
+          // print("RESPONSE $res");
+        }
+    );
 
+  }
+  Future deleteProductContributor({BuildContext context, String id})async{
+    FunctionalWidget.nofitDialog(
+        context: context,
+        msg: "Anda yakin akan menghapus data ini ?",
+        callback1: ()=>Navigator.of(context).pop(),
+        callback2: ()async{
+          Navigator.of(context).pop();
+          final res = await HttpService().delete(url: "product/$id",context: context);
+          Navigator.of(context).pop();
+          getProductContributor(context: context);
+          FunctionalWidget.toast(context: context,msg: "data berhasil dihapus");
+          notifyListeners();
+          // print("RESPONSE $res");
+        }
+    );
 
-  Future loadMoreLibrary(BuildContext context)async{
-    if(perPageLibrary<productLibraryModel.meta.total){
-      addListener(()=>isLoadMoreLibrary=true);
-      perPageLibrary+=10;
-      await getLibrary(context: context);
-      isLoadMoreLibrary=false;
-      notifyListeners();
-    }else{
-      addListener(()=>isLoadMoreLibrary=false);
-      notifyListeners();
-    }
   }
-  void scrollListener({BuildContext context}) {
-    if (!isLoadingLibrary) {
-      if (controllerLibrary.position.pixels == controllerLibrary.position.maxScrollExtent) {
-        loadMoreLibrary(context);
-      }
+  loadMoreContributor(BuildContext context){
+    if(perPageProductContributor<productContributorModel.meta.total){
+      isLoadMoreProductContributor=true;
+      perPageProductContributor+=10;
+      getProductContributor(context: context);
     }
+    else{
+      isLoadingProductContributor=false;
+    }
+    notifyListeners();
   }
+  // Future loadMoreLibrary(BuildContext context)async{
+  //   if(perPageLibrary<productLibraryModel.meta.total){
+  //     addListener(()=>isLoadMoreLibrary=true);
+  //     perPageLibrary+=10;
+  //     await getLibrary(context: context);
+  //     isLoadMoreLibrary=false;
+  //     notifyListeners();
+  //   }else{
+  //     addListener(()=>isLoadMoreLibrary=false);
+  //     notifyListeners();
+  //   }
+  // }
+  // void scrollListener({BuildContext context}) {
+  //   if (!isLoadingLibrary) {
+  //     if (controllerLibrary.position.pixels == controllerLibrary.position.maxScrollExtent) {
+  //       loadMoreLibrary(context);
+  //     }
+  //   }
+  // }
 
   int timeCounter = 0;
   bool timeUpFlag = false;
@@ -178,7 +263,6 @@ class ProductProvider with ChangeNotifier{
       }
     });
   }
-
   void setTimer(input){
     timeCounter=input;
     // timerUpdate();

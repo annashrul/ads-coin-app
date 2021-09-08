@@ -16,10 +16,12 @@ class _SplashComponentState extends State<SplashComponent> {
   Future checkingRoute()async{
     await Future.delayed(Duration(seconds: 1));
     final userStorage = Provider.of<UserProvider>(context, listen: false);
+    await userStorage.getDataUser();
+    print("userStorage.isLogin ${userStorage.isLogin}");
     if(userStorage.isLogin==null || userStorage.isLogin==StatusRoleString.baruInstall){
       Navigator.of(context).pushNamed(RouteString.onBoarding);
     }
-    else  if(userStorage.isLogin==StatusRoleString.keluarAplikasi){
+    else if(userStorage.isLogin==StatusRoleString.keluarAplikasi){
       Navigator.of(context).pushNamed(RouteString.signIn);
     }
     else{
@@ -32,11 +34,9 @@ class _SplashComponentState extends State<SplashComponent> {
   @override
   void initState() {
     super.initState();
-    final auth = Provider.of<UserProvider>(context, listen: false);
-    auth.getUser();
+
     assetImage = AssetImage("${GeneralString.imgLocal}ic_launcher.png");
     checkingRoute();
-
   }
 
   @override

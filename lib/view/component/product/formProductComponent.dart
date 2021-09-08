@@ -13,6 +13,7 @@ import 'package:adscoin/view/widget/general/fieldWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:adscoin/view/widget/general/uploadWidget.dart';
 import 'package:adscoin/view/widget/product/modalCategoryWidget.dart';
+import 'package:adscoin/view/widget/product/modalStatusFormProductWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
@@ -28,6 +29,8 @@ class _FormProductContributorComponentState extends State<FormProductContributor
   TextEditingController nameController = new TextEditingController();
   TextEditingController descriptionController = new TextEditingController();
   TextEditingController categoryController = new TextEditingController();
+  TextEditingController previewController = new TextEditingController();
+  TextEditingController statusController = new TextEditingController();
   File _image;
   String base64Image="-";
   MoneyMaskedTextControllerQ priceController = new MoneyMaskedTextControllerQ();
@@ -36,13 +39,48 @@ class _FormProductContributorComponentState extends State<FormProductContributor
   Future store(img)async{
     final product = Provider.of<ProductProvider>(context, listen: false);
     print("IMAGE ANJING $img");
+    print("CONTENT ANJING $result");
     product.autoSaveProduct({
       TableString.contentProduct:"$result",
       TableString.titleProduct:"${nameController.text}",
       TableString.imageProduct:"$img",
+      TableString.previewProduct:"${previewController.text}",
+      TableString.statusProduct:"${product.statusProduct}",
     });
-
   }
+  void setTime(){
+    final product = Provider.of<ProductProvider>(context, listen: false);
+    if(product.timeUpFlag){
+      product.setTimer(10);
+      product.timeUpFlag=false;
+      product.timerUpdate();
+    }
+  }
+  saveData(){
+    final product = Provider.of<ProductProvider>(context, listen: false);
+    FunctionalWidget.nofitDialog(
+      context: context,
+      msg: "simpan data sebagai draft ?",
+      callback1: (){
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+      callback2: ()async{
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        await product.storeAutoSaveProduct(context: context);
+      },
+    );
+  }
+  checkForm(){
+    if(nameController.text!=""||result!="-"||previewController.text!=""){
+      print("nameController.text ${nameController.text}");
+      print("konten $result");
+      return true;
+    }
+    return false;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -55,6 +93,17 @@ class _FormProductContributorComponentState extends State<FormProductContributor
     product.timerUpdate();
     product.timeUpFlag = false;
     product.timeCounter=10;
+
+    if(!product.isAdd){
+      print("data edit ${product.dataEditProductContributor}");
+      final dataEdit = product.dataEditProductContributor;
+      nameController.text=dataEdit["title"];
+      previewController.text=dataEdit["preview"];
+      Future.delayed(Duration(seconds: 2)).then((value){
+        contentController.setText(dataEdit["content"]);
+      });
+
+    }
   }
   @override
   void dispose() {
@@ -77,69 +126,45 @@ class _FormProductContributorComponentState extends State<FormProductContributor
         break;
       case AppLifecycleState.detached:
         // store();
+
         break;
     }
   }
-  void setTime(){
-    final product = Provider.of<ProductProvider>(context, listen: false);
-    if(product.timeUpFlag){
-      product.setTimer(10);
-      product.timeUpFlag=false;
-      product.timerUpdate();
-    }
-  }
 
-
-  saveData(){
-    final product = Provider.of<ProductProvider>(context, listen: false);
-    FunctionalWidget.nofitDialog(
-      context: context,
-      msg: "simpan data sebagai draft ?",
-      callback1: (){
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
-      },
-      callback2: ()async{
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
-        await product.storeAutoSaveProduct(context: context);
-
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale = ScreenScaler()..init(context);
-      bool isValid=false;
-      final product = Provider.of<ProductProvider>(context);
-      final category = Provider.of<CategoryProvider>(context);
-      int indexCategory=category.indexSelectedCategoryForm;
-      if(category.categoryProductModel!=null){
+    final product = Provider.of<ProductProvider>(context);
+    final category = Provider.of<CategoryProvider>(context);
+    final check = checkForm();
+    int indexCategory=category.indexSelectedCategoryForm;
+    int statusProduct=product.statusProduct;
+    Future.delayed(Duration(seconds: 2)).then((value)=>contentController.resetHeight());
+    if(category.categoryProductModel!=null){
         if(!category.isLoading){
           categoryController.text = category.categoryProductModel.result[indexCategory].title;
         }
       }
-      if(_image!=null&&nameController.text!=""&&descriptionController.text!=""){
-      isValid=true;
-    }
-     Future.delayed(Duration(seconds: 1)).then((value){
-       contentController.resetHeight();
-     });
     if(product.timeUpFlag){
-      store(base64Image);
+      if(check)store(base64Image);
     }
+    if(statusProduct==0)statusController.text="Draft";
+    else statusController.text="Selesai";
+
+
     return Listener(
       onPointerDown: (_)=>setTime(), // best place to reset timer imo
       onPointerMove: (_)=>setTime(),
       onPointerUp: (_)=>setTime(),
       child: WillPopScope(
         onWillPop: () async{
-          return saveData() ?? false;
+          return check?saveData():true ?? false;
         },
         child: Scaffold(
-          appBar: FunctionalWidget.appBarHelper(context: context,title: product.isAdd?"Tambah produk ${product.timeCounter}":"Edit produk",callback: (){
-            saveData();
+          appBar: FunctionalWidget.appBarHelper(context: context,title: product.isAdd?"Tambah produk ${product.timeCounter}":"Edit produk ${product.timeCounter}",callback: (){
+            if(check) saveData();
+            else Navigator.of(context).pop();
           }),
           body: ListView(
             primary: true,
@@ -185,7 +210,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                       ),
                     ),
                   ),
-                  if(_image!=null)Container(
+                  if(base64Image!="-")Container(
                     margin: scale.getMarginLTRB(1,0,0,0),
                     width: scale.getWidth(30),
                     height: scale.getHeight(8),
@@ -194,6 +219,18 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                         image: DecorationImage(
                             fit: BoxFit.cover,
                             image: FileImage(_image)
+                        )
+                    ),
+                  ),
+                  if(!product.isAdd)Container(
+                    margin: scale.getMarginLTRB(1,0,0,0),
+                    width: scale.getWidth(30),
+                    height: scale.getHeight(8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(product.dataEditProductContributor["image"])
                         )
                     ),
                   ),
@@ -228,6 +265,33 @@ class _FormProductContributorComponentState extends State<FormProductContributor
 
               ),
               SizedBox(height: scale.getHeight(1)),
+              Text("Status",style: Theme.of(context).textTheme.headline2),
+              FieldWidget(
+                controller: statusController,
+                maxLines: 1,
+                textInputType: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                readOnly: true,
+                isIcon: true,
+                onTap: (){
+                  FunctionalWidget.modal(
+                      context: context,
+                      child: ModalStatusFormProductWidget()
+                  );
+                },
+              ),
+              SizedBox(height: scale.getHeight(1)),
+              Text("Ringkasan",style: Theme.of(context).textTheme.headline2),
+              FieldWidget(
+                controller: previewController,
+                maxLines: 5,
+                textInputType: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                onChange: (e){
+                  setTime();
+                },
+              ),
+              SizedBox(height: scale.getHeight(1)),
               Text("Konten",style: Theme.of(context).textTheme.headline2),
               Container(
                 height: scale.getHeight(51),
@@ -236,7 +300,6 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                     controller: contentController,
                     callbacks: Callbacks(
                       onChange: (String changed)async {
-                        setTime();
                         setState(() {
                           result = changed;
                         });
@@ -275,10 +338,18 @@ class _FormProductContributorComponentState extends State<FormProductContributor
           bottomNavigationBar: Container(
             padding: scale.getPadding(1,2.5),
             child:BackroundButtonWidget(
-              backgroundColor: isValid?ColorConfig.redColor:ColorConfig.graySecondaryColor,
-              color: isValid?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,
+              backgroundColor: check?ColorConfig.redColor:ColorConfig.graySecondaryColor,
+              color: check?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,
               title: "Simpan",
-              callback: (){},
+              callback: (){
+                product.timeUpFlag = true;
+                product.timer.cancel();
+                 store(base64Image).then((value){
+                   Future.delayed(Duration(seconds: 1)).then((value){
+                     product.storeAutoSaveProduct(context: context,loading: true);
+                   });
+                 });
+              },
             ),
           ),
         ),

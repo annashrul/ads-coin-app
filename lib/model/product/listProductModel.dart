@@ -1,15 +1,15 @@
 // To parse this JSON data, do
 //
-//     final productNewModel = productNewModelFromJson(jsonString);
+//     final listProductModel = listProductModelFromJson(jsonString);
 
 import 'dart:convert';
 
-ProductNewModel productNewModelFromJson(String str) => ProductNewModel.fromJson(json.decode(str));
+ListProductModel listProductModelFromJson(String str) => ListProductModel.fromJson(json.decode(str));
 
-String productNewModelToJson(ProductNewModel data) => json.encode(data.toJson());
+String listProductModelToJson(ListProductModel data) => json.encode(data.toJson());
 
-class ProductNewModel {
-  ProductNewModel({
+class ListProductModel {
+  ListProductModel({
     this.result,
     this.meta,
     this.total,
@@ -23,7 +23,7 @@ class ProductNewModel {
   String msg;
   String status;
 
-  factory ProductNewModel.fromJson(Map<String, dynamic> json) => ProductNewModel(
+  factory ListProductModel.fromJson(Map<String, dynamic> json) => ListProductModel(
     result: List<Result>.from(json["result"].map((x) => Result.fromJson(x))),
     meta: Meta.fromJson(json["meta"]),
     total: List<dynamic>.from(json["total"].map((x) => x)),
@@ -88,6 +88,9 @@ class Result {
     this.sellerFoto,
     this.sellerBio,
     this.content,
+    this.preview,
+    this.idCategory,
+    this.category,
     this.idSeller,
     this.status,
     this.price,
@@ -105,6 +108,9 @@ class Result {
   String sellerFoto;
   String sellerBio;
   String content;
+  String preview;
+  String idCategory;
+  String category;
   String idSeller;
   int status;
   String price;
@@ -122,6 +128,9 @@ class Result {
     sellerFoto: json["seller_foto"],
     sellerBio: json["seller_bio"],
     content: json["content"],
+    preview: json["preview"],
+    idCategory: json["id_category"],
+    category: json["category"],
     idSeller: json["id_seller"],
     status: json["status"],
     price: json["price"],
@@ -140,6 +149,9 @@ class Result {
     "seller_foto": sellerFoto,
     "seller_bio": sellerBio,
     "content": content,
+    "preview": preview,
+    "id_category": idCategory,
+    "category": category,
     "id_seller": idSeller,
     "status": status,
     "price": price,
@@ -149,6 +161,5 @@ class Result {
     "image": image,
     "created_at": createdAt.toIso8601String(),
     "isFavorite": isFavorite,
-
   };
 }

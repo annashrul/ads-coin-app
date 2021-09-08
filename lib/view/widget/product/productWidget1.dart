@@ -1,12 +1,15 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/favoriteProvider.dart';
+import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class ProductWidget1 extends StatelessWidget {
@@ -55,10 +58,15 @@ class ProductWidget1 extends StatelessWidget {
             "image":image,
             "heroTag":heroTag,
             "id":id
+          }).then((value){
+            final product = Provider.of<ProductProvider>(context, listen: false);
+            final favorite  = Provider.of<FavoriteProvider>(context, listen: false);
+            product.getNew(context: context);
+            product.getBestSeller(context: context);
+            favorite.get();
           });
         },
         child: Column(
-
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Stack(

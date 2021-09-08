@@ -2,6 +2,7 @@ import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 
@@ -32,33 +33,94 @@ class BaseLoading extends StatelessWidget {
 }
 
 
+class LoadingProductHorizontal extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    ScreenScaler scale = ScreenScaler()..init(context);
+    return ListView.builder(
+      padding: EdgeInsets.all(0.0),
+      physics: ClampingScrollPhysics(),
+      shrinkWrap: true,
+      scrollDirection: Axis.horizontal,
+      itemCount:10,
+      itemBuilder: (context,index){
+        return Container(
+          margin: scale.getMarginLTRB(0,0,1,0),
+          width: scale.getWidth(35),
+
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              BaseLoading(width:42,height:13),
+              SizedBox(height: scale.getHeight(0.5)),
+              BaseLoading(width:42,height:1),
+              SizedBox(height: scale.getHeight(0.5)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  BaseLoading(width:20,height:1),
+                  BaseLoading(width:10,height:1),
+                ],
+              ),
+            ],
+          ),
+        );
+
+      },
+    );
+  }
+}
+
+
+
 class LoadingProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale = ScreenScaler()..init(context);
     return Container(
-      margin: scale.getMarginLTRB(0,0,1,0),
-      width: scale.getWidth(35),
+      padding: scale.getPadding(0.5,2.5),
+      child:new StaggeredGridView.countBuilder(
+        padding: EdgeInsets.all(0.0),
+        primary: false,
+        shrinkWrap: true,
+        crossAxisCount: 4,
+        itemCount: 10,
+        staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+        mainAxisSpacing: 10.0,
+        crossAxisSpacing: 10.0,
+        physics: ClampingScrollPhysics(),
+        itemBuilder: (context,index){
+          return Container(
+            width: scale.getWidth(35),
+            padding: scale.getPadding(0,0),
+            margin: scale.getMargin(0,0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              color: Theme.of(context).primaryColor.withOpacity(0.9),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                BaseLoading(width:42,height:13),
+                SizedBox(height: scale.getHeight(0.5)),
+                BaseLoading(width:42,height:1),
+                SizedBox(height: scale.getHeight(0.5)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    BaseLoading(width:20,height:1),
+                    BaseLoading(width:10,height:1),
+                  ],
+                ),
 
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          BaseLoading(width:42,height:13),
-          SizedBox(height: scale.getHeight(0.5)),
-          BaseLoading(width:42,height:1),
-          SizedBox(height: scale.getHeight(0.5)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              BaseLoading(width:20,height:1),
-              BaseLoading(width:10,height:1),
-            ],
-          ),
-        ],
+              ],
+            ),
+          );
+        },
       ),
     );
-
   }
 }
 
@@ -123,25 +185,78 @@ class LoadingHistoryPurchase extends StatelessWidget {
                       ],
                     )
                 )
-
-
-                // Container(
-                //   width: scale.getWidth(40),
-                //   alignment: Alignment.topCenter,
-                //   margin: scale.getMarginLTRB(0,0,2,1),
-                //   child: BackroundButtonWidget(
-                //     callback: (){
-                //       Navigator.of(context).pushNamed(RouteString.detailProduct,arguments: "");
-                //     },
-                //     backgroundColor: ColorConfig.redColor,
-                //     title: "Lihat produk",
-                //   ),
-                // )
               ],
             )
         );
       },
       separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(1));},
+    );
+  }
+}
+
+class LoadingProductContributor extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    ScreenScaler scale = ScreenScaler()..init(context);
+    return ListView.separated(
+        itemBuilder: (context,index){
+          return FunctionalWidget.wrapContent(
+              child: Padding(
+                padding: scale.getPadding(0.5,2),
+                child: Row(
+                  children: [
+                    BaseLoading(height:7,width:14,radius: 10),
+                    SizedBox(width: scale.getWidth(2)),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        BaseLoading(height:1,width:30),
+                        SizedBox(height: scale.getHeight(0.5)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text("terjual",style: Theme.of(context).textTheme.subtitle1),
+                                SizedBox(width: scale.getWidth(1)),
+                                Text(":",style: Theme.of(context).textTheme.subtitle1),
+                                SizedBox(width: scale.getWidth(1)),
+                                BaseLoading(height:1,width:10),
+                              ],
+                            ),
+                            SizedBox(width: scale.getWidth(1)),
+                            Row(
+                              children: [
+                                Text("Pengerjaan",style: Theme.of(context).textTheme.subtitle1),
+                                SizedBox(width: scale.getWidth(1)),
+                                Text(":",style: Theme.of(context).textTheme.subtitle1),
+                                SizedBox(width: scale.getWidth(1)),
+                                BaseLoading(height:1,width:10),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: scale.getHeight(0.5)),
+                        Container(
+                          width: scale.getWidth(60),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              BaseLoading(height:1,width:20),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              )
+          );
+        },
+        separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(1));},
+        itemCount: 10
     );
   }
 }

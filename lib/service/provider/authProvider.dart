@@ -3,6 +3,8 @@
 import 'dart:async';
 
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/database/databaseInit.dart';
+import 'package:adscoin/database/table.dart';
 import 'package:adscoin/model/auth/signInModel.dart';
 import 'package:adscoin/service/httpService.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
@@ -16,6 +18,7 @@ class AuthProvider with ChangeNotifier{
   int timeCounter = 0;
   bool timeUpFlag = false;
   Timer timer;
+  DatabaseInit db = new DatabaseInit();
   timerUpdate() {
     timer = Timer(const Duration(seconds: 1), () async {
       timeCounter--;
@@ -68,19 +71,39 @@ class AuthProvider with ChangeNotifier{
             isTrue=false;
             SignInModel result = SignInModel.fromJson(resLogin);
             final dataUser = result.result;
-            final userStorage = Provider.of<UserProvider>(context, listen: false);
-            userStorage.setStorage({
+            final getUserLocal = await db.getData(UserTable.TABLE_NAME);
+            final storeDataUser =  {
               SessionString.sessIsLogin:StatusRoleString.masukAplikasi,
-              SessionString.sessId:dataUser.id,
-              SessionString.sessToken:dataUser.token,
-              SessionString.sessHavePin:dataUser.havePin,
-              SessionString.sessPhoto:dataUser.foto,
-              SessionString.sessName:dataUser.fullname,
-              SessionString.sessMobileNo:dataUser.mobileNo,
-              SessionString.sessReferral:dataUser.referral,
-              SessionString.sessStatus:dataUser.status,
-              SessionString.sessType:dataUser.type,
-            });
+              SessionString.sessId:dataUser.id.toString(),
+              SessionString.sessToken:dataUser.token.toString(),
+              SessionString.sessHavePin:dataUser.havePin.toString(),
+              SessionString.sessPhoto:dataUser.foto.toString(),
+              SessionString.sessName:dataUser.fullname.toString(),
+              SessionString.sessMobileNo:dataUser.mobileNo.toString(),
+              SessionString.sessReferral:dataUser.referral.toString(),
+              SessionString.sessStatus:dataUser.status.toString(),
+              SessionString.sessType:dataUser.type.toString(),
+            };
+            if(getUserLocal.length>0){
+              await db.delete(UserTable.TABLE_NAME);
+              await db.insert(UserTable.TABLE_NAME,storeDataUser);
+            }else{
+              await db.insert(UserTable.TABLE_NAME,storeDataUser);
+            }
+            final userStorage = Provider.of<UserProvider>(context, listen: false);
+            await userStorage.getDataUser();
+            // userStorage.setStorage({
+            //   SessionString.sessIsLogin:StatusRoleString.masukAplikasi,
+            //   SessionString.sessId:dataUser.id,
+            //   SessionString.sessToken:dataUser.token,
+            //   SessionString.sessHavePin:dataUser.havePin,
+            //   SessionString.sessPhoto:dataUser.foto,
+            //   SessionString.sessName:dataUser.fullname,
+            //   SessionString.sessMobileNo:dataUser.mobileNo,
+            //   SessionString.sessReferral:dataUser.referral,
+            //   SessionString.sessStatus:dataUser.status,
+            //   SessionString.sessType:dataUser.type,
+            // });
             Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
           }
           notifyListeners();

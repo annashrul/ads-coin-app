@@ -67,7 +67,7 @@ class StatusRoleString{
 
 class SessionString{
   static const String sessIsLogin = "isLogin";
-  static const String sessId = "id";
+  static const String sessId = "idUser";
   static const String sessToken = "token";
   static const String sessHavePin = "havePin";
   static const String sessPhoto = "foto";

@@ -13,7 +13,6 @@ class ImageRoundedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Image.network(
       img,
       height: height,

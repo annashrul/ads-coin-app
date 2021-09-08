@@ -12,7 +12,9 @@
    }
    DatabaseInit._singleton();
    final tables = [
-     ProductTable.CREATE_TABLE
+     ProductTable.CREATE_TABLE,
+     UserTable.CREATE_TABLE,
+     FavoriteTable.CREATE_TABLE
    ];
    Future<Database> openDB() async {
      final dbPath = await sqlite.getDatabasesPath();
@@ -62,6 +64,22 @@
        print("error $err");
      });
    }
+   Future<List> getDetail(String tableName,String column,String id) async {
+     final db = await openDB();
+     var result = await db.rawQuery('SELECT * FROM $tableName WHERE $column=?',[id]);
+     return result.toList();
+   }
+   Future<bool> deleteById(table,int id) async{
+     try{
+       final db = await openDB();
+       await db.rawDelete('DELETE FROM $table WHERE id=?', [id]);
+       return true;
+     }
+     catch(_){
+       return false;
+     }
+   }
+
 
 
 

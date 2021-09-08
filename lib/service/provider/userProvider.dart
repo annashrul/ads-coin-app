@@ -1,12 +1,15 @@
 
 
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/database/databaseInit.dart';
+import 'package:adscoin/database/table.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider with ChangeNotifier{
+  int id;
   dynamic isLogin="0";
-  dynamic id="";
+  dynamic idUser="";
   dynamic token="";
   dynamic havePin="";
   dynamic photo="";
@@ -15,39 +18,23 @@ class UserProvider with ChangeNotifier{
   dynamic referral="";
   dynamic status="";
   dynamic type="";
-  Future setStorage(data)async{
-    print(data);
-    SharedPreferences myPrefs = await SharedPreferences.getInstance();
-    myPrefs.setString(SessionString.sessIsLogin, data[SessionString.sessIsLogin]);
-    myPrefs.setString(SessionString.sessId, data[SessionString.sessId]);
-    myPrefs.setString(SessionString.sessToken, data[SessionString.sessToken]);
-    myPrefs.setBool(SessionString.sessHavePin, data[SessionString.sessHavePin]);
-    myPrefs.setString(SessionString.sessPhoto, data[SessionString.sessPhoto]);
-    myPrefs.setString(SessionString.sessName, data[SessionString.sessName]);
-    myPrefs.setString(SessionString.sessMobileNo, data[SessionString.sessMobileNo]);
-    myPrefs.setString(SessionString.sessReferral, data[SessionString.sessReferral]);
-    myPrefs.setInt(SessionString.sessStatus, data[SessionString.sessStatus]);
-    myPrefs.setString(SessionString.sessType, data[SessionString.sessType]);
+  DatabaseInit db = new DatabaseInit();
+  Future getDataUser()async{
+    final getUser = await db.getData(UserTable.TABLE_NAME);
+    if(getUser.length>0){
+      id = getUser[0]["id"];
+      isLogin = getUser[0][SessionString.sessIsLogin];
+      idUser =getUser[0][SessionString.sessId];
+      token =getUser[0][SessionString.sessToken];
+      havePin =getUser[0][SessionString.sessHavePin];
+      photo =getUser[0][SessionString.sessPhoto];
+      name =getUser[0][SessionString.sessName];
+      mobileNo =getUser[0][SessionString.sessMobileNo];
+      referral =getUser[0][SessionString.sessReferral];
+      status =getUser[0][SessionString.sessStatus];
+      type =getUser[0][SessionString.sessType];
+    }
     notifyListeners();
   }
-
-
-  Future getUser()async{
-    SharedPreferences myPrefs = await SharedPreferences.getInstance();
-    isLogin = myPrefs.getString(SessionString.sessIsLogin);
-    id = myPrefs.getString(SessionString.sessId);
-    token =  myPrefs.getString(SessionString.sessToken);
-    havePin = myPrefs.getBool(SessionString.sessHavePin);
-    photo = myPrefs.getString(SessionString.sessPhoto);
-    name =  myPrefs.getString(SessionString.sessName);
-    mobileNo = myPrefs.getString(SessionString.sessMobileNo);
-    referral = myPrefs.getString(SessionString.sessReferral);
-    status = myPrefs.getInt(SessionString.sessStatus);
-    type = myPrefs.getString(SessionString.sessType);
-    notifyListeners();
-  }
-
-
-
 
 }

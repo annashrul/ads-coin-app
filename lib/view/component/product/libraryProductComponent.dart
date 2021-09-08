@@ -81,7 +81,7 @@ class _LibraryProductComponentState extends State<LibraryProductComponent> {
   Widget buildContent(BuildContext context){
     ScreenScaler scale= ScreenScaler()..init(context);
     final product = Provider.of<ProductProvider>(context);
-    return new StaggeredGridView.countBuilder(
+    return product.isLoadingLibrary?LoadingProduct():new StaggeredGridView.countBuilder(
       padding:scale.getPadding(1,2.5),
       primary: false,
       shrinkWrap: true,
@@ -91,7 +91,7 @@ class _LibraryProductComponentState extends State<LibraryProductComponent> {
       mainAxisSpacing: 10.0,
       crossAxisSpacing: 10.0,
       itemBuilder: (context,index){
-        return product.isLoadingLibrary?LoadingProduct():ProductWidget1(
+        return ProductWidget1(
           marginWidth: index==0?0:0,
           heroTag: "mainProduk"+index.toString(),
           isFavorite: index==0?true:false,

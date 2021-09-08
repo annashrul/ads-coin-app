@@ -6,7 +6,9 @@ import 'package:adscoin/database/databaseInit.dart';
 import 'package:adscoin/service/provider/GeneralProvider.dart';
 import 'package:adscoin/service/provider/authProvider.dart';
 import 'package:adscoin/service/provider/categoryProvider.dart';
+import 'package:adscoin/service/provider/favoriteProvider.dart';
 import 'package:adscoin/service/provider/historyProvider.dart';
+import 'package:adscoin/service/provider/listProductProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/service/provider/profileProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
@@ -22,9 +24,11 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
   ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
   ChangeNotifierProvider<ProfileProvider>(create: (_) => ProfileProvider()),
+  ChangeNotifierProvider<ListProductProvider>(create: (_) => ListProductProvider()),
   ChangeNotifierProvider<ProductProvider>(create: (_) => ProductProvider()),
   ChangeNotifierProvider<HistoryProvider>(create: (_) => HistoryProvider()),
   ChangeNotifierProvider<CategoryProvider>(create: (_) => CategoryProvider()),
+  ChangeNotifierProvider<FavoriteProvider>(create: (_) => FavoriteProvider()),
 ];
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,12 +56,13 @@ class _MyAppState extends State<MyApp> {
     // TODO: implement initState
     super.initState();
     _db.openDB();
+    final user = Provider.of<UserProvider>(context, listen: false);
+    user.getDataUser();
   }
 
   @override
   Widget build(BuildContext context) {
     TextStyle style = GoogleFonts.poppins();
-
     return MaterialApp(
       title: 'n-shop',
       initialRoute: RouteString.splash,

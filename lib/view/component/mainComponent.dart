@@ -1,5 +1,6 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/product/libraryProductComponent.dart';
 import 'package:adscoin/view/component/product/productComponent.dart';
 import 'package:adscoin/view/component/profile/profileComponent.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:provider/provider.dart';
 import 'home/homeComponent.dart';
 
 // ignore: must_be_immutable
@@ -22,6 +24,9 @@ class _MainComponentState extends State<MainComponent> {
   Widget currentWidget = HomeComponent();
   @override
   initState() {
+    // final userStorage = Provider.of<UserProvider>(context, listen: false);
+    // userStorage.getDataUser();
+
     _selectTab(widget.index);
     super.initState();
   }
@@ -55,7 +60,6 @@ class _MainComponentState extends State<MainComponent> {
   @override
   Widget build(BuildContext context) {
     ScreenScaler scaler= ScreenScaler()..init(context);
-
     return WillPopScope(
         child: Scaffold(
           key: _scaffoldKey,
@@ -116,7 +120,6 @@ class _MainComponentState extends State<MainComponent> {
   }
 
   Future<bool> _onWillPop() async {
-    // return WidgetHelper().showFloatingFlushbar(context, "success", "desc");
     return (
         FunctionalWidget.nofitDialog(
           context: context,
@@ -124,7 +127,6 @@ class _MainComponentState extends State<MainComponent> {
           callback1: ()=>Navigator.of(context).pop(),
           callback2: ()=>SystemNavigator.pop(),
         )
-        // UserRepository().notifAlertQ(context, "info ", "Keluar", "Kamu yakin akan keluar dari aplikasi ?", "Ya", "Batal", ()=>SystemNavigator.pop(), ()=>Navigator.of(context).pop(false))
     ) ?? false;
   }
 }

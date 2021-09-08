@@ -2,6 +2,7 @@ import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/GeneralProvider.dart';
+import 'package:adscoin/service/provider/favoriteProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
@@ -32,18 +33,18 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
     // TODO: implement initState
     super.initState();
     final product = Provider.of<ProductProvider>(context, listen: false);
+    final favorite = Provider.of<FavoriteProvider>(context, listen: false);
     product.getDetailProduct(context: context,id: widget.data["id"]);
+    favorite.getDetail(widget.data["id"]);
   }
 
   @override
   Widget build(BuildContext context) {
     final general = Provider.of<GeneralProvider>(context);
     final product = Provider.of<ProductProvider>(context);
-    print("product.detailProductModel ${product.detailProductModel}");
+    final favorite = Provider.of<FavoriteProvider>(context);
     bool isLoading=product.isLoadingDetailProduct;
     ScreenScaler scale= ScreenScaler()..init(context);
-    String desc="Glory Perfume,parfum keluaran terbaru kami. Bahan 100% original dan penggunaannya tahan lama hingga 16 jam. For women only. Harga Rp 150.000 untuk 100ml. Desain botolnya juga unik dan cocok dibawa kemanapun.";
-    String splitDesc = desc.split(". ")[0];
     return Scaffold(
       appBar: FunctionalWidget.appBarHelper(
         context: context,
@@ -76,8 +77,13 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
             children: [
               isLoading?BaseLoading(height: 1, width: 50):Text(product.detailProductModel.result.title,style: Theme.of(context).textTheme.headline1),
               isLoading?BaseLoading(height: 1.5, width: 4,radius: 100,):InkResponse(
-                onTap: (){},
-                child: Icon(AntDesign.heart,color: Colors.red,),
+                onTap: (){
+                  favorite.store(
+                    context: context,
+                    resData: product.detailProductModel.result.toJson()
+                  );
+                },
+                child: Icon(AntDesign.heart,color: favorite.detail.length>0&&favorite.detail[0]["checked"]=="1"?Colors.red:Colors.black),
               )
             ],
           ),
@@ -144,8 +150,8 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
       ),
       bottomNavigationBar: FunctionalWidget.bottomBar(
           context: context,
-          title:"Saldo anda",
-          desc: isLoading?"loading ......":"Rp 300,000",
+          title:"Harga",
+          desc: isLoading?"loading ......":FunctionalWidget.toCoin(double.parse(product.detailProductModel.result.price)),
           btnText: "Beli sekarang",
           callback: (){
 

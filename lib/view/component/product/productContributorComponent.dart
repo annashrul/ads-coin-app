@@ -3,9 +3,13 @@ import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/GeneralProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
+import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
+import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
+import 'package:adscoin/view/widget/general/noDataWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:adscoin/view/widget/product/optionActionProductWidget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
@@ -18,12 +22,36 @@ class ProductContributorComponent extends StatefulWidget {
 
 class _ProductContributorComponentState extends State<ProductContributorComponent> {
   TextEditingController anyController = TextEditingController();
+  ScrollController controller;
+  void scrollListener() {
+    final product = Provider.of<ProductProvider>(context, listen: false);
+    if (!product.isLoadingProductContributor) {
+      if (controller.position.pixels == controller.position.maxScrollExtent) {
+        product.loadMoreContributor(context);
+
+      }
+    }
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final product = Provider.of<ProductProvider>(context, listen: false);
+    product.getProductContributor(context: context);
+    controller = new ScrollController()..addListener(scrollListener);
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    controller.removeListener(scrollListener);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
     final general = Provider.of<GeneralProvider>(context);
     final product = Provider.of<ProductProvider>(context);
-    print(general.conditionStatusProductContributor);
     return Scaffold(
       appBar: FunctionalWidget.appBarWithFilterHelper(
         context: context,
@@ -67,6 +95,9 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
                 ),
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.search,
+                onSubmitted: (e){
+                  product.setAnyProductContributor(context, e);
+                },
               ),
             ):
             Row(
@@ -75,10 +106,11 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
                   width: scale.getWidth(30),
                   child: BackroundButtonWidget(
                     callback: (){
-                      general.setConditionStatusProductContributor(true);
+                      product.setFilterStatusProductContributor(context: context,input: 1);
+                      // product.getProductContributor(context: context,where: "&status=1");
                     },
-                    backgroundColor: general.conditionStatusProductContributor?ColorConfig.bluePrimaryColor:ColorConfig.graySecondaryColor,
-                    color: general.conditionStatusProductContributor?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,
+                    backgroundColor: product.filterStatusProduct==1?ColorConfig.bluePrimaryColor:ColorConfig.graySecondaryColor,
+                    color: product.filterStatusProduct==1?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,
                     title: "Selesai",
                   ),
                 ),
@@ -87,10 +119,12 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
                   width: scale.getWidth(30),
                   child: BackroundButtonWidget(
                     callback: (){
-                      general.setConditionStatusProductContributor(false);
+                      product.setFilterStatusProductContributor(context: context,input: 0);
+                      // product.getProductContributor(context: context,where: "&status=0");
+
                     },
-                    backgroundColor: !general.conditionStatusProductContributor?ColorConfig.bluePrimaryColor:ColorConfig.graySecondaryColor,
-                    color: !general.conditionStatusProductContributor?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,
+                    backgroundColor: product.filterStatusProduct==0?ColorConfig.bluePrimaryColor:ColorConfig.graySecondaryColor,
+                    color: product.filterStatusProduct==0?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,
                     title: "Draf",
                   ),
                 )
@@ -112,89 +146,105 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
             ),
             SizedBox(height: scale.getHeight(1)),
             Expanded(
-                child: ListView.separated(
-                    itemBuilder: (context,index){
-                      return InTouchWidget(
+                child: product.isLoadingProductContributor?LoadingProductContributor():product.productContributorModel==null?NoDataWidget():ListView.separated(
+                  itemBuilder: (context,index){
+                    final val = product.productContributorModel.result[index];
+                    String heroTag="productContributor" + val.id;
+                    return InTouchWidget(
                         radius: 10,
-                          callback: (){},
-                          child:FunctionalWidget.wrapContent(
-                            child: Padding(
-                              padding: scale.getPadding(0.5,2),
-                              child: Row(
-                                children: [
-                                  Container(
+                        callback: (){
+                          FunctionalWidget.modal(
+                            context: context,
+                            child: OptionActionProductWidget(dataJson: val.toJson()..addAll({"heroTag":heroTag}))
+                          );
+                        },
+                        child:FunctionalWidget.wrapContent(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                            ),
+                            child: Row(
+                              children: [
+                                Hero(
+                                  tag: heroTag,
+                                  child: ImageRoundedWidget(
+                                    img: val.image,
+                                    width:scale.getWidth(16),
                                     height: scale.getHeight(7),
-                                    width: scale.getWidth(14),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: NetworkImage(GeneralString.dummyImgProduct)
-                                        )
-                                    ),
+                                    fit: BoxFit.cover,
                                   ),
-                                  SizedBox(width: scale.getWidth(2)),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text("Copywriting untuk Website",style: Theme.of(context).textTheme.headline2,),
-                                      Row(
+                                ),
+                                SizedBox(width: scale.getWidth(2)),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(val.title,style: Theme.of(context).textTheme.headline2,),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text("terjual",style: Theme.of(context).textTheme.subtitle1),
+                                            SizedBox(width: scale.getWidth(1)),
+                                            Text(":",style: Theme.of(context).textTheme.subtitle1),
+                                            SizedBox(width: scale.getWidth(1)),
+                                            Text(val.terjual,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.blackPrimaryColor)),
+                                          ],
+                                        ),
+                                        SizedBox(width: scale.getWidth(1)),
+                                        Row(
+                                          children: [
+                                            Text("Pengerjaan",style: Theme.of(context).textTheme.subtitle1),
+                                            SizedBox(width: scale.getWidth(1)),
+                                            Text(":",style: Theme.of(context).textTheme.subtitle1),
+                                            SizedBox(width: scale.getWidth(1)),
+                                            Text("2 hari",style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.blackPrimaryColor)),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      width: scale.getWidth(60),
+                                      child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Row(
-                                            children: [
-                                              Text("terjual",style: Theme.of(context).textTheme.subtitle1),
-                                              SizedBox(width: scale.getWidth(1)),
-                                              Text(":",style: Theme.of(context).textTheme.subtitle1),
-                                              SizedBox(width: scale.getWidth(1)),
-                                              Text("2",style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.blackPrimaryColor)),
-                                            ],
-                                          ),
-                                          SizedBox(width: scale.getWidth(1)),
-                                          Row(
-                                            children: [
-                                              Text("Pengerjaan",style: Theme.of(context).textTheme.subtitle1),
-                                              SizedBox(width: scale.getWidth(1)),
-                                              Text(":",style: Theme.of(context).textTheme.subtitle1),
-                                              SizedBox(width: scale.getWidth(1)),
-                                              Text("2 hari",style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.blackPrimaryColor)),
-                                            ],
+                                          Text(FunctionalWidget.toCoin(double.parse(val.price)),style: Theme.of(context).textTheme.headline2),
+                                          InTouchWidget(
+                                            callback: ()async{
+                                              FunctionalWidget.modal(
+                                                context: context,
+                                                child: OptionActionProductWidget(dataJson: val.toJson()..addAll({"heroTag":heroTag}))
+                                              );
+                                            },
+                                            child: Icon(FlutterIcons.ios_more_ion),
+                                            radius: 0,
                                           ),
                                         ],
                                       ),
-                                      Container(
-                                        width: scale.getWidth(60),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text("Rp 50,000",style: Theme.of(context).textTheme.headline2),
-                                            InTouchWidget(
-                                              callback: ()async{
-                                                FunctionalWidget.modal(
-                                                  context: context,
-                                                  child: OptionActionProductWidget()
-                                                );
-                                              },
-                                              child: Icon(FlutterIcons.ios_more_ion),
-                                              radius: 0,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            )
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           )
-                      );
-                    },
-                    separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(1));},
-                    itemCount: 10
+                        )
+                    );
+                  },
+                  separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(1));},
+                  itemCount: product.productContributorModel.result.length,
+                  controller:controller,
                 )
-            )
+            ),
+            product.isLoadMoreProductContributor?Container(
+                alignment: Alignment.center,
+                padding: scale.getPaddingLTRB(0,1,0,0),
+                child:Center(
+                  child: CupertinoActivityIndicator(),
+                )
+            ):SizedBox(),
+
           ],
         ),
       ),

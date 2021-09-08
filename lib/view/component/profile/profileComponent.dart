@@ -1,6 +1,9 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/database/databaseInit.dart';
+import 'package:adscoin/database/table.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/cardAction.dart';
@@ -27,13 +30,15 @@ class _ProfileComponentState extends State<ProfileComponent> {
     // TODO: implement initState
     super.initState();
     final user = Provider.of<UserProvider>(context, listen: false);
-    user.getUser();
+    user.getDataUser();
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
     final user  = Provider.of<UserProvider>(context);
+    final product = Provider.of<ProductProvider>(context);
+
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -124,7 +129,10 @@ class _ProfileComponentState extends State<ProfileComponent> {
                  SizedBox(height: scale.getHeight(1)),
                  TitleSectionWidget(
                    title: "Produk",
-                   callback: ()=>Navigator.of(context).pushNamed(RouteString.formProductContributor),
+                   callback: ()async{
+                     await product.setIsAdd(true);
+                     Navigator.of(context).pushNamed(RouteString.formProductContributor);
+                   },
                    titleAction: "Tambah produk",
                  ),
                  SizedBox(height: scale.getHeight(1)),
@@ -162,9 +170,18 @@ class _ProfileComponentState extends State<ProfileComponent> {
                    borderColor: ColorConfig.redColor,
                    title: "Keluar",
                    callback: ()async{
-                     SharedPreferences myPrefs = await SharedPreferences.getInstance();
-                     myPrefs.setString(SessionString.sessIsLogin, StatusRoleString.keluarAplikasi);
-                     Navigator.of(context).pushNamedAndRemoveUntil(RouteString.signIn, (route) => false);
+                     DatabaseInit db = new DatabaseInit();
+                     final res = await db.update(UserTable.TABLE_NAME, user.id, {
+                       SessionString.sessIsLogin:StatusRoleString.keluarAplikasi
+                     });
+                     if(res){
+                       Navigator.of(context).pushNamedAndRemoveUntil(RouteString.signIn, (route) => false);
+                     }else{
+                       FunctionalWidget.toast(context: context,msg:"gagal keluar aplikasi");
+                     }
+                     // user.isLogin = StatusRoleString.keluarAplikasi;
+                     // SharedPreferences myPrefs = await SharedPreferences.getInstance();
+                     // myPrefs.setString(SessionString.sessIsLogin, StatusRoleString.keluarAplikasi);
                    },
                  ),
                ],

@@ -1,11 +1,13 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
-import 'package:adscoin/helper/functionalWidgetHelper.dart';
-import 'package:adscoin/service/provider/productProvider.dart';
+import 'package:adscoin/service/provider/categoryProvider.dart';
+import 'package:adscoin/service/provider/favoriteProvider.dart';
+import 'package:adscoin/service/provider/listProductProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
-import 'package:adscoin/view/widget/general/appBarWithActionWidget.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
+import 'package:adscoin/view/widget/general/noDataWidget.dart';
 import 'package:adscoin/view/widget/product/productWidget1.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
@@ -21,35 +23,54 @@ class ProductComponent extends StatefulWidget {
 class _ProductComponentState extends State<ProductComponent> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController anyController = new TextEditingController();
-
+  ScrollController controller;
+  void scrollListener() {
+    final product = Provider.of<ListProductProvider>(context, listen: false);
+    if (!product.isLoading) {
+      if (controller.position.pixels == controller.position.maxScrollExtent) {
+        product.loadMoreContributor(context);
+      }
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    final product = Provider.of<ProductProvider>(context, listen: false);
-    product.getNew(context: context);
+    final product = Provider.of<ListProductProvider>(context, listen: false);
+    final category = Provider.of<CategoryProvider>(context, listen: false);
+    category.getCategoryProduct(context: context,isFilter: true);
+    product.get(context: context);
+    controller = new ScrollController()..addListener(scrollListener);
+    final favorite = Provider.of<FavoriteProvider>(context, listen: false);
+    favorite.get();
   }
-
+  @override
+  void dispose() {
+    super.dispose();
+    controller.removeListener(scrollListener);
+  }
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<ListProductProvider>(context);
+    final category = Provider.of<CategoryProvider>(context);
+    int max = category.isLoading?10:category.categoryProductModel.result.length;
     ScreenScaler scale= ScreenScaler()..init(context);
     List<Widget> historyTab = [];
     List<Widget> historyView = [];
-    for(int i=0;i<10;i++){
-      historyView.add(buildContent(context));
+    for(int i=0;i<max;i++){
+      historyView.add(product.isLoading?LoadingProduct():product.listProductModel==null?NoDataWidget(): buildContent(context));
       historyTab.add(
         Tab(
           child: Container(
             padding: scale.getPadding(0,1),
-            // decoration: BoxDecoration(borderRadius: BorderRadius.circular(50),border: Border.all(color:Color(0xFF2D9CDB), width: 1)),
             child: Align(
               alignment: Alignment.center,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ImageRoundedWidget(img: "https://www.pngkey.com/png/full/817-8171322_computer-icons-book-clip-art-black-icon-transparent.png",height: scale.getHeight(1),),
-                  SizedBox(width: scale.getWidth(1)),
-                  Text("Copywriting")
+                  category.isLoading?BaseLoading(height: 1, width: 10):ImageRoundedWidget(img:category.categoryProductModel.result[i].icon,height: scale.getHeight(1),),
+                  if(!category.isLoading)SizedBox(width: scale.getWidth(1)),
+                  if(!category.isLoading)Text(category.categoryProductModel.result[i].title)
                 ],
               ),
             ),
@@ -115,20 +136,26 @@ class _ProductComponentState extends State<ProductComponent> {
               isScrollable: true,
               tabs:historyTab,
               onTap: (e){
-                this.setState(() {});
+                product.filterCategory(context, category.categoryProductModel.result[e].id);
               },
             ),
           ),
-          body: Container(
+          body: product.isLoading?LoadingProduct(): Container(
             padding: scale.getPadding(1,2.5),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Text("Kategori",style: Theme.of(context).textTheme.headline1),
                 Expanded(
-                    child:TabBarView(children:historyView)
-                )
+                  child:TabBarView(children:historyView)
+                ),
+                product.isLoadMore?Container(
+                    alignment: Alignment.center,
+                    padding: scale.getPaddingLTRB(0,1,0,0),
+                    child:Center(
+                      child: CupertinoActivityIndicator(),
+                    )
+                ):SizedBox(),
               ],
             ),
           )
@@ -136,32 +163,42 @@ class _ProductComponentState extends State<ProductComponent> {
     );
   }
 
-
   Widget buildContent(BuildContext context){
-    final product = Provider.of<ProductProvider>(context);
+    final product = Provider.of<ListProductProvider>(context);
+    final favorite = Provider.of<FavoriteProvider>(context);
     return new StaggeredGridView.countBuilder(
       padding: EdgeInsets.all(0.0),
       primary: false,
       shrinkWrap: true,
       crossAxisCount: 4,
-      itemCount:product.isLoadingNew?10:product.productNewModel.result.length,
+      itemCount:product.listProductModel.result.length,
       staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
       mainAxisSpacing: 10.0,
       crossAxisSpacing: 10.0,
+      controller: controller,
       itemBuilder: (context,index){
-        return product.isLoadingNew?LoadingProduct():ProductWidget1(
+        if(favorite.data.length>0){
+          for(int i=0;i<favorite.data.length;i++){
+            if(favorite.data[i][TableString.idProduct] == product.listProductModel.result[index].id){
+              product.listProductModel.result[index].isFavorite = "1";
+              break;
+            }
+            continue;
+          }
+        }
+        return ProductWidget1(
           marginWidth: index==0?0:0,
-          heroTag: "mainProduk"+index.toString(),
-          isFavorite: index==0?true:false,
-          id:"mainProduk"+index.toString(),
-          title:  product.productNewModel.result[index].title,
-          price:  product.productNewModel.result[index].price,
-          productSale:"${ product.productNewModel.result[index].terjual} terjual" ,
-          image:  product.productNewModel.result[index].image,
+          heroTag: "mainProduk"+product.listProductModel.result[index].id,
+          isFavorite:product.listProductModel.result[index].isFavorite=="0"?false:true,
+          id: product.listProductModel.result[index].id,
+          title:  product.listProductModel.result[index].title,
+          price:  product.listProductModel.result[index].price,
+          productSale:"${ product.listProductModel.result[index].terjual} terjual" ,
+          image:  product.listProductModel.result[index].image,
           isContributor: true,
-          nameContributor: product.productNewModel.result[index].seller,
-          imageContributor: product.productNewModel.result[index].sellerFoto,
-          rateContributor: double.parse(product.productNewModel.result[index].rating.toString()),
+          nameContributor: product.listProductModel.result[index].seller,
+          imageContributor: product.listProductModel.result[index].sellerFoto,
+          rateContributor: double.parse(product.listProductModel.result[index].rating.toString()),
         );
       },
     );

@@ -1,5 +1,6 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/service/provider/favoriteProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
@@ -22,8 +23,6 @@ class HomeComponent extends StatefulWidget {
 
 class _HomeComponentState extends State<HomeComponent> {
   TextEditingController anyController = new TextEditingController();
-
-
   @override
   void initState() {
     // TODO: implement initState
@@ -31,11 +30,14 @@ class _HomeComponentState extends State<HomeComponent> {
     final product = Provider.of<ProductProvider>(context, listen: false);
     product.getNew(context: context);
     product.getBestSeller(context: context);
+    final favorite = Provider.of<FavoriteProvider>(context, listen: false);
+    favorite.get();
   }
 
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<ProductProvider>(context);
+    final favorite = Provider.of<FavoriteProvider>(context);
 
     ScreenScaler scale= ScreenScaler()..init(context);
     return Scaffold(
@@ -108,20 +110,29 @@ class _HomeComponentState extends State<HomeComponent> {
                   callback: (){},
                 ),
               ),
-              Container(
+             Container(
                 padding: scale.getPadding(0.5,2.5),
                 height: scale.getHeight(23),
-                child: ListView.builder(
+                child:  product.isLoadingBestSeller?LoadingProductHorizontal():ListView.builder(
                   padding: EdgeInsets.all(0.0),
                   physics: ClampingScrollPhysics(),
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: product.isLoadingBestSeller?15:product.productBestSellerModel.result.length,
+                  itemCount: product.productBestSellerModel.result.length,
                   itemBuilder: (BuildContext context, int index){
-                    return product.isLoadingBestSeller?LoadingProduct():ProductWidget1(
+                    if(favorite.data.length>0){
+                      for(int i=0;i<favorite.data.length;i++){
+                        if(favorite.data[i][TableString.idProduct] == product.productBestSellerModel.result[index].id){
+                          product.productBestSellerModel.result[index].isFavorite = "1";
+                          break;
+                        }
+                        continue;
+                      }
+                    }
+                    return ProductWidget1(
                       marginWidth: index==0?0:1,
                       heroTag: "produkTerlaris"+product.productBestSellerModel.result[index].id,
-                      isFavorite: index==0?true:false,
+                      isFavorite:product.productBestSellerModel.result[index].isFavorite=="0"?false:true,
                       id:product.productBestSellerModel.result[index].id,
                       title: product.productBestSellerModel.result[index].title,
                       price: product.productBestSellerModel.result[index].price,
@@ -139,22 +150,31 @@ class _HomeComponentState extends State<HomeComponent> {
                   callback: (){},
                 ),
               ),
-              Container(
+              product.isLoadingNew?LoadingProduct():Container(
                 padding: scale.getPadding(0.5,2.5),
                 child: new StaggeredGridView.countBuilder(
                   padding: EdgeInsets.all(0.0),
                   primary: false,
                   shrinkWrap: true,
                   crossAxisCount: 4,
-                  itemCount:product.isLoadingNew?15:product.productNewModel.result.length,
+                  itemCount:product.productNewModel.result.length,
                   staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
                   mainAxisSpacing: 10.0,
                   crossAxisSpacing: 10.0,
                   itemBuilder: (context,index){
-                    return product.isLoadingNew?LoadingProduct():ProductWidget1(
+                    if(favorite.data.length>0){
+                      for(int i=0;i<favorite.data.length;i++){
+                        if(favorite.data[i][TableString.idProduct] == product.productNewModel.result[index].id){
+                          product.productNewModel.result[index].isFavorite = "1";
+                          break;
+                        }
+                        continue;
+                      }
+                    }
+                    return ProductWidget1(
                       marginWidth: index==0?0:0,
                       heroTag: "produkTerbaru"+product.productNewModel.result[index].id,
-                      isFavorite: index==0?true:false,
+                      isFavorite:product.productNewModel.result[index].isFavorite=="0"?false:true,
                       id:product.productNewModel.result[index].id,
                       title: product.productNewModel.result[index].title,
                       price: product.productNewModel.result[index].price,
