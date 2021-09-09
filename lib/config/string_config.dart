@@ -29,6 +29,9 @@ class RouteString{
   static const detailTopUp = "/detailTopUp";
   static const withdraw = "/withdraw";
   static const confirmWithdraw = "/confirmWithdraw";
+  static const bankMember = "/bankMember";
+  static const formBankMember = "/formBankMember";
+  static const favorite = "/favorite";
   static const success = "/success";
 }
 
@@ -91,6 +94,7 @@ class SiteString{
 }
 
 class ApiString{
+  static const String onesignalAppId = "ad1a7344-2b2f-40d0-87c8-0f8ec150cb8f";
   static const String url = "http://ptnetindo.com:6703/";
   static const int timeOut = 60;
   static const String xProjectId = "8123268367ea27e094e71e290";

@@ -23,7 +23,6 @@ class _SuccessComponentState extends State<SuccessComponent> {
   Widget build(BuildContext context) {
     ScreenScaler scale = ScreenScaler()..init(context);
     final general = Provider.of<GeneralProvider>(context);
-
     return WillPopScope(
         child: Scaffold(
           body: Padding(

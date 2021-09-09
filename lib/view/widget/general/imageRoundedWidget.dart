@@ -20,7 +20,7 @@ class ImageRoundedWidget extends StatelessWidget {
       fit: fit,
       filterQuality: FilterQuality.high,
       errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
-        return Center(child: Icon(Icons.error));
+        return Icon(Icons.error,size: width,);
       },
       frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
         if (wasSynchronouslyLoaded) {

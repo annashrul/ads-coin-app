@@ -1,24 +1,29 @@
-
-
 import 'package:adscoin/config/route_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/database/databaseInit.dart';
 import 'package:adscoin/service/provider/GeneralProvider.dart';
 import 'package:adscoin/service/provider/authProvider.dart';
+import 'package:adscoin/service/provider/bankMemberProvider.dart';
 import 'package:adscoin/service/provider/categoryProvider.dart';
+import 'package:adscoin/service/provider/channelPaymentProvider.dart';
 import 'package:adscoin/service/provider/favoriteProvider.dart';
+import 'package:adscoin/service/provider/fintechProvider.dart';
 import 'package:adscoin/service/provider/historyProvider.dart';
 import 'package:adscoin/service/provider/listProductProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/service/provider/profileProvider.dart';
+import 'package:adscoin/service/provider/siteProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'config/color_config.dart';
+
+
 List<SingleChildWidget> providers = [
   ChangeNotifierProvider<GeneralProvider>(create: (_) => GeneralProvider()),
   ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
@@ -29,6 +34,10 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<HistoryProvider>(create: (_) => HistoryProvider()),
   ChangeNotifierProvider<CategoryProvider>(create: (_) => CategoryProvider()),
   ChangeNotifierProvider<FavoriteProvider>(create: (_) => FavoriteProvider()),
+  ChangeNotifierProvider<ChannelPaymentProvider>(create: (_) => ChannelPaymentProvider()),
+  ChangeNotifierProvider<FintechProvider>(create: (_) => FintechProvider()),
+  ChangeNotifierProvider<SiteProvider>(create: (_) => SiteProvider()),
+  ChangeNotifierProvider<BankMemberProvider>(create: (_) => BankMemberProvider()),
 ];
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +51,8 @@ void main() {
     ),
   );
 }
+
+
 
 class MyApp extends StatefulWidget {
   @override
@@ -57,6 +68,13 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _db.openDB();
     final user = Provider.of<UserProvider>(context, listen: false);
+    OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.notification);
+    var settings = {
+      OSiOSSettings.autoPrompt: false,
+      OSiOSSettings.promptBeforeOpeningPushUrl: true
+    };
+    OneSignal.shared.init(ApiString.onesignalAppId, iOSSettings: settings);
+
     user.getDataUser();
   }
 
@@ -101,4 +119,6 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
+
 

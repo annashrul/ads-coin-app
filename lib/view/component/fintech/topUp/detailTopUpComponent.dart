@@ -2,12 +2,15 @@ import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/formatCurrencyHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/model/fintech/topUp/detailTopUpModel.dart';
+import 'package:adscoin/service/provider/fintechProvider.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/cardTitleAction.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:provider/provider.dart';
 
 import '../../successComponent.dart';
 
@@ -38,6 +41,8 @@ class _DetailTopUpComponentState extends State<DetailTopUpComponent> with Ticker
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale = ScreenScaler()..init(context);
+    final fintech = Provider.of<FintechProvider>(context);
+
     return Scaffold(
       appBar: FunctionalWidget.appBarHelper(context: context,title: "Informasi pembayaran"),
       body: ListView(

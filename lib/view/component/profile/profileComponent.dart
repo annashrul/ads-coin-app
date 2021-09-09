@@ -38,7 +38,6 @@ class _ProfileComponentState extends State<ProfileComponent> {
     ScreenScaler scale= ScreenScaler()..init(context);
     final user  = Provider.of<UserProvider>(context);
     final product = Provider.of<ProductProvider>(context);
-
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -114,15 +113,22 @@ class _ProfileComponentState extends State<ProfileComponent> {
                            colorIcon: ColorConfig.bluePrimaryColor,
                            callback: (){},
                          ),
-
+                         if(user.type=="Kontributor")divid(),
+                         if(user.type=="Kontributor")CardAction(
+                           img:"Home1" ,
+                           title: "Bank",
+                           colorIcon: ColorConfig.bluePrimaryColor,
+                           callback: (){
+                              Navigator.of(context).pushNamed(RouteString.bankMember);
+                           },
+                         ),
                          divid(),
                          CardAction(
                            img:"Heart" ,
                            title: "Favorite saya",
                            colorIcon: ColorConfig.redColor,
-                           callback: (){},
+                           callback: ()=>Navigator.of(context).pushNamed(RouteString.favorite),
                          ),
-
                        ],
                      )
                  ),
@@ -130,16 +136,18 @@ class _ProfileComponentState extends State<ProfileComponent> {
                  TitleSectionWidget(
                    title: "Produk",
                    callback: ()async{
-                     await product.setIsAdd(true);
-                     Navigator.of(context).pushNamed(RouteString.formProductContributor);
+                     if(user.type=="Kontributor"){
+                       await product.setIsAdd(true);
+                       Navigator.of(context).pushNamed(RouteString.formProductContributor);
+                     }
                    },
-                   titleAction: "Tambah produk",
+                   titleAction: user.type=="Kontributor"?"Tambah produk":"",
                  ),
                  SizedBox(height: scale.getHeight(1)),
                  FunctionalWidget.wrapContent(
                      child:Column(
                        children: [
-                         CardAction(
+                         if(user.type=="Kontributor")CardAction(
                            img:"analytics1" ,
                            title: "Daftar produk",
                            colorIcon: ColorConfig.yellowColor,
@@ -148,15 +156,15 @@ class _ProfileComponentState extends State<ProfileComponent> {
                            },
                          ),
 
-                         divid(),
+                         if(user.type=="Kontributor")divid(),
                          CardAction(
                            img:"Chart" ,
                            title: "Laporan pembelian",
                            colorIcon: ColorConfig.blueSecondaryColor,
                            callback: ()=>Navigator.of(context).pushNamed(RouteString.historyPurchase),
                          ),
-                         divid(),
-                         CardAction(
+                         if(user.type=="Kontributor")divid(),
+                         if(user.type=="Kontributor")CardAction(
                            img:"analytics" ,
                            title: "Laporan penjualan",
                            colorIcon: ColorConfig.purplePrimaryColor,

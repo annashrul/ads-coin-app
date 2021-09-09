@@ -54,7 +54,7 @@ class FieldWidget extends StatelessWidget {
         keyboardType: textInputType,
         textInputAction: textInputAction,
         inputFormatters: <TextInputFormatter>[
-          if(textInputType == TextInputType.number) LengthLimitingTextInputFormatter(13),
+          if(textInputType == TextInputType.number) LengthLimitingTextInputFormatter(15),
           if(textInputType == TextInputType.number) FilteringTextInputFormatter.digitsOnly
         ],
         onTap: (){

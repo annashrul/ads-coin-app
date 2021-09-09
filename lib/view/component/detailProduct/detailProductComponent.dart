@@ -64,7 +64,7 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(product.detailProductModel.result.image)
+                    image: NetworkImage(widget.data["image"])
                   )
               ),
 

@@ -261,3 +261,21 @@ class LoadingProductContributor extends StatelessWidget {
   }
 }
 
+
+
+class LoadingBankMember extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+        itemBuilder: (context,index){
+          return ListTile(
+            leading: BaseLoading(height: 3, width:8,radius: 100),
+            title: BaseLoading(height: 1, width: 20),
+            subtitle: BaseLoading(height: 1,width: 10)
+          );
+        },
+        separatorBuilder: (context,index){return SizedBox();},
+        itemCount:10
+    );
+  }
+}

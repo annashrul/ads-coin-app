@@ -4,6 +4,8 @@ import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/view/component/auth/otpComponent.dart';
 import 'package:adscoin/view/component/auth/pinComponent.dart';
 import 'package:adscoin/view/component/auth/signInComponent.dart';
+import 'package:adscoin/view/component/bankMember/bankMemberComponent.dart';
+import 'package:adscoin/view/component/bankMember/formBankMemberComponent.dart';
 import 'package:adscoin/view/component/checkout/checkoutComponent.dart';
 import 'package:adscoin/view/component/checkout/detailCheckoutComponent.dart';
 import 'package:adscoin/view/component/detailProduct/detailProductComponent.dart';
@@ -18,6 +20,7 @@ import 'package:adscoin/view/component/history/historyPurchaseComponent.dart';
 import 'package:adscoin/view/component/home/homeComponent.dart';
 import 'package:adscoin/view/component/mainComponent.dart';
 import 'package:adscoin/view/component/onBoardingComponent.dart';
+import 'package:adscoin/view/component/product/favoriteComponent.dart';
 import 'package:adscoin/view/component/product/formProductComponent.dart';
 import 'package:adscoin/view/component/product/productContributorComponent.dart';
 import 'package:adscoin/view/component/profile/formProfileComponent.dart';
@@ -72,6 +75,12 @@ class RouteGenerator{
         return CupertinoPageRoute(builder: (_) => WithdrawComponent());
       case '${RouteString.confirmWithdraw}':
         return CupertinoPageRoute(builder: (_) => ConfirmWithdrawComponent());
+      case '${RouteString.bankMember}':
+        return CupertinoPageRoute(builder: (_) => BankMemberComponent());
+      case '${RouteString.formBankMember}':
+        return CupertinoPageRoute(builder: (_) => FormBankMemberComponent());
+      case '${RouteString.favorite}':
+        return CupertinoPageRoute(builder: (_) => FavoriteComponent());
 
       default:
         return _errorRoute(callback: args);

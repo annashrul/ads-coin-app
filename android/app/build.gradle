@@ -36,6 +36,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     compileSdkVersion 30
 
@@ -51,21 +57,39 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         manifestPlaceholders = [
-                onesignal_app_id: '2f7a9ad1-aec2-4abe-ab9b-2354c51580b2',
+                onesignal_app_id: 'ad1a7344-2b2f-40d0-87c8-0f8ec150cb8f',
                 onesignal_google_project_number: 'REMOTE'
         ]
         multiDexEnabled true
     }
-
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true// to shrink your image resource read more at https://developer.android.com/studio/build/shrink-code
             useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+//    buildTypes {
+//        release {
+//            signingConfig signingConfigs.debug
+//            minifyEnabled true
+//            shrinkResources true// to shrink your image resource read more at https://developer.android.com/studio/build/shrink-code
+//            useProguard true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//        }
+//    }
+
 }
 
 flutter {
