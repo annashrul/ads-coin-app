@@ -116,13 +116,15 @@ class ProductWidget1 extends StatelessWidget {
                           backgroundImage: NetworkImage(this.imageContributor)
                       ),
                       SizedBox(width: scale.getWidth(1)),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(this.nameContributor,style: Theme.of(context).textTheme.headline2),
-                          FunctionalWidget.rating(context: context,rate: this.rateContributor)
-                        ],
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(this.nameContributor,style: Theme.of(context).textTheme.headline2,maxLines: 1,overflow:TextOverflow.ellipsis,),
+                            FunctionalWidget.rating(context: context,rate: this.rateContributor)
+                          ],
+                        ),
                       ),
                     ],
                   ),

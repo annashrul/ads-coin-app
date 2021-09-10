@@ -43,9 +43,9 @@ class _ModalCategoryWidgetState extends State<ModalCategoryWidget> {
                   return InTouchWidget(
                       callback: ()async{
                         category.setIndexSelectedCategoryForm(index);
-                        await product.autoSaveProduct({
-                          TableString.idProduct:"${category.categoryProductModel.result[index].id}",
-                        });
+                        // await product.autoSaveProduct({
+                        //   TableString.idProduct:"${category.categoryProductModel.result[index].id}",
+                        // });
                         Navigator.of(context).pop();
                       },
                       child: CardTitleAction(image: category.categoryProductModel.result[index].icon,title: category.categoryProductModel.result[index].title)

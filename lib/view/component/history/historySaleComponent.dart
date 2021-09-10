@@ -1,16 +1,12 @@
-import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
-import 'package:adscoin/model/product/detailProductModel.dart';
-import 'package:adscoin/service/provider/GeneralProvider.dart';
 import 'package:adscoin/service/provider/historyProvider.dart';
-import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
-import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:adscoin/view/widget/general/noDataWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:adscoin/view/widget/history/modalActionHistoryPurchaseWidget.dart';
+import 'package:adscoin/view/widget/history/modalActionHistorySaleWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -19,18 +15,18 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class HistoryPurchaseComponent extends StatefulWidget {
+class HistorySaleComponent extends StatefulWidget {
   @override
-  _HistoryPurchaseComponentState createState() => _HistoryPurchaseComponentState();
+  _HistorySaleComponentState createState() => _HistorySaleComponentState();
 }
 
-class _HistoryPurchaseComponentState extends State<HistoryPurchaseComponent> {
+class _HistorySaleComponentState extends State<HistorySaleComponent> {
   ScrollController controller;
   void scrollListener() {
     final history = Provider.of<HistoryProvider>(context, listen: false);
-    if (!history.isLoadingHistoryPurchase) {
+    if (!history.isLoadingHistorySale) {
       if (controller.position.pixels == controller.position.maxScrollExtent) {
-        history.loadMoreHistoryPurchase(context);
+        history.loadMoreHistorySale(context);
       }
     }
   }
@@ -40,8 +36,9 @@ class _HistoryPurchaseComponentState extends State<HistoryPurchaseComponent> {
     super.initState();
     controller = new ScrollController()..addListener(scrollListener);
     final history = Provider.of<HistoryProvider>(context,listen:false);
-    history.getHistoryPurchase(context: context);
+    history.getHistorySale(context: context);
     initializeDateFormatting();
+
   }
   @override
   void dispose() {
@@ -54,24 +51,24 @@ class _HistoryPurchaseComponentState extends State<HistoryPurchaseComponent> {
     final history = Provider.of<HistoryProvider>(context);
     ScreenScaler scale= ScreenScaler()..init(context);
     return Scaffold(
-      appBar: FunctionalWidget.appBarHelper(context: context,title: "Laporan pembelian"),
+      appBar: FunctionalWidget.appBarHelper(context: context,title: "Laporan penjualan"),
       body: Column(
         children: [
           FunctionalWidget.filterDate(
               context: context,
-              data: {"from":history.fromHistoryPurchase,"to":history.toHistoryPurchase},
+              data: {"from":history.fromHistorySale,"to":history.toHistorySale},
               callback: (from,to){
-                history.setDateFromDateToHistoryPurchase(context: context,input: {"from":from,"to":to});
+                history.setDateFromDateToHistorySale(context: context,input: {"from":from,"to":to});
               }
           ),
           Expanded(
-            child: history.isLoadingHistoryPurchase?LoadingHistoryPurchase():history.historyPurchaseModel==null?NoDataWidget():ListView.separated(
+            child: history.isLoadingHistorySale?LoadingHistoryPurchase():history.historySaleModel==null?NoDataWidget():ListView.separated(
               controller: controller,
               padding: scale.getPadding(0.5,2.5),
-              itemCount: history.historyPurchaseModel.result.length,
+              itemCount: history.historySaleModel.result.length,
               itemBuilder: (context,index){
-                final val = history.historyPurchaseModel.result[index];
-                String tag = "historyPurchaseComponent" + val.idProduct;
+                final val = history.historySaleModel.result[index];
+                String tag = "historySaleComponent" + val.idProduct;
                 return FunctionalWidget.wrapContent(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -96,7 +93,9 @@ class _HistoryPurchaseComponentState extends State<HistoryPurchaseComponent> {
                                 callback: (){
                                   FunctionalWidget.modal(
                                       context: context,
-                                      child: ModalActionHistoryPurchaseWidget(dataJson: val.toJson()..addAll({"tag":tag}))
+                                      child: ModalActionHistorySaleWidget(
+                                          dataJson: val.toJson()..addAll({"tag":tag})
+                                      )
                                   );
                                 },
                                 child: Container(
@@ -183,7 +182,7 @@ class _HistoryPurchaseComponentState extends State<HistoryPurchaseComponent> {
           )
         ],
       ),
-      bottomNavigationBar: history.isLoadMoreHistoryPurchase?Container(
+      bottomNavigationBar: history.isLoadMoreHistorySale?Container(
         padding: scale.getPadding(1,2),
         child: CupertinoActivityIndicator(),
       ):SizedBox(),

@@ -23,29 +23,32 @@ class HistoryMutationWidget extends StatelessWidget {
 
     return InTouchWidget(
         callback: (){},
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: NetworkImage(GeneralString.dummyImgProduct),
-                  radius: 25,
-                ),
-                SizedBox(width: scale.getWidth(1)),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(this.note,style: Theme.of(context).textTheme.headline2,),
-                    Text(this.status,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.yellowColor),),
-                  ],
-                )
-              ],
-            ),
-            Text(nominal,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.blackPrimaryColor),),
-          ],
+        child: Padding(
+          padding: scale.getPadding(1,2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: NetworkImage(GeneralString.dummyImgProduct),
+                    radius: 25,
+                  ),
+                  SizedBox(width: scale.getWidth(1)),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(this.note,style: Theme.of(context).textTheme.headline2,),
+                      Text(this.status,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.yellowColor),),
+                    ],
+                  )
+                ],
+              ),
+              Text(nominal,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.blackPrimaryColor),),
+            ],
+          ),
         )
     );
   }

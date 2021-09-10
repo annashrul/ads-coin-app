@@ -3,6 +3,7 @@ import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/database/databaseInit.dart';
 import 'package:adscoin/database/table.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/historyProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
@@ -30,7 +31,7 @@ class _ProfileComponentState extends State<ProfileComponent> {
     // TODO: implement initState
     super.initState();
     final user = Provider.of<UserProvider>(context, listen: false);
-    user.getDataUser();
+    user.getDetailMember(context: context);
   }
 
   @override
@@ -55,14 +56,14 @@ class _ProfileComponentState extends State<ProfileComponent> {
                   children: [
                     // SizedBox(height: scale.getHeight(1)),
                     InTouchWidget(
-                      callback: ()=>Navigator.of(context).pushNamed(RouteString.formProfile),
+                      callback: ()=>Navigator.of(context).pushNamed(RouteString.formProfile).then((value) => user.getDetailMember(context: context)),
                       child: Stack(
                         alignment: Alignment.bottomRight,
                         children: [
                           CircleAvatar(
                               backgroundColor: Colors.transparent,
                               radius: 30,
-                              backgroundImage: NetworkImage(user.photo)
+                              backgroundImage: NetworkImage(user.detailMemberModel.result.foto)
                           ),
                           Container(
                             padding: scale.getPadding(0.2,1),
@@ -76,9 +77,9 @@ class _ProfileComponentState extends State<ProfileComponent> {
                       )
                     ),
                     SizedBox(height: scale.getHeight(1)),
-                    Text(user.name,style: Theme.of(context).textTheme.headline1.copyWith(color:Colors.white)),
-                    Text(user.mobileNo,style: Theme.of(context).textTheme.subtitle1),
-                    Text(user.type,style: Theme.of(context).textTheme.subtitle2),
+                    Text(user.detailMemberModel.result.fullname,style: Theme.of(context).textTheme.headline1.copyWith(color:Colors.white)),
+                    Text(user.detailMemberModel.result.mobileNo,style: Theme.of(context).textTheme.subtitle1),
+                    Text(user.detailMemberModel.result.type,style: Theme.of(context).textTheme.subtitle2),
                   ],
                 ),
               ),
@@ -113,8 +114,8 @@ class _ProfileComponentState extends State<ProfileComponent> {
                            colorIcon: ColorConfig.bluePrimaryColor,
                            callback: (){},
                          ),
-                         if(user.type=="Kontributor")divid(),
-                         if(user.type=="Kontributor")CardAction(
+                         if(user.type==RoleAccessString.contributor)divid(),
+                         if(user.type==RoleAccessString.contributor)CardAction(
                            img:"Home1" ,
                            title: "Bank",
                            colorIcon: ColorConfig.bluePrimaryColor,
@@ -136,18 +137,18 @@ class _ProfileComponentState extends State<ProfileComponent> {
                  TitleSectionWidget(
                    title: "Produk",
                    callback: ()async{
-                     if(user.type=="Kontributor"){
+                     if(user.type==RoleAccessString.contributor){
                        await product.setIsAdd(true);
                        Navigator.of(context).pushNamed(RouteString.formProductContributor);
                      }
                    },
-                   titleAction: user.type=="Kontributor"?"Tambah produk":"",
+                   titleAction: user.type==RoleAccessString.contributor?"Tambah produk":"",
                  ),
                  SizedBox(height: scale.getHeight(1)),
                  FunctionalWidget.wrapContent(
                      child:Column(
                        children: [
-                         if(user.type=="Kontributor")CardAction(
+                         if(user.type==RoleAccessString.contributor)CardAction(
                            img:"analytics1" ,
                            title: "Daftar produk",
                            colorIcon: ColorConfig.yellowColor,
@@ -156,19 +157,23 @@ class _ProfileComponentState extends State<ProfileComponent> {
                            },
                          ),
 
-                         if(user.type=="Kontributor")divid(),
+                         if(user.type==RoleAccessString.contributor)divid(),
                          CardAction(
                            img:"Chart" ,
                            title: "Laporan pembelian",
                            colorIcon: ColorConfig.blueSecondaryColor,
-                           callback: ()=>Navigator.of(context).pushNamed(RouteString.historyPurchase),
+                           callback: (){
+                             Navigator.of(context).pushNamed(RouteString.historyPurchase);
+                           },
                          ),
-                         if(user.type=="Kontributor")divid(),
-                         if(user.type=="Kontributor")CardAction(
+                         if(user.type==RoleAccessString.contributor)divid(),
+                         if(user.type==RoleAccessString.contributor)CardAction(
                            img:"analytics" ,
                            title: "Laporan penjualan",
                            colorIcon: ColorConfig.purplePrimaryColor,
-                           callback: (){},
+                           callback: (){
+                             Navigator.of(context).pushNamed(RouteString.historySale);
+                           },
                          ),
                        ],
                      )

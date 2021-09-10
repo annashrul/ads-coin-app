@@ -232,6 +232,16 @@ class MoneyFormat{
   static final formatter = new NumberFormat("#,###");
   static final dataNominal=["50000","100000","150000","250000","500000","1500000"];
 
+
+
+  static toFormat(num n){
+    var forFractions = new NumberFormat();
+    var forInts = new NumberFormat();
+    forFractions.minimumFractionDigits = 2;
+    forFractions.maximumFractionDigits = 2;
+    return n == n.truncate() ? forInts.format(n) : forFractions.format(n);
+  }
+
   static toCurrency(x){
     var forInts = new NumberFormat();
     var forFractions = new NumberFormat();

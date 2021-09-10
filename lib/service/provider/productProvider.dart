@@ -13,7 +13,9 @@ import 'package:adscoin/model/product/productContributorModel.dart';
 import 'package:adscoin/model/product/productLibraryModel.dart';
 import 'package:adscoin/model/product/productNewModel.dart';
 import 'package:adscoin/service/httpService.dart';
+import 'package:adscoin/service/provider/categoryProvider.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 class ProductProvider with ChangeNotifier{
   bool isNoDataProductContributor=false;
@@ -62,7 +64,6 @@ class ProductProvider with ChangeNotifier{
     if(productContributorModel==null) isLoadingProductContributor=true;
     String url = "product/list/crud?page=1&perpage=$perPageProductContributor&status=$filterStatusProduct";
     if(anyProductContributor!="") url+="&q=$anyProductContributor";
-    print("GET DATA CONTRIBUTOR $url");
     final res = await HttpService().get(url: url,context: context);
     isLoadingProductContributor=false;
     isLoadMoreProductContributor=false;
@@ -115,7 +116,6 @@ class ProductProvider with ChangeNotifier{
       "id_product":detailProductModel.result.id
     };
     final res = await HttpService().post(url: "transaction/checkout",data: data,context: context);
-    print(res);
     if(res!=null){
       Navigator.of(context).pushNamed(RouteString.detailCheckout);
     }
@@ -133,53 +133,56 @@ class ProductProvider with ChangeNotifier{
     }
     // if()
   }
-  Future storeAutoSaveProduct({BuildContext context,loading=false})async{
+  Future storeAutoSaveProduct({BuildContext context,String status,loading=false})async{
     final get = await db.getData(ProductTable.TABLE_NAME);
-    print("####################### GET DATA IN LOCAL DB $get");
     if(get.length>0){
       File image;
       String fileName;
       String base64Image="-";
-      print(get[0][TableString.imageProduct]);
       if(get[0][TableString.imageProduct]!="-"){
         image=File(get[0][TableString.imageProduct]);
         fileName = image.path.split("/").last;
         var type = fileName.split('.');
         base64Image = 'data:image/' + type[1] + ';base64,' + base64Encode(image.readAsBytesSync());
       }
+      final category = Provider.of<CategoryProvider>(context, listen: false);
       final data= {
         "title":get[0][TableString.titleProduct]==null?"-":get[0][TableString.titleProduct],
         "content":get[0][TableString.contentProduct],
         "preview":get[0][TableString.previewProduct]==null?"-":get[0][TableString.previewProduct],
-        "id_category":get[0][TableString.idProduct]==null?"-":get[0][TableString.idProduct],
-        "status":"${get[0][TableString.statusProduct]}",
+        "id_category":get[0][TableString.idProduct]==null?category.categoryProductModel.result[category.indexSelectedCategoryForm].id:get[0][TableString.idProduct],
+        "status":status,
         "image":base64Image,
       };
-      print("DATA INSER TO SERVER $data");
+      print("################### DATA = $data");
       dynamic res;
       if(isAdd){
         res = await HttpService().post(url: "product",data: data,context: context,isLoading: loading);
       }else{
         res = await HttpService().put(url: "product/${dataEditProductContributor["id"]}",data: data,context: context,isLoading: loading);
       }
+      getProductContributor(context: context);
+      await db.delete(ProductTable.TABLE_NAME);
+
       if(res!=null){
-        await db.delete(ProductTable.TABLE_NAME);
         if(loading){
           FunctionalWidget.nofitDialog(context: context,msg:"Data berhasil disimpan",callback2: ()=>Navigator.of(context).pushNamed(RouteString.productContributor));
         }
-        print("SAVE PRODUCT TO SERVER $data");
       }
     }
   }
-  Future autoSaveProduct(Map<String, Object> data)async{
-    final get = await db.getData(ProductTable.TABLE_NAME);
-    if(get.length>0){
-      await db.update(ProductTable.TABLE_NAME,get[0]["id"],data);
-    }
-    else{
-      await db.insert(ProductTable.TABLE_NAME, data);
-    }
-  }
+  // Future autoSaveProduct(Map<String, Object> data)async{
+  //   final get = await db.getData(ProductTable.TABLE_NAME);
+  //   print("##################### SAVE TO LOCAL DB $data");
+  //   await db.delete(ProductTable.TABLE_NAME);
+  //   if(get.length>0){
+  //     await db.update(ProductTable.TABLE_NAME,get[0]["id"],data);
+  //   }
+  //   else{
+  //     await db.insert(ProductTable.TABLE_NAME, data);
+  //   }
+  //   // notifyListeners();
+  // }
   Future updateToDraft({BuildContext context})async{
     FunctionalWidget.nofitDialog(
         context: context,

@@ -28,7 +28,6 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<GeneralProvider>(create: (_) => GeneralProvider()),
   ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
   ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
-  ChangeNotifierProvider<ProfileProvider>(create: (_) => ProfileProvider()),
   ChangeNotifierProvider<ListProductProvider>(create: (_) => ListProductProvider()),
   ChangeNotifierProvider<ProductProvider>(create: (_) => ProductProvider()),
   ChangeNotifierProvider<HistoryProvider>(create: (_) => HistoryProvider()),
@@ -67,14 +66,13 @@ class _MyAppState extends State<MyApp> {
     // TODO: implement initState
     super.initState();
     _db.openDB();
-    final user = Provider.of<UserProvider>(context, listen: false);
     OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.notification);
     var settings = {
       OSiOSSettings.autoPrompt: false,
       OSiOSSettings.promptBeforeOpeningPushUrl: true
     };
     OneSignal.shared.init(ApiString.onesignalAppId, iOSSettings: settings);
-
+    final user = Provider.of<UserProvider>(context, listen: false);
     user.getDataUser();
   }
 

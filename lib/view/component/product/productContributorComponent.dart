@@ -132,8 +132,8 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
             ),
             SizedBox(height: scale.getHeight(1)),
             InTouchWidget(
-                callback: ()async{
-                  await product.setIsAdd(true);
+                callback: (){
+                  product.setIsAdd(true);
                   Navigator.of(context).pushNamed(RouteString.formProductContributor);
                 },
                 child: Row(
@@ -146,95 +146,100 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
             ),
             SizedBox(height: scale.getHeight(1)),
             Expanded(
-                child: product.isLoadingProductContributor?LoadingProductContributor():product.productContributorModel==null?NoDataWidget():ListView.separated(
-                  itemBuilder: (context,index){
-                    final val = product.productContributorModel.result[index];
-                    String heroTag="productContributor" + val.id;
-                    return InTouchWidget(
-                        radius: 10,
-                        callback: (){
-                          FunctionalWidget.modal(
-                            context: context,
-                            child: OptionActionProductWidget(dataJson: val.toJson()..addAll({"heroTag":heroTag}))
-                          );
-                        },
-                        child:FunctionalWidget.wrapContent(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                            ),
-                            child: Row(
-                              children: [
-                                Hero(
-                                  tag: heroTag,
-                                  child: ImageRoundedWidget(
-                                    img: val.image,
-                                    width:scale.getWidth(16),
-                                    height: scale.getHeight(7),
-                                    fit: BoxFit.cover,
-                                  ),
+                child: RefreshIndicator(
+                  onRefresh: ()=>product.getProductContributor(context: context),
+                  child: product.isLoadingProductContributor?LoadingProductContributor():product.productContributorModel==null?NoDataWidget():ListView.separated(
+                    physics: AlwaysScrollableScrollPhysics(),
+
+                    itemBuilder: (context,index){
+                      final val = product.productContributorModel.result[index];
+                      String heroTag="productContributor" + val.id;
+                      return InTouchWidget(
+                          radius: 10,
+                          callback: (){
+                            FunctionalWidget.modal(
+                                context: context,
+                                child: OptionActionProductWidget(dataJson: val.toJson()..addAll({"heroTag":heroTag}))
+                            );
+                          },
+                          child:FunctionalWidget.wrapContent(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(10)),
                                 ),
-                                SizedBox(width: scale.getWidth(2)),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                child: Row(
                                   children: [
-                                    Text(val.title,style: Theme.of(context).textTheme.headline2,),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text("terjual",style: Theme.of(context).textTheme.subtitle1),
-                                            SizedBox(width: scale.getWidth(1)),
-                                            Text(":",style: Theme.of(context).textTheme.subtitle1),
-                                            SizedBox(width: scale.getWidth(1)),
-                                            Text(val.terjual,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.blackPrimaryColor)),
-                                          ],
-                                        ),
-                                        SizedBox(width: scale.getWidth(1)),
-                                        Row(
-                                          children: [
-                                            Text("Pengerjaan",style: Theme.of(context).textTheme.subtitle1),
-                                            SizedBox(width: scale.getWidth(1)),
-                                            Text(":",style: Theme.of(context).textTheme.subtitle1),
-                                            SizedBox(width: scale.getWidth(1)),
-                                            Text("2 hari",style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.blackPrimaryColor)),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Container(
-                                      width: scale.getWidth(60),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(FunctionalWidget.toCoin(double.parse(val.price)),style: Theme.of(context).textTheme.headline2),
-                                          InTouchWidget(
-                                            callback: ()async{
-                                              FunctionalWidget.modal(
-                                                context: context,
-                                                child: OptionActionProductWidget(dataJson: val.toJson()..addAll({"heroTag":heroTag}))
-                                              );
-                                            },
-                                            child: Icon(FlutterIcons.ios_more_ion),
-                                            radius: 0,
-                                          ),
-                                        ],
+                                    Hero(
+                                      tag: heroTag,
+                                      child: ImageRoundedWidget(
+                                        img: val.image,
+                                        width:scale.getWidth(16),
+                                        height: scale.getHeight(7),
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
+                                    SizedBox(width: scale.getWidth(2)),
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(val.title,style: Theme.of(context).textTheme.headline2,),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text("terjual",style: Theme.of(context).textTheme.subtitle1),
+                                                SizedBox(width: scale.getWidth(1)),
+                                                Text(":",style: Theme.of(context).textTheme.subtitle1),
+                                                SizedBox(width: scale.getWidth(1)),
+                                                Text(val.terjual,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.blackPrimaryColor)),
+                                              ],
+                                            ),
+                                            SizedBox(width: scale.getWidth(1)),
+                                            Row(
+                                              children: [
+                                                Text("Pengerjaan",style: Theme.of(context).textTheme.subtitle1),
+                                                SizedBox(width: scale.getWidth(1)),
+                                                Text(":",style: Theme.of(context).textTheme.subtitle1),
+                                                SizedBox(width: scale.getWidth(1)),
+                                                Text("2 hari",style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.blackPrimaryColor)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          width: scale.getWidth(60),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(FunctionalWidget.toCoin(double.parse(val.price)),style: Theme.of(context).textTheme.headline2),
+                                              InTouchWidget(
+                                                callback: ()async{
+                                                  FunctionalWidget.modal(
+                                                      context: context,
+                                                      child: OptionActionProductWidget(dataJson: val.toJson()..addAll({"heroTag":heroTag}))
+                                                  );
+                                                },
+                                                child: Icon(FlutterIcons.ios_more_ion),
+                                                radius: 0,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )
                                   ],
-                                )
-                              ],
-                            ),
+                                ),
+                              )
                           )
-                        )
-                    );
-                  },
-                  separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(1));},
-                  itemCount: product.productContributorModel.result.length,
-                  controller:controller,
+                      );
+                    },
+                    separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(1));},
+                    itemCount: product.productContributorModel.result.length,
+                    controller:controller,
+                  ),
                 )
             ),
             product.isLoadMoreProductContributor?Container(

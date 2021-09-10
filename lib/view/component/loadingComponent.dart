@@ -279,3 +279,71 @@ class LoadingBankMember extends StatelessWidget {
     );
   }
 }
+
+
+class LoadingDetailHistoryPurchaseOrSale extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    ScreenScaler scale= ScreenScaler()..init(context);
+
+    return ListView(
+      padding: scale.getPadding(1,2),
+      children: [
+        FunctionalWidget.wrapContent(
+            child: Container(
+              padding: scale.getPadding(1,2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Detail pesanan",style: Theme.of(context).textTheme.headline1),
+                  SizedBox(height: scale.getHeight(1)),
+                  Row(
+                    children: [
+                      BaseLoading(height: 7, width: 15,radius: 10),
+                      SizedBox(width: scale.getWidth(2)),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          BaseLoading(height: 1, width: 30),
+                          FunctionalWidget.spaceText(
+                              context: context,
+                              title: "Rating",
+                              child: BaseLoading(height: 1, width: 20),
+                          ),
+                          FunctionalWidget.spaceText(
+                              context: context,
+                              title: "Penulis",
+                            child: BaseLoading(height: 1, width: 20),
+                          )
+                        ],
+                      )
+                    ],
+                  )
+                ],
+              ),
+            )
+        ),
+        SizedBox(height: scale.getHeight(1)),
+        FunctionalWidget.wrapContent(
+            child: Container(
+              padding: scale.getPadding(1,2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Ringkasan belanja",style: Theme.of(context).textTheme.headline1),
+                  SizedBox(height: scale.getHeight(1)),
+                  FunctionalWidget.betweenText(context:context,title: "Harga produk",child: BaseLoading(height: 1, width: 20)),
+                  FunctionalWidget.betweenText(context:context,title: "Biaya admin",child: BaseLoading(height: 1, width: 20)),
+                  SizedBox(height: scale.getHeight(0.5)),
+                  FunctionalWidget.betweenText(context:context,title: "Subtotal",child: BaseLoading(height: 1, width: 20),color: Colors.white54),
+                ],
+              ),
+            )
+        )
+      ],
+    );
+  }
+}

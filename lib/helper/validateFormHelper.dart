@@ -28,7 +28,15 @@ class ValidateFormHelper {
         else if(key=="email"){
           final validEmail = validateEmail(context: context,email: value);
           if(!validEmail){
-            FunctionalWidget.toast(context: context,msg: "format email");
+            FunctionalWidget.toast(context: context,msg: "format email salah");
+            forEachDone=false;
+            return forEachDone;
+          }
+        }
+        else if(key=="website"){
+          bool validLink = Uri.parse(value).isAbsolute;
+          if(!validLink){
+            FunctionalWidget.toast(context: context,msg: "format link salah");
             forEachDone=false;
             return forEachDone;
           }

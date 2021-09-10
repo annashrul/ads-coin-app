@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/helper/dateHelper.dart';
 import 'package:adscoin/helper/formatCurrencyHelper.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
@@ -15,7 +16,62 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 
 
+
 class FunctionalWidget{
+
+  static convertDateToYMD(DateTime date){
+    String strDate = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    return strDate;
+  }
+  static convertDateToDMY(DateTime date){
+    String strDate = '${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')}-${date.year}';
+    return strDate;
+  }
+
+  static filterDate({BuildContext context,dynamic data,Function(DateTime from, DateTime to) callback}){
+    ScreenScaler scale= ScreenScaler()..init(context);
+
+    return Padding(
+      padding: scale.getPadding(0.5,2.5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Periode",style: Theme.of(context).textTheme.headline2),
+          InTouchWidget(
+            radius: 10,
+            callback: (){
+              DateHelper(
+                  startText: "Dari",
+                  endText: "Sampai",
+                  doneText: "Simpan",
+                  cancelText: "Batal",
+                  initialStartTime: data["from"],
+                  initialEndTime: data["to"],
+                  mode: DateTimeRangePickerMode.date,
+                  onConfirm: (start, end) {
+                    callback(start,end);
+                  }).showPicker(context);
+            },
+            child: FunctionalWidget.wrapContent(
+                child: Padding(
+                  padding: scale.getPadding(0.5,2),
+                  child:  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Ionicons.ios_calendar),
+                      SizedBox(width: scale.getWidth(1)),
+                      Text("${FunctionalWidget.convertDateToDMY(data["from"])} s/d ${FunctionalWidget.convertDateToDMY(data["to"])}",style: Theme.of(context).textTheme.headline2,),
+                    ],
+                  ),
+                )
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
 
   static backToHome(BuildContext context){
     return Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
@@ -190,12 +246,12 @@ class FunctionalWidget{
   }
 
 
-  static betweenText({BuildContext context,String title,String desc,Color color}){
+  static betweenText({BuildContext context,String title,String desc,Color color,Widget child}){
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(title,style: Theme.of(context).textTheme.headline2.copyWith(color: color==null?Theme.of(context).textTheme.subtitle1.color:Theme.of(context).textTheme.headline2.color)),
-        Text(desc,style: Theme.of(context).textTheme.headline2),
+        child==null?Text(desc,style: Theme.of(context).textTheme.headline2):child,
       ],
     );
   }
@@ -261,7 +317,6 @@ class FunctionalWidget{
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
     return stringToBase64.encode(val);
   }
-
 
 
 

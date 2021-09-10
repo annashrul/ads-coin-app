@@ -1,12 +1,15 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/historyProvider.dart';
+import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/fintech/historyMutationWidget.dart';
 import 'package:adscoin/view/widget/general/titleSectionWidget.dart';
 import 'package:adscoin/view/widget/home/cardSaldoWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:provider/provider.dart';
 
 
 class IndexFintechComponent extends StatefulWidget {
@@ -15,9 +18,20 @@ class IndexFintechComponent extends StatefulWidget {
 }
 
 class _IndexFintechComponentState extends State<IndexFintechComponent> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final history = Provider.of<HistoryProvider>(context,listen:false);
+    history.getHistoryMutation(context: context,isNow: true);
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale = ScreenScaler()..init(context);
+    final history = Provider.of<HistoryProvider>(context);
+
     return Scaffold(
       backgroundColor: Color(0xFFE5E5E5),
       appBar: FunctionalWidget.appBarHelper(context: context,title: "Ads Coin Wallet",backgroundColor: ColorConfig.redColor,titleColor: ColorConfig.graySecondaryColor),
@@ -50,7 +64,7 @@ class _IndexFintechComponentState extends State<IndexFintechComponent> {
           Padding(
             padding: scale.getPadding(1, 2.5),
             child: TitleSectionWidget(title: "Transaksi terakhir",callback: (){
-              Navigator.of(context).pushNamed(RouteString.historyMutation);
+              Navigator.of(context).pushNamed(RouteString.historyMutation).then((value) =>  history.getHistoryMutation(context: context,isNow: true));
             },),
           ),
           Expanded(
@@ -58,7 +72,7 @@ class _IndexFintechComponentState extends State<IndexFintechComponent> {
               child: Padding(
                 padding: scale.getPadding(0, 2.5),
                 child: FunctionalWidget.wrapContent(
-                    child: ListView.separated(
+                    child: history.isLoadingHistoryMutation?LoadingBankMember():ListView.separated(
                       padding: scale.getPadding(1,2),
                         itemBuilder: (context,index){
                           return HistoryMutationWidget(
@@ -71,7 +85,7 @@ class _IndexFintechComponentState extends State<IndexFintechComponent> {
 
                         },
                         separatorBuilder: (context,index){return Divider();},
-                        itemCount: 100
+                        itemCount: history.historyMutationModel.result.length
                     )
                 ),
               )

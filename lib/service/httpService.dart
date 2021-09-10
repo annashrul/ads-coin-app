@@ -24,6 +24,10 @@ class HttpService{
         final jsonResponse = json.decode(response.body);
         return jsonResponse;
       }
+      else if(response.statusCode==500){
+        FunctionalWidget.toast(context: context,msg: "terjadi kesalahan url");
+        return null;
+      }
       else{
         final jsonResponse = json.decode(response.body);
         return GeneralModel.fromJson(jsonResponse);

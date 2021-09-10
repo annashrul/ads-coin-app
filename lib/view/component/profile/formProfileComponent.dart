@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/helper/validateFormHelper.dart';
 import 'package:adscoin/service/provider/profileProvider.dart';
+import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/widget/general/appBarWithActionWidget.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/fieldWidget.dart';
@@ -23,10 +26,26 @@ class FormProfileComponent extends StatefulWidget {
 class _FormProfileComponentState extends State<FormProfileComponent> {
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  TextEditingController bioController = TextEditingController();
+  TextEditingController websiteController = TextEditingController();
+  String image="";
+  bool isFile=false;
+  File imageUpload;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final user = Provider.of<UserProvider>(context, listen: false);
+    nameController.text=user.detailMemberModel.result.fullname;
+    phoneController.text=user.detailMemberModel.result.mobileNo;
+    image = user.detailMemberModel.result.foto;
+    bioController.text=user.detailMemberModel.result.bio;
+    websiteController.text=user.detailMemberModel.result.website;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final profle = Provider.of<ProfileProvider>(context);
+    final profle = Provider.of<UserProvider>(context);
     ScreenScaler scale= ScreenScaler()..init(context);
     return Scaffold(
       appBar:FunctionalWidget.appBarHelper(
@@ -42,6 +61,11 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
                 child: UploadWidget(
                     callback: (img){
                       print(img);
+                      Navigator.of(context).pop();
+                      setState(() {
+                        imageUpload = img["preview"];
+                        image=img["base64"];
+                      }); 
                     }
                 )
               ),
@@ -51,7 +75,7 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
                   CircleAvatar(
                       backgroundColor: Colors.transparent,
                       radius: 50,
-                      backgroundImage: NetworkImage(GeneralString.dummyImgUser)
+                      backgroundImage: imageUpload==null?NetworkImage(image):FileImage(imageUpload)
                   ),
                   Container(
                     padding: scale.getPadding(0.2,1),
@@ -81,7 +105,9 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
             ),
             cursorColor: ColorConfig.yellowColor,
           ),
+
           TextFormField(
+            readOnly: true,
             style: Theme.of(context).textTheme.headline2,
             controller: phoneController,
             maxLength: 14,
@@ -103,31 +129,49 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
           ),
           TextFormField(
             style: Theme.of(context).textTheme.headline2,
-            controller: emailController,
-            maxLength: 20,
+            controller: websiteController,
+            maxLength: 30,
             buildCounter: (_, {currentLength, maxLength, isFocused}) => Padding(
               padding: const EdgeInsets.all(0),
               child: Container(alignment: Alignment.bottomRight,child: Text(currentLength.toString() + "/" + maxLength.toString())),
             ),
             decoration: InputDecoration(
-                labelText: "Email",
+                labelText: "Website",
                 labelStyle: Theme.of(context).textTheme.subtitle1,
                 focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ColorConfig.yellowColor))
             ),
             cursorColor: ColorConfig.yellowColor,
-            keyboardType: TextInputType.emailAddress,
+            keyboardType: TextInputType.url,
           ),
+          TextFormField(
+            style: Theme.of(context).textTheme.headline2,
+            controller: bioController,
+            maxLength: 50,
+            maxLines: 3,
+            buildCounter: (_, {currentLength, maxLength, isFocused}) => Padding(
+              padding: const EdgeInsets.all(0),
+              child: Container(alignment: Alignment.bottomRight,child: Text(currentLength.toString() + "/" + maxLength.toString())),
+            ),
+            decoration: InputDecoration(
+                labelText: "Bio",
+                labelStyle: Theme.of(context).textTheme.subtitle1,
+                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ColorConfig.yellowColor))
+            ),
+            cursorColor: ColorConfig.yellowColor,
+            keyboardType: TextInputType.text,
+          ),
+
         ],
       ),
       bottomNavigationBar: Container(
-        height: scale.getHeight(7),
         padding: scale.getPadding(1, 2.5),
         child: BackroundButtonWidget(
           callback: ()async{
             await profle.store(context: context,fields: {
-              "nama":nameController.text,
-              "nohp":phoneController.text,
-              "email":emailController.text,
+              "fullname":nameController.text,
+              "bio":bioController.text,
+              "website":websiteController.text,
+              "foto":imageUpload!=null?image:"-"
             });
           },
           backgroundColor: ColorConfig.redColor,

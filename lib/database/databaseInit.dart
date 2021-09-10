@@ -57,12 +57,11 @@
        return false;
      }
    }
-   delete(table) async{
-     openDB().then((db) {
-       db.execute("DELETE FROM $table");
-     }).catchError((err) {
-       print("error $err");
-     });
+   Future<int> delete(String table) async {
+     final db = await openDB();
+     var result = await db.delete(table);
+      print("DELETEEEEEEED $result");
+     return result;
    }
    Future<List> getDetail(String tableName,String column,String id) async {
      final db = await openDB();

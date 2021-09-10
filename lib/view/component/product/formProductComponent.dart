@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/database/databaseInit.dart';
+import 'package:adscoin/database/table.dart';
 import 'package:adscoin/helper/formatCurrencyHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/authProvider.dart';
@@ -36,22 +38,12 @@ class _FormProductContributorComponentState extends State<FormProductContributor
   MoneyMaskedTextControllerQ priceController = new MoneyMaskedTextControllerQ();
   String result = "-";
   final HtmlEditorController contentController = HtmlEditorController();
-  Future store(img)async{
-    final product = Provider.of<ProductProvider>(context, listen: false);
-    print("IMAGE ANJING $img");
-    print("CONTENT ANJING $result");
-    product.autoSaveProduct({
-      TableString.contentProduct:"$result",
-      TableString.titleProduct:"${nameController.text}",
-      TableString.imageProduct:"$img",
-      TableString.previewProduct:"${previewController.text}",
-      TableString.statusProduct:"${product.statusProduct}",
-    });
-  }
+
   void setTime(){
+    contentController.resetHeight();
     final product = Provider.of<ProductProvider>(context, listen: false);
     if(product.timeUpFlag){
-      product.setTimer(10);
+      product.setTimer(1);
       product.timeUpFlag=false;
       product.timerUpdate();
     }
@@ -68,19 +60,36 @@ class _FormProductContributorComponentState extends State<FormProductContributor
       callback2: ()async{
         Navigator.of(context).pop();
         Navigator.of(context).pop();
-        await product.storeAutoSaveProduct(context: context);
+        await product.storeAutoSaveProduct(context: context,status: "0");
       },
     );
   }
   checkForm(){
-    if(nameController.text!=""||result!="-"||previewController.text!=""){
-      print("nameController.text ${nameController.text}");
-      print("konten $result");
-      return true;
+    if(nameController.text!=""&&previewController.text!=""){
+      if(result!=""&&result!="-"&&result!="<p><br></p>"){
+        return true;
+      }
     }
     return false;
   }
+  DatabaseInit db = new DatabaseInit();
 
+  Future autoSaveProduct(img)async{
+    final data ={
+      TableString.contentProduct:"$result",
+      TableString.titleProduct:"${nameController.text}",
+      TableString.imageProduct:"$img",
+      TableString.previewProduct:"${previewController.text}",
+      TableString.statusProduct:"0",
+    };
+    final get = await db.getData(ProductTable.TABLE_NAME);
+    if(get.length>0){
+      await db.update(ProductTable.TABLE_NAME,get[0]["id"],data);
+    }
+    else{
+      await db.insert(ProductTable.TABLE_NAME, data);
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -92,17 +101,15 @@ class _FormProductContributorComponentState extends State<FormProductContributor
     WidgetsBinding.instance.addObserver(this);
     product.timerUpdate();
     product.timeUpFlag = false;
-    product.timeCounter=10;
-
+    product.timeCounter=1;
+    db.delete(ProductTable.TABLE_NAME).then((value) => null);
     if(!product.isAdd){
-      print("data edit ${product.dataEditProductContributor}");
       final dataEdit = product.dataEditProductContributor;
       nameController.text=dataEdit["title"];
       previewController.text=dataEdit["preview"];
       Future.delayed(Duration(seconds: 2)).then((value){
         contentController.setText(dataEdit["content"]);
       });
-
     }
   }
   @override
@@ -140,18 +147,21 @@ class _FormProductContributorComponentState extends State<FormProductContributor
     final check = checkForm();
     int indexCategory=category.indexSelectedCategoryForm;
     int statusProduct=product.statusProduct;
-    Future.delayed(Duration(seconds: 2)).then((value)=>contentController.resetHeight());
+    // Future.delayed(Duration(seconds: 2)).then((value)=>contentController.resetHeight());
     if(category.categoryProductModel!=null){
         if(!category.isLoading){
           categoryController.text = category.categoryProductModel.result[indexCategory].title;
         }
       }
+
     if(product.timeUpFlag){
-      if(check)store(base64Image);
+      print("nameController.text = ${nameController.text}");
+      print("previewController.text = ${previewController.text}");
+      print("result.text = $result");
+      if(nameController.text!=""||previewController.text!=""||result!=""&&result!="-"&&result!="<p><br></p>") autoSaveProduct(base64Image);
     }
     if(statusProduct==0)statusController.text="Draft";
     else statusController.text="Selesai";
-
 
     return Listener(
       onPointerDown: (_)=>setTime(), // best place to reset timer imo
@@ -159,12 +169,16 @@ class _FormProductContributorComponentState extends State<FormProductContributor
       onPointerUp: (_)=>setTime(),
       child: WillPopScope(
         onWillPop: () async{
-          return check?saveData():true ?? false;
+          return nameController.text!=""||previewController.text!=""||result!=""&&result!="-"&&result!="<p><br></p>"?saveData():true ?? false;
         },
         child: Scaffold(
           appBar: FunctionalWidget.appBarHelper(context: context,title: product.isAdd?"Tambah produk ${product.timeCounter}":"Edit produk ${product.timeCounter}",callback: (){
-            if(check) saveData();
-            else Navigator.of(context).pop();
+            if(nameController.text!=""||previewController.text!=""||result!=""&&result!="-"&&result!="<p><br></p>"){
+              saveData();
+            }else{
+              Navigator.of(context).pop();
+            }
+
           }),
           body: ListView(
             primary: true,
@@ -184,7 +198,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                             child: UploadWidget(
                                 callback: (res)async{
                                   setTime();
-                                  store(res["path"]);
+                                  autoSaveProduct(res["path"]);
                                   setState((){
                                     _image = res["preview"];
                                     base64Image = res["path"];
@@ -300,6 +314,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                     controller: contentController,
                     callbacks: Callbacks(
                       onChange: (String changed)async {
+                        checkForm();
                         setState(() {
                           result = changed;
                         });
@@ -308,6 +323,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                         setTime();
                       },
                       onFocus: () {
+
                         setTime();
                       },
                       onBlur: () {
@@ -344,11 +360,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
               callback: (){
                 product.timeUpFlag = true;
                 product.timer.cancel();
-                 store(base64Image).then((value){
-                   Future.delayed(Duration(seconds: 1)).then((value){
-                     product.storeAutoSaveProduct(context: context,loading: true);
-                   });
-                 });
+                product.storeAutoSaveProduct(context: context,status:statusProduct.toString(),loading: true);
               },
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/favoriteProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
@@ -32,12 +33,15 @@ class _HomeComponentState extends State<HomeComponent> {
     product.getBestSeller(context: context);
     final favorite = Provider.of<FavoriteProvider>(context, listen: false);
     favorite.get();
+    final user = Provider.of<UserProvider>(context, listen: false);
+    user.getLeaderBoard(context: context);
   }
 
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<ProductProvider>(context);
     final favorite = Provider.of<FavoriteProvider>(context);
+    final user = Provider.of<UserProvider>(context);
 
     ScreenScaler scale= ScreenScaler()..init(context);
     return Scaffold(
@@ -186,6 +190,42 @@ class _HomeComponentState extends State<HomeComponent> {
                       rateContributor: double.parse(product.productNewModel.result[index].rating.toString()),
                     );
                   },
+                ),
+              ),
+              if(!user.isLoadingLeaderBoard&&user.leaderBoardModel.result.length>0)Padding(
+                padding: scale.getPadding(0,2.5),
+                child: TitleSectionWidget(
+                  title: "Leaderboard",
+                  callback: (){},
+                  isAction: false,
+                ),
+              ),
+              if(!user.isLoadingLeaderBoard&&user.leaderBoardModel.result.length>0)Container(
+                padding: scale.getPadding(0.5,2.5),
+                child:ListView.separated(
+                  padding: EdgeInsets.zero,
+                    primary: false,
+                    shrinkWrap: true,
+                    itemBuilder: (context,index){
+                      final val = user.leaderBoardModel.result[index];
+                      return FunctionalWidget.wrapContent(
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            radius: 20,
+                            backgroundImage: NetworkImage(val.foto)
+                          ),
+                          title: Text(val.fullname,style: Theme.of(context).textTheme.headline2),
+                          subtitle: Text(val.bio,style: Theme.of(context).textTheme.subtitle1,maxLines: 1,overflow: TextOverflow.ellipsis),
+                          trailing: Container(
+                            width: scale.getWidth(10),
+                            child: FunctionalWidget.rating(context: context,rate:double.parse(val.rating.toString())),
+                          ),
+                        )
+                      );
+                    },
+                    separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(0.5),);},
+                    itemCount: user.leaderBoardModel.result.length
                 ),
               )
             ],

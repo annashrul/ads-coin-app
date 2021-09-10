@@ -1,7 +1,8 @@
 
 
-class StatusString{
-
+class RoleAccessString{
+  static const String contributor="Kontributor";
+  static const String member="Member";
 }
 
 
@@ -21,10 +22,14 @@ class RouteString{
   static const formProfile = "/formProfile";
   static const historyPurchase = "/historyPurchase";
   static const detailHistoryPurchase = "/detailHistoryPurchase";
+  static const historySale = "/historySale";
+  static const detailHistorSale = "/detailHistorSale";
   static const productContributor = "/productContributor";
   static const formProductContributor = "/formProductContributor";
   static const indexFintechComponent = "/indexFintechComponent";
   static const historyMutation = "/historyMutation";
+
+
   static const topUp = "/topUp";
   static const detailTopUp = "/detailTopUp";
   static const withdraw = "/withdraw";

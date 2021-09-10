@@ -16,7 +16,9 @@ import 'package:adscoin/view/component/fintech/topUp/topUpComponent.dart';
 import 'package:adscoin/view/component/fintech/withdraw/confirmWithdrawComponent.dart';
 import 'package:adscoin/view/component/fintech/withdraw/withdrawComponent.dart';
 import 'package:adscoin/view/component/history/detailHistoryPurchaseComponent.dart';
+import 'package:adscoin/view/component/history/detailHistorySaleComponent.dart';
 import 'package:adscoin/view/component/history/historyPurchaseComponent.dart';
+import 'package:adscoin/view/component/history/historySaleComponent.dart';
 import 'package:adscoin/view/component/home/homeComponent.dart';
 import 'package:adscoin/view/component/mainComponent.dart';
 import 'package:adscoin/view/component/onBoardingComponent.dart';
@@ -25,7 +27,6 @@ import 'package:adscoin/view/component/product/formProductComponent.dart';
 import 'package:adscoin/view/component/product/productContributorComponent.dart';
 import 'package:adscoin/view/component/profile/formProfileComponent.dart';
 import 'package:adscoin/view/component/splashComponent.dart';
-import 'package:adscoin/view/component/successComponent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -59,6 +60,10 @@ class RouteGenerator{
         return CupertinoPageRoute(builder: (_) => HistoryPurchaseComponent());
       case '${RouteString.detailHistoryPurchase}':
         return CupertinoPageRoute(builder: (_) => DetailHistoryPurchaseComponent(id: args));
+      case '${RouteString.historySale}':
+        return CupertinoPageRoute(builder: (_) => HistorySaleComponent());
+      case '${RouteString.detailHistorSale}':
+        return CupertinoPageRoute(builder: (_) => DetailHistorySaleComponent(id: args));
       case '${RouteString.productContributor}':
         return CupertinoPageRoute(builder: (_) => ProductContributorComponent());
       case '${RouteString.formProductContributor}':
@@ -81,6 +86,7 @@ class RouteGenerator{
         return CupertinoPageRoute(builder: (_) => FormBankMemberComponent());
       case '${RouteString.favorite}':
         return CupertinoPageRoute(builder: (_) => FavoriteComponent());
+
 
       default:
         return _errorRoute(callback: args);

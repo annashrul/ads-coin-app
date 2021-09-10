@@ -1,16 +1,39 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/helper/formatCurrencyHelper.dart';
+import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/historyProvider.dart';
+import 'package:adscoin/service/provider/userProvider.dart';
+import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:provider/provider.dart';
 
 
-class CardSaldoWidget extends StatelessWidget {
+class CardSaldoWidget extends StatefulWidget {
+  @override
+  _CardSaldoWidgetState createState() => _CardSaldoWidgetState();
+}
+
+class _CardSaldoWidgetState extends State<CardSaldoWidget> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final user = Provider.of<UserProvider>(context, listen: false);
+    user.getDetailMember(context: context);
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
+    final user = Provider.of<UserProvider>(context);
+    final history = Provider.of<HistoryProvider>(context);
+
     return  Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -44,7 +67,7 @@ class CardSaldoWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text("1.230.0000",style: Theme.of(context).textTheme.headline1.copyWith(color: ColorConfig.blackSecondaryColor,fontWeight:FontWeight.w400)),
+                          user.isLoadingDetailMember?BaseLoading(height: 1.5, width:5):Text("${MoneyFormat.toFormat(double.parse(user.detailMemberModel.result.saldo))}",style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.blackSecondaryColor,fontWeight:FontWeight.w400)),
                           SizedBox(height: scale.getHeight(0.2),),
                           Text("Saldo AdsCoin",style: Theme.of(context).textTheme.subtitle1),
                         ],
@@ -54,7 +77,6 @@ class CardSaldoWidget extends StatelessWidget {
                 )
             ),
             Container(
-              // padding: scale.getPadding(0,2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,7 +104,7 @@ class CardSaldoWidget extends StatelessWidget {
                       title: "Mutasi",
                       image: "history",
                       callback: (){
-                        Navigator.of(context).pushNamed(RouteString.historyMutation);
+                        Navigator.of(context).pushNamed(RouteString.historyMutation).then((value) =>  history.getHistoryMutation(context: context,isNow: true));
                       }
                   )
 
@@ -94,8 +116,6 @@ class CardSaldoWidget extends StatelessWidget {
       ),
     );
   }
-
-
   Widget cardWallet({BuildContext context,title,Function callback,String image}){
     ScreenScaler scale= ScreenScaler()..init(context);
     return InTouchWidget(
@@ -112,5 +132,4 @@ class CardSaldoWidget extends StatelessWidget {
         )
     );
   }
-
 }
