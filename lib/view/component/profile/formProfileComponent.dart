@@ -25,6 +25,7 @@ class FormProfileComponent extends StatefulWidget {
 
 class _FormProfileComponentState extends State<FormProfileComponent> {
   TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   TextEditingController websiteController = TextEditingController();
@@ -37,6 +38,7 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
     super.initState();
     final user = Provider.of<UserProvider>(context, listen: false);
     nameController.text=user.detailMemberModel.result.fullname;
+    emailController.text=user.detailMemberModel.result.email;
     phoneController.text=user.detailMemberModel.result.mobileNo;
     image = user.detailMemberModel.result.foto;
     bioController.text=user.detailMemberModel.result.bio;
@@ -93,7 +95,7 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
           TextFormField(
             style: Theme.of(context).textTheme.headline2,
             controller: nameController,
-            maxLength: 20,
+            maxLength: 80,
             buildCounter: (_, {currentLength, maxLength, isFocused}) => Padding(
               padding: const EdgeInsets.all(0),
               child: Container(alignment: Alignment.bottomRight,child: Text(currentLength.toString() + "/" + maxLength.toString())),
@@ -105,12 +107,29 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
             ),
             cursorColor: ColorConfig.yellowColor,
           ),
+          TextFormField(
+            style: Theme.of(context).textTheme.headline2,
+            controller: emailController,
+            maxLength: 80,
+            buildCounter: (_, {currentLength, maxLength, isFocused}) => Padding(
+              padding: const EdgeInsets.all(0),
+              child: Container(alignment: Alignment.bottomRight,child: Text(currentLength.toString() + "/" + maxLength.toString())),
+            ),
+            decoration: InputDecoration(
+                labelText: "Email",
+                labelStyle: Theme.of(context).textTheme.subtitle1,
+                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ColorConfig.yellowColor))
+            ),
+            cursorColor: ColorConfig.yellowColor,
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.done,
+          ),
 
           TextFormField(
             readOnly: true,
             style: Theme.of(context).textTheme.headline2,
             controller: phoneController,
-            maxLength: 14,
+            maxLength: 15,
             buildCounter: (_, {currentLength, maxLength, isFocused}) => Padding(
               padding: const EdgeInsets.all(0),
               child: Container(alignment: Alignment.bottomRight,child: Text(currentLength.toString() + "/" + maxLength.toString())),
@@ -130,7 +149,7 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
           TextFormField(
             style: Theme.of(context).textTheme.headline2,
             controller: websiteController,
-            maxLength: 30,
+            maxLength: 100,
             buildCounter: (_, {currentLength, maxLength, isFocused}) => Padding(
               padding: const EdgeInsets.all(0),
               child: Container(alignment: Alignment.bottomRight,child: Text(currentLength.toString() + "/" + maxLength.toString())),
@@ -146,7 +165,7 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
           TextFormField(
             style: Theme.of(context).textTheme.headline2,
             controller: bioController,
-            maxLength: 50,
+            maxLength: 150,
             maxLines: 3,
             buildCounter: (_, {currentLength, maxLength, isFocused}) => Padding(
               padding: const EdgeInsets.all(0),
@@ -169,6 +188,7 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
           callback: ()async{
             await profle.store(context: context,fields: {
               "fullname":nameController.text,
+              "email":emailController.text,
               "bio":bioController.text,
               "website":websiteController.text,
               "foto":imageUpload!=null?image:"-"

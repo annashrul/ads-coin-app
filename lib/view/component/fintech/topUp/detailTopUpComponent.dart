@@ -42,7 +42,7 @@ class _DetailTopUpComponentState extends State<DetailTopUpComponent> with Ticker
   Widget build(BuildContext context) {
     ScreenScaler scale = ScreenScaler()..init(context);
     final fintech = Provider.of<FintechProvider>(context);
-
+    // DetailTopUpModel result = DetailTopUpModel.fromJson(fintech.dataDetailTopUp);
     return Scaffold(
       appBar: FunctionalWidget.appBarHelper(context: context,title: "Informasi pembayaran"),
       body: ListView(

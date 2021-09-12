@@ -42,92 +42,72 @@ class DetailTopUpModel {
 
 class Result {
   Result({
-    this.invoiceNo,
-    this.paymentMethod,
-    this.paymentName,
-    this.promo,
-    this.amount,
-    this.amountRupiah,
-    this.admin,
-    this.totalPay,
-    this.kodeUnik,
-    this.payCode,
-    this.accName,
-    this.expiredDate,
-    this.paymentType,
-    this.expiredTime,
-    this.instruction,
+    this.id,
+    this.fullname,
+    this.mobileNo,
+    this.saldo,
+    this.totalPayment,
+    this.referral,
+    this.deviceId,
+    this.signupSource,
+    this.status,
+    this.createdAt,
+    this.bio,
+    this.website,
+    this.type,
+    this.idType,
+    this.foto,
   });
 
-  var invoiceNo;
-  var paymentMethod;
-  var paymentName;
-  var promo;
-  var amount;
-  var amountRupiah;
-  var admin;
-  var totalPay;
-  var kodeUnik;
-  var payCode;
-  var accName;
-  DateTime expiredDate;
-  var paymentType;
-  var expiredTime;
-  Instruction instruction;
+  String id;
+  String fullname;
+  String mobileNo;
+  String saldo;
+  String totalPayment;
+  String referral;
+  String deviceId;
+  String signupSource;
+  int status;
+  DateTime createdAt;
+  String bio;
+  String website;
+  String type;
+  int idType;
+  String foto;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
-    invoiceNo: json["invoice_no"],
-    paymentMethod: json["payment_method"],
-    paymentName: json["payment_name"],
-    promo: json["promo"],
-    amount: json["amount"],
-    amountRupiah: json["amount_rupiah"],
-    admin: json["admin"],
-    totalPay: json["total_pay"],
-    kodeUnik: json["kode_unik"],
-    payCode: json["pay_code"],
-    accName: json["acc_name"],
-    expiredDate: DateTime.parse(json["expired_date"]),
-    paymentType: json["payment_type"],
-    expiredTime: json["expired_time"],
-    instruction: Instruction.fromJson(json["instruction"]),
+    id: json["id"],
+    fullname: json["fullname"],
+    mobileNo: json["mobile_no"],
+    saldo: json["saldo"],
+    totalPayment: json["total_payment"],
+    referral: json["referral"],
+    deviceId: json["device_id"],
+    signupSource: json["signup_source"],
+    status: json["status"],
+    createdAt: DateTime.parse(json["created_at"]),
+    bio: json["bio"],
+    website: json["website"],
+    type: json["type"],
+    idType: json["id_type"],
+    foto: json["foto"],
   );
 
   Map<String, dynamic> toJson() => {
-    "invoice_no": invoiceNo,
-    "payment_method": paymentMethod,
-    "payment_name": paymentName,
-    "promo": promo,
-    "amount": amount,
-    "amount_rupiah": amountRupiah,
-    "admin": admin,
-    "total_pay": totalPay,
-    "kode_unik": kodeUnik,
-    "pay_code": payCode,
-    "acc_name": accName,
-    "expired_date": expiredDate.toIso8601String(),
-    "payment_type": paymentType,
-    "expired_time": expiredTime,
-    "instruction": instruction.toJson(),
-  };
-}
-
-class Instruction {
-  Instruction({
-    this.title,
-    this.steps,
-  });
-
-  String title;
-  List steps;
-
-  factory Instruction.fromJson(Map<String, dynamic> json) => Instruction(
-    title: json["title"],
-    steps: List.from(json["steps"].map((x) => x)),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "title": title,
-    "steps": List.from(steps.map((x) => x)),
+    "id": id,
+    "fullname": fullname,
+    "mobile_no": mobileNo,
+    "saldo": saldo,
+    "total_payment": totalPayment,
+    "referral": referral,
+    "device_id": deviceId,
+    "signup_source": signupSource,
+    "status": status,
+    "created_at": createdAt.toIso8601String(),
+    "bio": bio,
+    "website": website,
+    "type": type,
+    "id_type": idType,
+    "foto": foto,
   };
 }

@@ -26,6 +26,7 @@ import 'package:adscoin/view/component/product/favoriteComponent.dart';
 import 'package:adscoin/view/component/product/formProductComponent.dart';
 import 'package:adscoin/view/component/product/productContributorComponent.dart';
 import 'package:adscoin/view/component/profile/formProfileComponent.dart';
+import 'package:adscoin/view/component/profile/referralComponent.dart';
 import 'package:adscoin/view/component/splashComponent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -86,6 +87,8 @@ class RouteGenerator{
         return CupertinoPageRoute(builder: (_) => FormBankMemberComponent());
       case '${RouteString.favorite}':
         return CupertinoPageRoute(builder: (_) => FavoriteComponent());
+      case '${RouteString.referral}':
+        return CupertinoPageRoute(builder: (_) => ReferralComponent());
 
 
       default:

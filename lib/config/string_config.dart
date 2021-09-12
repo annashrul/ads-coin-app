@@ -1,5 +1,11 @@
 
 
+
+class StatusDeposit{
+  static const String paymentGateway = "1";
+  static const String virtualAccount = "0";
+}
+
 class RoleAccessString{
   static const String contributor="Kontributor";
   static const String member="Member";
@@ -28,6 +34,7 @@ class RouteString{
   static const formProductContributor = "/formProductContributor";
   static const indexFintechComponent = "/indexFintechComponent";
   static const historyMutation = "/historyMutation";
+  static const referral = "/referral";
 
 
   static const topUp = "/topUp";

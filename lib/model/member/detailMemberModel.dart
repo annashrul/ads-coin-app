@@ -48,6 +48,7 @@ class Result {
     this.saldo,
     this.totalPayment,
     this.referral,
+    this.email,
     this.deviceId,
     this.signupSource,
     this.status,
@@ -55,6 +56,7 @@ class Result {
     this.bio,
     this.website,
     this.type,
+    this.idType,
     this.foto,
   });
 
@@ -64,6 +66,7 @@ class Result {
   String saldo;
   String totalPayment;
   String referral;
+  String email;
   String deviceId;
   String signupSource;
   int status;
@@ -71,6 +74,7 @@ class Result {
   String bio;
   String website;
   String type;
+  int idType;
   String foto;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
@@ -80,6 +84,7 @@ class Result {
     saldo: json["saldo"],
     totalPayment: json["total_payment"],
     referral: json["referral"],
+    email: json["email"],
     deviceId: json["device_id"],
     signupSource: json["signup_source"],
     status: json["status"],
@@ -87,6 +92,7 @@ class Result {
     bio: json["bio"],
     website: json["website"],
     type: json["type"],
+    idType: json["id_type"],
     foto: json["foto"],
   );
 
@@ -97,6 +103,7 @@ class Result {
     "saldo": saldo,
     "total_payment": totalPayment,
     "referral": referral,
+    "email": email,
     "device_id": deviceId,
     "signup_source": signupSource,
     "status": status,
@@ -104,6 +111,7 @@ class Result {
     "bio": bio,
     "website": website,
     "type": type,
+    "id_type": idType,
     "foto": foto,
   };
 }

@@ -287,6 +287,9 @@ class LoadingDetailHistoryPurchaseOrSale extends StatelessWidget {
     ScreenScaler scale= ScreenScaler()..init(context);
 
     return ListView(
+      physics: ClampingScrollPhysics(),
+      primary: false,
+      shrinkWrap: true,
       padding: scale.getPadding(1,2),
       children: [
         FunctionalWidget.wrapContent(
@@ -344,6 +347,32 @@ class LoadingDetailHistoryPurchaseOrSale extends StatelessWidget {
             )
         )
       ],
+    );
+  }
+}
+
+
+class LoadingReferral extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    ScreenScaler scale= ScreenScaler()..init(context);
+
+    return ListView.separated(
+        padding: scale.getPaddingLTRB(0,1,0, 0),
+        physics: ClampingScrollPhysics(),
+        primary: false,
+        shrinkWrap: true,
+        itemBuilder: (context,index){
+          return FunctionalWidget.wrapContent(
+              child: ListTile(
+                leading: BaseLoading(height: 3, width: 7,radius: 100,),
+                title: BaseLoading(height:1,width: 20,),
+                subtitle:  BaseLoading(height:1,width: 20,),
+              )
+          );
+        },
+        separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(1));},
+        itemCount:10
     );
   }
 }

@@ -54,7 +54,6 @@ class _ProfileComponentState extends State<ProfileComponent> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // SizedBox(height: scale.getHeight(1)),
                     InTouchWidget(
                       callback: ()=>Navigator.of(context).pushNamed(RouteString.formProfile).then((value) => user.getDetailMember(context: context)),
                       child: Stack(
@@ -113,6 +112,13 @@ class _ProfileComponentState extends State<ProfileComponent> {
                            title: "Informasi pribadi",
                            colorIcon: ColorConfig.bluePrimaryColor,
                            callback: (){},
+                         ),
+                         divid(),
+                         CardAction(
+                           img:"Discount" ,
+                           title: "Referral",
+                           colorIcon: ColorConfig.bluePrimaryColor,
+                           callback: ()=>Navigator.of(context).pushNamed(RouteString.referral),
                          ),
                          if(user.type==RoleAccessString.contributor)divid(),
                          if(user.type==RoleAccessString.contributor)CardAction(

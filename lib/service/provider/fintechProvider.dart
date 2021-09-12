@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 
 class FintechProvider with ChangeNotifier{
   DetailTopUpModel detailTopUpModel;
+  dynamic dataDetailTopUp;
   Future createTopUp({BuildContext context,dynamic data})async{
     final store = {
       "payment_channel":data["paymentCode"],
@@ -15,9 +16,10 @@ class FintechProvider with ChangeNotifier{
       "member_pin":data["pin"].toString()
     };
     final res = await HttpService().post(url: "transaction/deposit",data: store,context: context);
+    print(res);
     if(res!=null){
-      DetailTopUpModel result = DetailTopUpModel.fromJson(res.toJson());
-      detailTopUpModel = result;
+      // DetailTopUpModel result = DetailTopUpModel.fromJson(res);
+      dataDetailTopUp = res;
       Navigator.of(context).pushNamed(RouteString.detailTopUp);
       notifyListeners();
     }

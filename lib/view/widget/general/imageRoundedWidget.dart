@@ -1,3 +1,4 @@
+import 'package:adscoin/config/string_config.dart';
 import 'package:flutter/material.dart';
 
 
@@ -20,7 +21,7 @@ class ImageRoundedWidget extends StatelessWidget {
       fit: fit,
       filterQuality: FilterQuality.high,
       errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
-        return Icon(Icons.error,size: width,);
+        return Image.asset(GeneralString.imgLocal+"logo.png",width: width,);
       },
       frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
         if (wasSynchronouslyLoaded) {

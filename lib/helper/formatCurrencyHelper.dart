@@ -230,7 +230,7 @@ class MoneyMaskedTextControllerQ extends TextEditingController {
 
 class MoneyFormat{
   static final formatter = new NumberFormat("#,###");
-  static final dataNominal=["50000","100000","150000","250000","500000","1500000"];
+  static final dataNominal=["50","100","150","200","250","300"];
 
 
 

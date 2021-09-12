@@ -7,6 +7,7 @@ import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/helper/validateFormHelper.dart';
 import 'package:adscoin/model/member/detailMemberModel.dart';
 import 'package:adscoin/model/member/leaderBoardModel.dart';
+import 'package:adscoin/model/member/listReferralMember.dart';
 import 'package:adscoin/service/httpService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,9 +25,10 @@ class UserProvider with ChangeNotifier{
   dynamic status="";
   dynamic type="";
   DatabaseInit db = new DatabaseInit();
-  bool isLoadingLeaderBoard=true,isLoadingDetailMember=true;
+  bool isLoadingLeaderBoard=true,isLoadingDetailMember=true,isLoadingListReferral=true;
   LeaderBoardModel leaderBoardModel;
   DetailMemberModel detailMemberModel;
+  ListReferralMember listReferralMember;
   Future getDetailMember({BuildContext context})async{
     if(detailMemberModel==null) isLoadingDetailMember=true;
     final res = await HttpService().get(url: "member/get/$idUser",context: context);
@@ -73,6 +75,18 @@ class UserProvider with ChangeNotifier{
       FunctionalWidget.toast(context: context,msg: res["msg"]);
       getDetailMember(context: context);
       notifyListeners();
+    }
+    notifyListeners();
+  }
+  Future getListReferral({BuildContext context})async{
+    if(listReferralMember==null) isLoadingLeaderBoard=true;
+    final res = await HttpService().get(url: "member/referral?page=1",context: context);
+    isLoadingListReferral=false;
+    if(res["result"].length>0){
+      ListReferralMember result=ListReferralMember.fromJson(res);
+      listReferralMember=result;
+    }else{
+      listReferralMember=null;
     }
     notifyListeners();
   }

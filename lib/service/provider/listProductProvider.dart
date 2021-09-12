@@ -8,6 +8,14 @@ class ListProductProvider with ChangeNotifier{
   bool isLoadMore=false;
   int perPage=10;
   String idCategory="";
+  String q="";
+  setQ({BuildContext context,input}){
+    isLoading=true;
+    q=input;
+    get(context: context);
+    notifyListeners();
+  }
+
 
   filterCategory(BuildContext context,input){
     isLoading=true;
@@ -20,15 +28,19 @@ class ListProductProvider with ChangeNotifier{
     if(listProductModel==null) isLoading=true;
     String url  =  "product?page=1&perpage=$perPage";
     if(idCategory!="") url+="&id_category=$idCategory";
+    if(q!="") url+="&q=$q";
     final res = await HttpService().get(url: url,context: context);
     isLoading=false;
     isLoadMore=false;
+    print(res["result"].length);
     if(res["result"].length>0){
       ListProductModel result = ListProductModel.fromJson(res);
       listProductModel = result;
       notifyListeners();
     }else{
       listProductModel = null;
+      notifyListeners();
+
     }
   }
   loadMoreContributor(BuildContext context){

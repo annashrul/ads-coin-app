@@ -2,6 +2,7 @@ import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/bankMemberProvider.dart';
 import 'package:adscoin/service/provider/fintechProvider.dart';
+import 'package:adscoin/service/provider/siteProvider.dart';
 import 'package:adscoin/view/component/fintech/methodChannel/methodChannelComponent.dart';
 import 'package:adscoin/view/widget/fintech/formFintechWidget.dart';
 import 'package:adscoin/view/widget/fintech/modalBankWidget.dart';
@@ -23,6 +24,8 @@ class _WithdrawComponentState extends State<WithdrawComponent> {
     super.initState();
     final bank = Provider.of<BankMemberProvider>(context,listen: false);
     bank.get(context: context);
+    final config = Provider.of<SiteProvider>(context,listen: false);
+    config.getConfig(context: context);
   }
 
   @override
@@ -30,14 +33,15 @@ class _WithdrawComponentState extends State<WithdrawComponent> {
     ScreenScaler scale = ScreenScaler()..init(context);
     final fintech = Provider.of<FintechProvider>(context);
     final bank = Provider.of<BankMemberProvider>(context);
+    final config = Provider.of<SiteProvider>(context);
 
     return Scaffold(
       appBar: FunctionalWidget.appBarHelper(context: context,title: "Penarikan"),
       body: FormFintechWidget(
         type: false,
         callback: (amount){
-          if(amount<50000){
-            FunctionalWidget.toast(context: context,msg: "top up minimal Rp 50,000");
+          if(amount<int.parse(config.configModel.result[0].wdMin)){
+            FunctionalWidget.toast(context: context,msg: "penarikan minimal ${config.configModel.result[0].wdMin} coin");
           }
           else{
             print(bank.bankMemberModel);

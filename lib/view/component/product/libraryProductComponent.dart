@@ -1,6 +1,7 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
+import 'package:adscoin/view/widget/general/noDataWidget.dart';
 import 'package:adscoin/view/widget/product/productWidget1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -27,6 +28,7 @@ class _LibraryProductComponentState extends State<LibraryProductComponent> {
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
+    final product = Provider.of<ProductProvider>(context);
 
     return Scaffold(
         appBar: AppBar(
@@ -60,6 +62,9 @@ class _LibraryProductComponentState extends State<LibraryProductComponent> {
                     ),
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.search,
+                    onSubmitted: (e){
+                      product.setAnyProductLibrary(context, e.toString());
+                    },
                   ),
                 ),
                 InkResponse(
@@ -81,7 +86,7 @@ class _LibraryProductComponentState extends State<LibraryProductComponent> {
   Widget buildContent(BuildContext context){
     ScreenScaler scale= ScreenScaler()..init(context);
     final product = Provider.of<ProductProvider>(context);
-    return product.isLoadingLibrary?LoadingProduct():new StaggeredGridView.countBuilder(
+    return product.isLoadingLibrary?LoadingProduct():product.productLibraryModel==null?NoDataWidget():new StaggeredGridView.countBuilder(
       padding:scale.getPadding(1,2.5),
       primary: false,
       shrinkWrap: true,

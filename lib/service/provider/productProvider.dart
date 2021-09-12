@@ -33,12 +33,18 @@ class ProductProvider with ChangeNotifier{
   DatabaseInit db = new DatabaseInit();
   int statusProduct=0;
   int filterStatusProduct=0;
-  String anyProductContributor="";
+  String anyProductContributor="",anyProductLibrary="";
 
   setAnyProductContributor(BuildContext context,input){
     anyProductContributor=input;
     isLoadingProductContributor=true;
     getProductContributor(context: context);
+    notifyListeners();
+  }
+  setAnyProductLibrary(BuildContext context,input){
+    anyProductLibrary=input;
+    isLoadingLibrary=true;
+    getLibrary(context: context);
     notifyListeners();
   }
 
@@ -96,9 +102,16 @@ class ProductProvider with ChangeNotifier{
   }
   Future getLibrary({BuildContext context,String type="home"})async{
     if(productLibraryModel==null) isLoadingLibrary=true;
-    final res = await HttpService().get(url: "product/library?page=1",context: context);
-    ProductLibraryModel result = ProductLibraryModel.fromJson(res);
-    productLibraryModel = result;
+    String url = "product/library?page=1";
+    if(anyProductLibrary!="") url+="&q=$anyProductLibrary";
+    final res = await HttpService().get(url:url,context: context);
+    if(res["result"].length>0){
+      ProductLibraryModel result = ProductLibraryModel.fromJson(res);
+      productLibraryModel = result;
+    }else{
+      productLibraryModel=null;
+    }
+
     isLoadingLibrary=false;
     notifyListeners();
   }

@@ -114,6 +114,9 @@ class _ProductComponentState extends State<ProductComponent> {
                       ),
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.search,
+                      onSubmitted: (e){
+                        product.setQ(context: context,input: e.toString());
+                      },
                     ),
                   ),
                   InkResponse(
