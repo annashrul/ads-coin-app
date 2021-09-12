@@ -173,7 +173,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
           return nameController.text!=""||previewController.text!=""||result!=""&&result!="-"&&result!="<p><br></p>"?saveData():true ?? false;
         },
         child: Scaffold(
-          appBar: FunctionalWidget.appBarHelper(context: context,title: product.isAdd?"Tambah produk ${product.timeCounter}":"Edit produk ${product.timeCounter}",callback: (){
+          appBar: FunctionalWidget.appBarHelper(context: context,title: product.isAdd?"Tambah produk":"Edit produk",callback: (){
             if(nameController.text!=""||previewController.text!=""||result!=""&&result!="-"&&result!="<p><br></p>"){
               saveData();
             }else{
