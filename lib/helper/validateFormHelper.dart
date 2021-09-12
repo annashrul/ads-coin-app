@@ -9,21 +9,31 @@ class ValidateFormHelper {
     return valid;
   }
 
-  validateLength(field,length){
-    if(field.length>length){
-      return false;
-    }
-    return true;
-  }
+
 
   validateEmptyForm({BuildContext context, field}){
     bool forEachDone=true;
     field.forEach((key, value) {
       if(forEachDone){
         if(value==""){
-          FunctionalWidget.toast(context: context,msg: "$key tidak boleh kosong");
+          FunctionalWidget.toast(context: context,msg: "${key.replaceAll("_"," ")} tidak boleh kosong");
           forEachDone=false;
           return forEachDone;
+        }
+        else if(key=="nomor"){
+          if(value.length<10){
+            FunctionalWidget.toast(context: context,msg: "no telepon terlalu pendek");
+            forEachDone=false;
+            return forEachDone;
+          }
+
+        }
+        else if(key=="compare"){
+          if(value["pin"]!=value["confirm_pin"]){
+            FunctionalWidget.toast(context: context,msg: "pin tidak cocok");
+            forEachDone=false;
+            return forEachDone;
+          }
         }
         else if(key=="email"){
           final validEmail = validateEmail(context: context,email: value);
@@ -45,7 +55,6 @@ class ValidateFormHelper {
       }
     });
     return forEachDone;
-
   }
 
 

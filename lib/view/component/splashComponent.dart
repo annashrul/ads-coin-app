@@ -1,5 +1,6 @@
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/siteProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/mainComponent.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,12 +22,17 @@ class _SplashComponentState extends State<SplashComponent> {
     if(userStorage.isLogin==null || userStorage.isLogin==StatusRoleString.baruInstall){
       Navigator.of(context).pushNamed(RouteString.onBoarding);
     }
-    else if(userStorage.isLogin==StatusRoleString.keluarAplikasi){
-      Navigator.of(context).pushNamed(RouteString.signIn);
-    }
     else{
-      Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
+      final user = Provider.of<UserProvider>(context, listen: false);
+      user.getDetailMember(context: context);
+      if(userStorage.isLogin==StatusRoleString.keluarAplikasi){
+        Navigator.of(context).pushNamed(RouteString.signIn);
+      }
+      else{
+        Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
+      }
     }
+
   }
 
 
@@ -34,9 +40,10 @@ class _SplashComponentState extends State<SplashComponent> {
   @override
   void initState() {
     super.initState();
-
     assetImage = AssetImage("${GeneralString.imgLocal}ic_launcher.png");
     checkingRoute();
+    final site = Provider.of<SiteProvider>(context,listen: false);
+    site.getConfig(context: context);
   }
 
   @override

@@ -48,7 +48,8 @@ class _SignInComponentState extends State<SignInComponent> {
                         "nomor":phoneNumberController.text,
                         "type":"otp",
                         "nama":"",
-                        "islogin":"1"
+                        "islogin":"1",
+                        "isRegister":"0"
                       };
                       await auth.sendOtp(context: context,data: data);
                     },
@@ -61,7 +62,9 @@ class _SignInComponentState extends State<SignInComponent> {
         ),
       ),
       bottomNavigationBar: InTouchWidget(
-        callback: (){},
+        callback: (){
+          Navigator.of(context).pushNamedAndRemoveUntil(RouteString.signUp, (route) => false);
+        },
         child: Padding(
           padding:scale.getPadding(2, 6),
           child: Row(

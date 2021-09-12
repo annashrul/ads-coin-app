@@ -150,7 +150,6 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
                   onRefresh: ()=>product.getProductContributor(context: context),
                   child: product.isLoadingProductContributor?LoadingProductContributor():product.productContributorModel==null?NoDataWidget():ListView.separated(
                     physics: AlwaysScrollableScrollPhysics(),
-
                     itemBuilder: (context,index){
                       final val = product.productContributorModel.result[index];
                       String heroTag="productContributor" + val.id;

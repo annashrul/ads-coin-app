@@ -7,9 +7,15 @@ import 'package:adscoin/service/provider/fintechProvider.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/cardTitleAction.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
+import 'package:adscoin/view/widget/general/touchWidget.dart';
+import 'package:adscoin/view/widget/general/uploadWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:getwidget/components/accordion/gf_accordion.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../successComponent.dart';
@@ -40,51 +46,135 @@ class _DetailTopUpComponentState extends State<DetailTopUpComponent> with Ticker
 
   @override
   Widget build(BuildContext context) {
+    bool isTrue=false;
     ScreenScaler scale = ScreenScaler()..init(context);
     final fintech = Provider.of<FintechProvider>(context);
-    // DetailTopUpModel result = DetailTopUpModel.fromJson(fintech.dataDetailTopUp);
+    final val = fintech.detailTopUpModel.result;
     return Scaffold(
-      appBar: FunctionalWidget.appBarHelper(context: context,title: "Informasi pembayaran"),
+      appBar: FunctionalWidget.appBarWithFilterHelper(context: context,title: "Informasi pembayaran",action: <Widget>[
+        IconButton(
+            onPressed: (){
+              fintech.refreshStatus(context: context);
+            },
+            icon: Icon(Icons.refresh,color: val.paymentType==0?ColorConfig.redColor:Colors.transparent,)
+        )
+      ]),
       body: ListView(
-        padding: scale.getPadding(1,2.5),
+        // padding: scale.getPadding(1,2.5),
         children: [
           Image.asset( GeneralString.imgLocalPng+"paymentInfo.png",height:  scale.getHeight(20),),
-          FunctionalWidget.wrapContent(
-            child: Padding(
-              padding: scale.getPadding(1,2),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Bank tujuan",style: Theme.of(context).textTheme.subtitle1),
-                  SizedBox(height: scale.getHeight(1)),
-                  CardTitleAction(
-                    image: GeneralString.dummyImgProduct,
-                    title: "Bank mandiri",
-                  ),
-                  SizedBox(height: scale.getHeight(1)),
-                  Text("Nomor rekening",style: Theme.of(context).textTheme.subtitle1),
-                  Text("13800110101010",style: Theme.of(context).textTheme.headline2),
-                  Divider(),
-                  Text("Nama pemilik",style: Theme.of(context).textTheme.subtitle1),
-                  Text("Ads Coin",style: Theme.of(context).textTheme.headline2),
-                  Divider(),
-                  Text("Jumlah rupiah",style: Theme.of(context).textTheme.subtitle1),
-                  Text("Rp "+MoneyFormat.toCurrency(double.parse("1000000")),style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.bluePrimaryColor,fontWeight: FontWeight.bold)),
-                  Divider(),
-                  Text("Jumlah coin",style: Theme.of(context).textTheme.subtitle1),
-                  Text(MoneyFormat.toCurrency(double.parse("50"))+" coin",style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.bluePrimaryColor,fontWeight: FontWeight.bold)),
-                ],
-              ),
+          Container(
+            child: Column(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Jumlah yang harus dibayar",style: Theme.of(context).textTheme.headline2,textAlign: TextAlign.center,),
+                Text("Rp "+MoneyFormat.toCurrency(double.parse(val.totalPay)),style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.bluePrimaryColor,fontWeight: FontWeight.bold,fontSize: scale.getTextSize(14))),
+              ],
             )
           ),
+          Padding(
+            padding: scale.getPadding(1,2),
+            child: FunctionalWidget.wrapContent(
+                child: Padding(
+                  padding: scale.getPadding(1,2),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(val.paymentType==0?"No virtual account":"No rekening",style: Theme.of(context).textTheme.subtitle1),
+                      InTouchWidget(
+                        callback: ()=>FunctionalWidget.copy(context: context,text:val.payCode),
+                        child: Row(
+                          children: [
+                            Text(val.payCode,style: Theme.of(context).textTheme.headline2),
+                            Icon(Icons.copy,size: scale.getTextSize(8))
+                          ],
+                        )
+                      ),
+                      if(val.paymentType==1)Divider(),
+                      if(val.paymentType==1)Text("Nama bank",style: Theme.of(context).textTheme.subtitle1),
+                      if(val.paymentType==1)Text(val.paymentName,style: Theme.of(context).textTheme.headline2),
+                      Divider(),
+                      Text("Jumlah coin",style: Theme.of(context).textTheme.subtitle1),
+                      Text(MoneyFormat.toCurrency(double.parse(val.amount))+" coin",style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.bluePrimaryColor,fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                )
+            ),
+          ),
+          Padding(
+            padding: scale.getPadding(0.5,2),
+            child: Text("Cara pembayaran",style: Theme.of(context).textTheme.headline1),
+          ),
+          Container(
+            margin: scale.getMargin(0,2),
+            child: FunctionalWidget.wrapContent(
+                child: ListView.separated(
+                  padding: scale.getPadding(0,0.0),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  physics: ScrollPhysics(),
+                  itemCount: val.instruction.length,
+                  itemBuilder: (context,index){
+                    final resParent= val.instruction[index];
+                    return GFAccordion(
+                        contentBorderRadius: BorderRadius.only(bottomRight: Radius.circular(10),bottomLeft:Radius.circular(10)),
+                        textStyle:Theme.of(context).textTheme.headline1,
+                        collapsedTitleBackgroundColor:Colors.transparent,
+                        contentBackgroundColor:Colors.transparent ,
+                        expandedTitleBackgroundColor: ColorConfig.yellowColor,
+                        collapsedIcon: Icon(Icons.arrow_drop_down),
+                        expandedIcon:Icon(Icons.arrow_drop_up),
+                        titlePadding: scale.getPaddingLTRB(2,0.5,2,0.5),
+                        contentPadding: EdgeInsets.zero,
+                        margin: EdgeInsets.zero,
+                        titleChild: Text(resParent.title,style: Theme.of(context).textTheme.subtitle1.copyWith(color: isTrue?Colors.white:Colors.black),),
+                        onToggleCollapsed: (isTrue){
+                          setState(() {
+                            isTrue=isTrue;
+                          });
+                        },
+                        contentChild: ListView.separated(
+                          // padding: EdgeInsets.zero,
+                          padding: scale.getPadding(1,2),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          physics: ScrollPhysics(),
+                          itemCount: resParent.steps.length,
+                          itemBuilder: (c,i){
+                            final resChild=resParent.steps[i];
+                            return Html(
+                              data: resChild,
+                              style: {
+                                "body": Style(
+                                  fontSize: FontSize(14.0),
+                                  fontWeight: FontWeight.w400,
+                                  margin: EdgeInsets.zero,
+                                ),
+                              },
+                              // defaultTextStyle: config.MyFont.style(context: context,color:Theme.of(context).textTheme.caption.color,style: Theme.of(context).textTheme.subtitle1,fontWeight: FontWeight.normal),
+                              onLinkTap: (String url){},
+                            );
+                          },
+                          separatorBuilder: (c,i){return Divider(color:Theme.of(context).textTheme.caption.color);},
+                        )
+                    );
+                  },
+                  separatorBuilder: (context,index){
+                    return Divider();
+                  },
+                )
+            ),
+          ),
           SizedBox(height: scale.getHeight(1)),
-          FunctionalWidget.wrapContent(
-            child: Padding(
+          Container(
+            margin: scale.getMargin(0,2),
+            child: Container(
               padding: scale.getPadding(1,2),
               child: Column(
                 children: [
-                  Text("Lakukan pembayaran sebelum 12 Agustus 2021",style: Theme.of(context).textTheme.subtitle1),
+                  Text("Lakukan pembayaran sebelum tanggal ${FunctionalWidget.convertDateToDMY(val.expiredDate)}",style: Theme.of(context).textTheme.subtitle1,textAlign: TextAlign.center,),
+                  if(val.paymentType==1)Text("mohon transfer tepat hingga 3 digit terakhir agar tidak menghambat proses verifikasi",style: Theme.of(context).textTheme.subtitle1,textAlign: TextAlign.center),
                   SizedBox(height: scale.getHeight(1)),
                   Countdown(animation: StepTween(begin: levelClock, end: 0).animate(_controller))
                 ],
@@ -98,14 +188,22 @@ class _DetailTopUpComponentState extends State<DetailTopUpComponent> with Ticker
         child:BackroundButtonWidget(
           backgroundColor: ColorConfig.redColor,
           color:ColorConfig.graySecondaryColor,
-          title: "Bayar",
+          title: val.paymentType==0?"Selesai":"Upload bukti transfer",
           callback: (){
-            FunctionalWidget.modal(
+            if(val.paymentType==0){
+              FunctionalWidget.backToHome(context);
+            }else{
+              FunctionalWidget.modal(
                 context: context,
-                child: SuccessComponent(
-                  callback: ()=>Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome),
+                child: UploadWidget(
+                  callback: (res){
+                    print(res);
+                    fintech.uploadBuktiTransfer(context: context,data: res["base64"]);
+                  },
+                  title: "Upload bukti transfer",
                 )
-            );
+              );
+            }
           },
         ),
       )

@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 
 class FintechProvider with ChangeNotifier{
   DetailTopUpModel detailTopUpModel;
-  dynamic dataDetailTopUp;
   Future createTopUp({BuildContext context,dynamic data})async{
     final store = {
       "payment_channel":data["paymentCode"],
@@ -18,8 +17,8 @@ class FintechProvider with ChangeNotifier{
     final res = await HttpService().post(url: "transaction/deposit",data: store,context: context);
     print(res);
     if(res!=null){
-      // DetailTopUpModel result = DetailTopUpModel.fromJson(res);
-      dataDetailTopUp = res;
+      DetailTopUpModel result = DetailTopUpModel.fromJson(res);
+      detailTopUpModel = result;
       Navigator.of(context).pushNamed(RouteString.detailTopUp);
       notifyListeners();
     }
@@ -36,4 +35,28 @@ class FintechProvider with ChangeNotifier{
       notifyListeners();
     }
   }
+  Future refreshStatus({BuildContext context})async{
+    FunctionalWidget.loadingDialog(context);
+    final res = await HttpService().get(url:"transaction/payment/check/${FunctionalWidget.btoa(detailTopUpModel.result.invoiceNo)}",context: context);
+    print(res["result"]);
+    Navigator.of(context).pop();
+    if(res["result"]["status"]==1){
+      FunctionalWidget.nofitDialog(context: context,msg: res["msg"],callback2: ()=>FunctionalWidget.backToHome(context),label2: "Beranda");
+    }else{
+      FunctionalWidget.toast(context: context,msg: res["msg"]);
+    }
+    notifyListeners();
+  }
+  Future uploadBuktiTransfer({BuildContext context,dynamic data})async{
+    final store = {
+      "bukti":data
+    };
+    final res = await HttpService().put(url: "transaction/deposit/${FunctionalWidget.btoa(detailTopUpModel.result.invoiceNo)}",data: store,context: context);
+
+    FunctionalWidget.nofitDialog(context: context,msg: "upload bukti transfer berhasil",callback2: ()=>FunctionalWidget.backToHome(context),label2: "Beranda");
+    notifyListeners();
+  }
+
+
+
 }

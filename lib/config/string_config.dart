@@ -15,6 +15,7 @@ class RoleAccessString{
 
 class RouteString{
   static const splash = "/";
+  static const info = "/info";
   static const onBoarding = "/onBoarding";
   static const signIn = "/signIn";
   static const signUp = "/signUp";
@@ -99,6 +100,8 @@ class GeneralString{
   static const String imgLocalSvg = "assets/img/svg/";
   static const String dummyImgUser = "https://freepikpsd.com/media/2019/10/user-png-image-9.png";
   static const String dummyImgProduct= "https://png.pngitem.com/pimgs/s/43-434027_product-beauty-skin-care-personal-care-liquid-tree.png";
+  static const String lorem = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+
 }
 
 class SiteString{

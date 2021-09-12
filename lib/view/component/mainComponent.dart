@@ -1,5 +1,6 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/siteProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/product/libraryProductComponent.dart';
 import 'package:adscoin/view/component/product/productComponent.dart';
@@ -26,7 +27,8 @@ class _MainComponentState extends State<MainComponent> {
   initState() {
     // final userStorage = Provider.of<UserProvider>(context, listen: false);
     // userStorage.getDataUser();
-
+    final config = Provider.of<SiteProvider>(context,listen: false);
+    config.getConfig(context: context);
     _selectTab(widget.index);
     super.initState();
   }

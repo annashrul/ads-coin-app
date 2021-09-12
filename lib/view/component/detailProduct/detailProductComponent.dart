@@ -58,16 +58,11 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
             width: 100,
           ):Hero(
               tag: widget.data["heroTag"] + widget.data["id"],
-              child:Container(
+              child:ImageRoundedWidget(
+                img: widget.data["image"],
                 height: scale.getHeight(30),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(widget.data["image"])
-                  )
-              ),
-
+                width: double.infinity,
+                fit: BoxFit.cover,
             )
           ),
           SizedBox(height: scale.getHeight(1)),

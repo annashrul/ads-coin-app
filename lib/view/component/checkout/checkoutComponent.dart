@@ -1,7 +1,10 @@
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/helper/formatCurrencyHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/GeneralProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
+import 'package:adscoin/service/provider/userProvider.dart';
+import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
@@ -27,6 +30,7 @@ class _CheckoutComponentState extends State<CheckoutComponent> {
     ScreenScaler scale= ScreenScaler()..init(context);
     final general = Provider.of<GeneralProvider>(context);
     final product = Provider.of<ProductProvider>(context);
+    final user  = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: FunctionalWidget.appBarHelper(context: context,title:"Checkout"),
       body: ListView(
@@ -43,23 +47,18 @@ class _CheckoutComponentState extends State<CheckoutComponent> {
                   SizedBox(height: scale.getHeight(1)),
                   Row(
                     children: [
-                      Container(
+                      ImageRoundedWidget(
+                        img: product.detailProductModel.result.image,
                         height: scale.getHeight(7),
                         width: scale.getWidth(15),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(GeneralString.dummyImgProduct)
-                            )
-                        ),
                       ),
+
                       SizedBox(width: scale.getWidth(2)),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Copywriting untuk Website",style: Theme.of(context).textTheme.headline2,),
+                          Text(product.detailProductModel.result.title,style: Theme.of(context).textTheme.headline2,),
                           FunctionalWidget.spaceText(
                               context: context,
                               title: "Rating",
@@ -102,7 +101,7 @@ class _CheckoutComponentState extends State<CheckoutComponent> {
       bottomNavigationBar:FunctionalWidget.bottomBar(
         context: context,
         title: "Saldo anda",
-        desc: "Rp 300,000",
+        desc: FunctionalWidget.toCoin(double.parse(user.detailMemberModel.result.saldo)),
         btnText: "Bayar",
         callback: (){
           // Navigator.of(context).pushNamed(RouteString.detailCheckout);

@@ -16,7 +16,6 @@ class SiteProvider with ChangeNotifier{
     notifyListeners();
   }
 
-
   Future getBank({BuildContext context})async{
     if(bankCompanyModel==null) isLoadingBank=true;
     final res = await HttpService().get(url: "bank",context: context);
@@ -46,6 +45,7 @@ class SiteProvider with ChangeNotifier{
   Future getConfig({BuildContext context})async{
     if(configModel==null) isLoadingConfig=true;
     final res = await HttpService().get(url: "site/config",context: context);
+    print(res);
     isLoadingConfig=false;
     ConfigModel result=ConfigModel.fromJson(res);
     configModel=result;

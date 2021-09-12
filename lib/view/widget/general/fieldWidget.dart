@@ -16,17 +16,19 @@ class FieldWidget extends StatelessWidget {
   bool isIcon;
   Function onTap;
   Function(String e) onChange;
+  int maxLength;
   FieldWidget({
     @required this.controller,
     this.textInputType,
     this.textInputAction,
     this.hintText,
     this.width,
-    this.maxLines,
+    this.maxLines=1,
     this.readOnly=false,
     this.isIcon=false,
     this.onTap,
     this.onChange,
+    this.maxLength,
   });
   @override
   Widget build(BuildContext context) {
@@ -45,16 +47,11 @@ class FieldWidget extends StatelessWidget {
         decoration: InputDecoration(
           hintText:hintText,
           border: InputBorder.none,
-          suffixIcon: Icon(Icons.arrow_forward_ios_outlined,color:isIcon?ColorConfig.grayPrimaryColor:Colors.transparent,),
-          suffixIconConstraints: BoxConstraints(
-              minHeight: scale.getHeight(1),
-              minWidth: scale.getWidth(1)
-          ),
         ),
         keyboardType: textInputType,
         textInputAction: textInputAction,
         inputFormatters: <TextInputFormatter>[
-          if(textInputType == TextInputType.number) LengthLimitingTextInputFormatter(15),
+          if(maxLength!=null)LengthLimitingTextInputFormatter(maxLength),
           if(textInputType == TextInputType.number) FilteringTextInputFormatter.digitsOnly
         ],
         onTap: (){

@@ -86,31 +86,34 @@ class _LibraryProductComponentState extends State<LibraryProductComponent> {
   Widget buildContent(BuildContext context){
     ScreenScaler scale= ScreenScaler()..init(context);
     final product = Provider.of<ProductProvider>(context);
-    return product.isLoadingLibrary?LoadingProduct():product.productLibraryModel==null?NoDataWidget():new StaggeredGridView.countBuilder(
-      padding:scale.getPadding(1,2.5),
-      primary: false,
-      shrinkWrap: true,
-      crossAxisCount: 4,
-      itemCount:product.isLoadingLibrary?10:product.productLibraryModel.result.length,
-      staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
-      mainAxisSpacing: 10.0,
-      crossAxisSpacing: 10.0,
-      itemBuilder: (context,index){
-        return ProductWidget1(
-          marginWidth: index==0?0:0,
-          heroTag: "mainProduk"+index.toString(),
-          isFavorite: index==0?true:false,
-          id:"mainProduk"+index.toString(),
-          title:  product.productLibraryModel.result[index].title,
-          price:  product.productLibraryModel.result[index].price,
-          productSale:"${ product.productLibraryModel.result[index].terjual} terjual" ,
-          image:  product.productLibraryModel.result[index].image,
-          isContributor: true,
-          nameContributor: product.productLibraryModel.result[index].seller,
-          imageContributor: product.productLibraryModel.result[index].sellerFoto,
-          rateContributor: double.parse(product.productLibraryModel.result[index].rating.toString()),
-        );
-      },
+    return RefreshIndicator(
+        child: product.isLoadingLibrary?LoadingProduct():product.productLibraryModel==null?NoDataWidget():new StaggeredGridView.countBuilder(
+          padding:scale.getPadding(1,2.5),
+          primary: false,
+          shrinkWrap: true,
+          crossAxisCount: 4,
+          itemCount:product.isLoadingLibrary?10:product.productLibraryModel.result.length,
+          staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+          mainAxisSpacing: 10.0,
+          crossAxisSpacing: 10.0,
+          itemBuilder: (context,index){
+            return ProductWidget1(
+              marginWidth: index==0?0:0,
+              heroTag: "mainProduk"+index.toString(),
+              isFavorite: index==0?true:false,
+              id:"mainProduk"+index.toString(),
+              title:  product.productLibraryModel.result[index].title,
+              price:  product.productLibraryModel.result[index].price,
+              productSale:"${ product.productLibraryModel.result[index].terjual} terjual" ,
+              image:  product.productLibraryModel.result[index].image,
+              isContributor: true,
+              nameContributor: product.productLibraryModel.result[index].seller,
+              imageContributor: product.productLibraryModel.result[index].sellerFoto,
+              rateContributor: double.parse(product.productLibraryModel.result[index].rating.toString()),
+            );
+          },
+        ),
+        onRefresh: ()=>product.getLibrary(context: context)
     );
   }
 }

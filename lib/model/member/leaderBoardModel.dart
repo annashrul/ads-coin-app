@@ -118,7 +118,7 @@ class Result {
   String website;
   String totalReferral;
   String copyTerjual;
-  int rating;
+  dynamic rating;
   int typeId;
   String type;
   String foto;

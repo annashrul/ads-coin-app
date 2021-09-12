@@ -32,6 +32,13 @@ class _ProductComponentState extends State<ProductComponent> {
       }
     }
   }
+  Future onLoadService()async{
+    // _refreshIndicatorKey.currentState.show();
+    final product = Provider.of<ListProductProvider>(context, listen: false);
+    final category = Provider.of<CategoryProvider>(context, listen: false);
+    category.getCategoryProduct(context: context,isFilter: true);
+    product.get(context: context);
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -43,6 +50,10 @@ class _ProductComponentState extends State<ProductComponent> {
     controller = new ScrollController()..addListener(scrollListener);
     final favorite = Provider.of<FavoriteProvider>(context, listen: false);
     favorite.get();
+    if(product.q!=""){
+      anyController.text=product.q;
+      setState(() {});
+    }
   }
   @override
   void dispose() {
@@ -53,6 +64,7 @@ class _ProductComponentState extends State<ProductComponent> {
   Widget build(BuildContext context) {
     final product = Provider.of<ListProductProvider>(context);
     final category = Provider.of<CategoryProvider>(context);
+
     int max = category.isLoading?10:category.categoryProductModel.result.length;
     ScreenScaler scale= ScreenScaler()..init(context);
     List<Widget> historyTab = [];
@@ -82,7 +94,6 @@ class _ProductComponentState extends State<ProductComponent> {
         initialIndex:  0,
         length: historyTab.length,
         child: Scaffold(
-          key: _scaffoldKey,
           appBar: AppBar(
             titleSpacing: 0.0,
             automaticallyImplyLeading: false,
@@ -143,14 +154,14 @@ class _ProductComponentState extends State<ProductComponent> {
               },
             ),
           ),
-          body: product.isLoading?LoadingProduct(): Container(
+          body:  product.isLoading?LoadingProduct(): Container(
             padding: scale.getPadding(1,2.5),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child:TabBarView(children:historyView)
+                    child:TabBarView(children:historyView),
                 ),
                 product.isLoadMore?Container(
                     alignment: Alignment.center,
@@ -161,7 +172,7 @@ class _ProductComponentState extends State<ProductComponent> {
                 ):SizedBox(),
               ],
             ),
-          )
+          ),
         )
     );
   }
@@ -169,41 +180,43 @@ class _ProductComponentState extends State<ProductComponent> {
   Widget buildContent(BuildContext context){
     final product = Provider.of<ListProductProvider>(context);
     final favorite = Provider.of<FavoriteProvider>(context);
-    return new StaggeredGridView.countBuilder(
-      padding: EdgeInsets.all(0.0),
-      primary: false,
-      shrinkWrap: true,
-      crossAxisCount: 4,
-      itemCount:product.listProductModel.result.length,
-      staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
-      mainAxisSpacing: 10.0,
-      crossAxisSpacing: 10.0,
-      controller: controller,
-      itemBuilder: (context,index){
-        if(favorite.data.length>0){
-          for(int i=0;i<favorite.data.length;i++){
-            if(favorite.data[i][TableString.idProduct] == product.listProductModel.result[index].id){
-              product.listProductModel.result[index].isFavorite = "1";
-              break;
+    return RefreshIndicator(
+        child: new StaggeredGridView.countBuilder(
+          padding: EdgeInsets.all(0.0),
+          physics: AlwaysScrollableScrollPhysics(),
+          crossAxisCount: 4,
+          itemCount:product.listProductModel.result.length,
+          staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+          mainAxisSpacing: 10.0,
+          crossAxisSpacing: 10.0,
+          controller: controller,
+          itemBuilder: (context,index){
+            if(favorite.data.length>0){
+              for(int i=0;i<favorite.data.length;i++){
+                if(favorite.data[i][TableString.idProduct] == product.listProductModel.result[index].id){
+                  product.listProductModel.result[index].isFavorite = "1";
+                  break;
+                }
+                continue;
+              }
             }
-            continue;
-          }
-        }
-        return ProductWidget1(
-          marginWidth: index==0?0:0,
-          heroTag: "mainProduk"+product.listProductModel.result[index].id,
-          isFavorite:product.listProductModel.result[index].isFavorite=="0"?false:true,
-          id: product.listProductModel.result[index].id,
-          title:  product.listProductModel.result[index].title,
-          price:  product.listProductModel.result[index].price,
-          productSale:"${ product.listProductModel.result[index].terjual} terjual" ,
-          image:  product.listProductModel.result[index].image,
-          isContributor: true,
-          nameContributor: product.listProductModel.result[index].seller,
-          imageContributor: product.listProductModel.result[index].sellerFoto,
-          rateContributor: double.parse(product.listProductModel.result[index].rating.toString()),
-        );
-      },
+            return ProductWidget1(
+              marginWidth: index==0?0:0,
+              heroTag: "mainProduk"+product.listProductModel.result[index].id,
+              isFavorite:product.listProductModel.result[index].isFavorite=="0"?false:true,
+              id: product.listProductModel.result[index].id,
+              title:  product.listProductModel.result[index].title,
+              price:  product.listProductModel.result[index].price,
+              productSale:"${ product.listProductModel.result[index].terjual} terjual" ,
+              image:  product.listProductModel.result[index].image,
+              isContributor: true,
+              nameContributor: product.listProductModel.result[index].seller,
+              imageContributor: product.listProductModel.result[index].sellerFoto,
+              rateContributor: double.parse(product.listProductModel.result[index].rating.toString()),
+            );
+          },
+        ),
+        onRefresh: ()=>onLoadService(),
     );
   }
 

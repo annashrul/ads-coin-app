@@ -4,6 +4,7 @@ import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/view/component/auth/otpComponent.dart';
 import 'package:adscoin/view/component/auth/pinComponent.dart';
 import 'package:adscoin/view/component/auth/signInComponent.dart';
+import 'package:adscoin/view/component/auth/signUpComponent.dart';
 import 'package:adscoin/view/component/bankMember/bankMemberComponent.dart';
 import 'package:adscoin/view/component/bankMember/formBankMemberComponent.dart';
 import 'package:adscoin/view/component/checkout/checkoutComponent.dart';
@@ -27,6 +28,7 @@ import 'package:adscoin/view/component/product/formProductComponent.dart';
 import 'package:adscoin/view/component/product/productContributorComponent.dart';
 import 'package:adscoin/view/component/profile/formProfileComponent.dart';
 import 'package:adscoin/view/component/profile/referralComponent.dart';
+import 'package:adscoin/view/component/site/infoAdsComponent.dart';
 import 'package:adscoin/view/component/splashComponent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -43,8 +45,9 @@ class RouteGenerator{
         return CupertinoPageRoute(builder: (_) => OnBoardingComponent());
       case '${RouteString.signIn}':
         return CupertinoPageRoute(builder: (_) => SignInComponent());
-      case '${RouteString.otp}':
-        return CupertinoPageRoute(builder: (_) => OtpComponent(data: args,));
+      case '${RouteString.signUp}':
+        return CupertinoPageRoute(builder: (_) => SignUpComponent());
+
       case '${RouteString.pin}':
         return CupertinoPageRoute(builder: (_) => PinComponent(callback: args));
       case '${RouteString.main}':

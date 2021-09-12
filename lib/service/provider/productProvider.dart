@@ -179,7 +179,7 @@ class ProductProvider with ChangeNotifier{
 
       if(res!=null){
         if(loading){
-          FunctionalWidget.nofitDialog(context: context,msg:"Data berhasil disimpan",callback2: ()=>Navigator.of(context).pushNamed(RouteString.productContributor));
+          FunctionalWidget.nofitDialog(context: context,msg:"Data berhasil disimpan",callback2: ()=>Navigator.of(context).pushReplacementNamed(RouteString.productContributor));
         }
       }
     }

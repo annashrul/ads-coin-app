@@ -64,26 +64,26 @@ class _DetailCheckoutComponentState extends State<DetailCheckoutComponent> {
                 ),
 
                 SizedBox(height:scale.getHeight(8)),
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: ColorConfig.redColor,
-                      border: Border.all(color: ColorConfig.redColor)
-
-                  ),
-                  child: InTouchWidget(
-                      radius: 10,
-                      callback:(){},
-                      child: Container(
-                          width: scale.getWidth(100),
-                          padding: scale.getPadding(0.8, 3),
-                          child: Center(
-                            child: Text("Detail pembelian",style: Theme.of(context).textTheme.headline1.copyWith(color: ColorConfig.graySecondaryColor)),
-                          )
-                      )
-                  ),
-                ),
-                SizedBox(height:scale.getHeight(1)),
+                // Container(
+                //   decoration: BoxDecoration(
+                //       borderRadius: BorderRadius.circular(10),
+                //       color: ColorConfig.redColor,
+                //       border: Border.all(color: ColorConfig.redColor)
+                //
+                //   ),
+                //   child: InTouchWidget(
+                //       radius: 10,
+                //       callback:(){},
+                //       child: Container(
+                //           width: scale.getWidth(100),
+                //           padding: scale.getPadding(0.8, 3),
+                //           child: Center(
+                //             child: Text("Detail pembelian",style: Theme.of(context).textTheme.headline1.copyWith(color: ColorConfig.graySecondaryColor)),
+                //           )
+                //       )
+                //   ),
+                // ),
+                // SizedBox(height:scale.getHeight(1)),
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),

@@ -20,7 +20,7 @@ class UploadWidget extends StatefulWidget {
 }
 
 class _UploadWidgetState extends State<UploadWidget> {
-  File _image;
+  dynamic _image;
 
   Future toImage(img)async{
     if(img!=null){
@@ -58,8 +58,10 @@ class _UploadWidgetState extends State<UploadWidget> {
           title: "Pilih dari kamera",
           callback: ()async{
             var img = await FunctionalWidget.getImage("kamera");
-            setState(()=>_image = img["file"]);
-            toImage(img);
+            setState(()=>_image = img);
+            if(widget.title!="Upload bukti transfer"){
+              toImage(img);
+            }
           },
         ),
         CardAction(
@@ -67,10 +69,10 @@ class _UploadWidgetState extends State<UploadWidget> {
           title: "Pilih dari galeri",
           callback: ()async{
             var img = await FunctionalWidget.getImage("galeri");
-            setState(()=>_image = img["file"]);
-            toImage(img);
-            // print(img);
-
+            setState(()=>_image = img);
+            if(widget.title!="Upload bukti transfer"){
+              toImage(img);
+            }
           },
         ),
         Container(
@@ -78,7 +80,7 @@ class _UploadWidgetState extends State<UploadWidget> {
           decoration: BoxDecoration(
             borderRadius:  BorderRadius.circular(10.0),
           ),
-          child: _image == null ?Image.network(GeneralString.dummyImgUser,width: double.infinity,fit: BoxFit.contain): new Image.file(_image,width: MediaQuery.of(context).size.width/1,height: MediaQuery.of(context).size.height/2,filterQuality: FilterQuality.high,),
+          child: _image == null ?Image.network(GeneralString.dummyImgUser,width: double.infinity,fit: BoxFit.contain): new Image.file(_image["file"],width: MediaQuery.of(context).size.width/1,height: MediaQuery.of(context).size.height/2,filterQuality: FilterQuality.high,),
         ),
 
       ],

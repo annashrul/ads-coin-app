@@ -18,6 +18,7 @@ import 'package:adscoin/view/widget/product/modalCategoryWidget.dart';
 import 'package:adscoin/view/widget/product/modalStatusFormProductWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:provider/provider.dart';
@@ -251,14 +252,22 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                 ],
               ),
               SizedBox(height: scale.getHeight(1)),
-              Text("Nama",style: Theme.of(context).textTheme.headline2),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Judul",style: Theme.of(context).textTheme.headline2),
+                  Text("${nameController.text.length}/30",style: Theme.of(context).textTheme.subtitle2,)
+                ],
+              ),
               FieldWidget(
                 controller: nameController,
-                maxLines: 1,
+                maxLength: 30,
                 textInputType: TextInputType.text,
                 textInputAction: TextInputAction.done,
                 onChange: (e){
                   setTime();
+                  this.setState(() {});
                 },
               ),
               SizedBox(height: scale.getHeight(1)),
@@ -295,14 +304,24 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                 },
               ),
               SizedBox(height: scale.getHeight(1)),
-              Text("Ringkasan",style: Theme.of(context).textTheme.headline2),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Ringkasan",style: Theme.of(context).textTheme.headline2),
+                  Text("${previewController.text.length}/100",style: Theme.of(context).textTheme.subtitle2,)
+                ],
+              ),
+
               FieldWidget(
                 controller: previewController,
                 maxLines: 5,
+                maxLength: 100,
                 textInputType: TextInputType.text,
                 textInputAction: TextInputAction.done,
                 onChange: (e){
                   setTime();
+                  this.setState(() {});
                 },
               ),
               SizedBox(height: scale.getHeight(1)),
@@ -340,13 +359,13 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                       },
                       onPaste: () {
                         setTime();
+                        print("######################### PASTE");
                       },
                     ),
                     toolbar: [
                       Style(),
                       Font(buttons: [FontButtons.bold, FontButtons.underline, FontButtons.italic])
                     ]
-
                 ),
               )
             ],

@@ -10,6 +10,7 @@ import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -18,6 +19,11 @@ import 'package:image_picker/image_picker.dart';
 
 
 class FunctionalWidget{
+  static copy({BuildContext context,String text}){
+    Clipboard.setData(new ClipboardData(text: text));
+    toast(context: context,msg:"data berhasil disalin");
+    // WidgetHelper().showFloatingFlushbar(context,"success","data berhasil disalin");
+  }
 
   static convertDateToYMD(DateTime date){
     String strDate = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
@@ -311,6 +317,7 @@ class FunctionalWidget{
     );
   }
   static toCoin(double coin){
+    return MoneyFormat.toFormat(coin)+" coin";
     return "$coin coin";
   }
   static btoa(val){

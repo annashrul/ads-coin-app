@@ -1,7 +1,10 @@
 import 'package:adscoin/config/color_config.dart';
+import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/service/provider/listProductProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class AppBarWithActionWidget extends StatefulWidget {
@@ -16,6 +19,8 @@ class _AppBarWithActionWidgetState extends State<AppBarWithActionWidget> {
   TextEditingController anyController;
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<ListProductProvider>(context,listen: false);
+
     ScreenScaler scale= ScreenScaler()..init(context);
     return SliverAppBar(
       titleSpacing: 0.0,
@@ -49,6 +54,10 @@ class _AppBarWithActionWidgetState extends State<AppBarWithActionWidget> {
                 ),
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.search,
+                onSubmitted: (e){
+                  product.setQ(context: context,input: e);
+                  Navigator.of(context).pushReplacementNamed(RouteString.main,arguments: TabIndexString.tabProduct);
+                },
               ),
             ),
             InkResponse(

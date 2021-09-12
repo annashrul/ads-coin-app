@@ -73,7 +73,7 @@ class _ReferralComponentState extends State<ReferralComponent> {
                 ),
                 SizedBox(width:scale.getWidth(1)),
                 InTouchWidget(
-                    callback: (){},
+                    callback: ()=>FunctionalWidget.copy(context: context,text: member.referral),
                     child: Container(
                       padding: scale.getPadding(1,2),
                       decoration: BoxDecoration(
@@ -110,7 +110,7 @@ class _ReferralComponentState extends State<ReferralComponent> {
                   final val = member.listReferralMember.result[index];
                   return FunctionalWidget.wrapContent(
                     child: ListTile(
-                      leading: ImageRoundedWidget(img: GeneralString.dummyImgUser,height: scale.getHeight(3),width: scale.getWidth(6),),
+                      leading: ImageRoundedWidget(img:val.foto,height: scale.getHeight(3),width: scale.getWidth(6),),
                       title: Text(val.fullname,style: Theme.of(context).textTheme.headline2),
                       subtitle: Text(val.produkReward=="-"?val.rewardCoin:val.produkReward,style: Theme.of(context).textTheme.subtitle1),
                     )

@@ -12,10 +12,9 @@ import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class OtpComponent extends StatefulWidget {
-  final dynamic data;
   Function(String otp) callback;
   bool isTrue;
-  OtpComponent({this.data,this.callback,this.isTrue});
+  OtpComponent({this.callback,this.isTrue});
   @override
   _OtpComponentState createState() => _OtpComponentState();
 }
@@ -23,7 +22,8 @@ class OtpComponent extends StatefulWidget {
 class _OtpComponentState extends State<OtpComponent> {
   String joinString="";
   void hidePhoneNumber(){
-    String nohp = widget.data["nomor"];
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    String nohp = auth.dataOtp["nomor"];
     String substringNoHp = nohp.substring(3,9);
     String replaceToStar="";
     for(int i=0;i<substringNoHp.length;i++){
@@ -47,17 +47,12 @@ class _OtpComponentState extends State<OtpComponent> {
     auth.timerUpdate();
     auth.timeCounter=10;
     auth.isTrue=false;
-    print("initstae");
-    // timerUpdate();
-    // isTrue=false;
-    // timeCounter = 10;
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
     final auth = Provider.of<AuthProvider>(context);
-    print(auth.dataOtp);
     return Scaffold(
       body:  Container(
         alignment: Alignment.center,
@@ -98,12 +93,13 @@ class _OtpComponentState extends State<OtpComponent> {
         child: RedButtonWidget(
           callback: (){
             if(auth.timeUpFlag){
-              print(widget.data);
+
               final sendData={
                 "nomor":auth.dataOtp["nomor"],
                 "type":auth.dataOtp["type"],
                 "nama":auth.dataOtp["nama"],
                 "islogin":auth.dataOtp["islogin"],
+                "isRegister":auth.dataOtp["isRegister"],
               };
               auth.sendOtp(context: context,data: sendData,isRedirect: false);
             }

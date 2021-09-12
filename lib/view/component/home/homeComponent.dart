@@ -24,16 +24,29 @@ class HomeComponent extends StatefulWidget {
 
 class _HomeComponentState extends State<HomeComponent> {
   TextEditingController anyController = new TextEditingController();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+  Future onLoadService() async {
+    _refreshIndicatorKey.currentState.show();
+    final product = Provider.of<ProductProvider>(context, listen: false);
+    final user = Provider.of<UserProvider>(context, listen: false);
+    final favorite = Provider.of<FavoriteProvider>(context, listen: false);
+    favorite.get();
+    user.getDetailMember(context: context);
+    product.getNew(context: context);
+    product.getBestSeller(context: context);
+    user.getLeaderBoard(context: context);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     final product = Provider.of<ProductProvider>(context, listen: false);
-    product.getNew(context: context);
-    product.getBestSeller(context: context);
+    final user = Provider.of<UserProvider>(context, listen: false);
     final favorite = Provider.of<FavoriteProvider>(context, listen: false);
     favorite.get();
-    final user = Provider.of<UserProvider>(context, listen: false);
+    product.getNew(context: context);
+    product.getBestSeller(context: context);
     user.getLeaderBoard(context: context);
   }
 
@@ -50,185 +63,191 @@ class _HomeComponentState extends State<HomeComponent> {
             return <Widget>[
               AppBarWithActionWidget(
                 color: ColorConfig.yellowColor,
-                callback: (res){},
+                callback: (res){
+                  // product.setQ(context: context,input: e.toString());
+                },
               )
             ];
           },
-          body: ListView(
-            padding: EdgeInsets.all(0),
-            children: [
-              Stack(
-                children: [
-                  DecoratedBox(
+          body: RefreshIndicator(
+            key: _refreshIndicatorKey,
+            child: ListView(
+              padding: EdgeInsets.all(0),
+              children: [
+                Stack(
+                  children: [
+                    DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: ColorConfig.yellowColor,
+                        ),
+                        child: Container(
+                          width: double.infinity,
+                          height: scale.getHeight(3),
+                        )
+                    ),
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children:<Widget>[
+                          Container(height: scale.getHeight(0)),
+                          Container(
+                            padding: scale.getPadding(0,2.5),
+                            child: CardSaldoWidget(),
+                          ),
+                        ]
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: scale.getPadding(1,2.5),
+                  child: InTouchWidget(
+                    callback: (){},
+                    radius: 10,
+                    child: Container(
                       decoration: BoxDecoration(
-                        color: ColorConfig.yellowColor,
+                          color: Color(0xFF2D9CDB),
+                          borderRadius: BorderRadius.circular(10)
                       ),
-                      child: Container(
-                        width: double.infinity,
-                        height: scale.getHeight(3),
-                      )
-                  ),
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children:<Widget>[
-                        Container(height: scale.getHeight(0)),
-                        Container(
-                          padding: scale.getPadding(0,2.5),
-                          child: CardSaldoWidget(),
-                        ),
-                      ]
-                  )
-                ],
-              ),
-              Padding(
-                padding: scale.getPadding(1,2.5),
-                child: InTouchWidget(
-                  callback: (){},
-                  radius: 10,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Color(0xFF2D9CDB),
-                        borderRadius: BorderRadius.circular(10)
-                    ),
-                    padding: scale.getPadding(2, 2),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text("Situs kami memberi jaminan jam kerja tepat waktu dan penulisan memuaskan",style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white,fontWeight: FontWeight.w400))
-                        ),
-                        CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          radius: 30,
-                          backgroundImage: NetworkImage('https://www.iconpacks.net/icons/1/free-user-group-icon-296-thumb.png')
-                        )
-                      ],
+                      padding: scale.getPadding(2, 2),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                              child: Text("Situs kami memberi jaminan jam kerja tepat waktu dan penulisan memuaskan",style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white,fontWeight: FontWeight.w400))
+                          ),
+                          CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              radius: 30,
+                              backgroundImage: NetworkImage('https://www.iconpacks.net/icons/1/free-user-group-icon-296-thumb.png')
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: scale.getPadding(0,2.5),
-                child: TitleSectionWidget(
-                  title: "Produk terlaris",
-                  callback: (){},
+                Padding(
+                  padding: scale.getPadding(0,2.5),
+                  child: TitleSectionWidget(
+                    title: "Produk terlaris",
+                    callback: (){},
+                  ),
                 ),
-              ),
-             Container(
-                padding: scale.getPadding(0.5,2.5),
-                height: scale.getHeight(23),
-                child:  product.isLoadingBestSeller?LoadingProductHorizontal():ListView.builder(
-                  padding: EdgeInsets.all(0.0),
-                  physics: ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: product.productBestSellerModel.result.length,
-                  itemBuilder: (BuildContext context, int index){
-                    if(favorite.data.length>0){
-                      for(int i=0;i<favorite.data.length;i++){
-                        if(favorite.data[i][TableString.idProduct] == product.productBestSellerModel.result[index].id){
-                          product.productBestSellerModel.result[index].isFavorite = "1";
-                          break;
-                        }
-                        continue;
-                      }
-                    }
-                    return ProductWidget1(
-                      marginWidth: index==0?0:1,
-                      heroTag: "produkTerlaris"+product.productBestSellerModel.result[index].id,
-                      isFavorite:product.productBestSellerModel.result[index].isFavorite=="0"?false:true,
-                      id:product.productBestSellerModel.result[index].id,
-                      title: product.productBestSellerModel.result[index].title,
-                      price: product.productBestSellerModel.result[index].price,
-                      productSale:"${product.productBestSellerModel.result[index].terjual} terjual" ,
-                      image: product.productBestSellerModel.result[index].image,
-                      isContributor: false,
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: scale.getPadding(0,2.5),
-                child: TitleSectionWidget(
-                  title: "Produk terbaru",
-                  callback: (){},
-                ),
-              ),
-              product.isLoadingNew?LoadingProduct():Container(
-                padding: scale.getPadding(0.5,2.5),
-                child: new StaggeredGridView.countBuilder(
-                  padding: EdgeInsets.all(0.0),
-                  primary: false,
-                  shrinkWrap: true,
-                  crossAxisCount: 4,
-                  itemCount:product.productNewModel.result.length,
-                  staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                  itemBuilder: (context,index){
-                    if(favorite.data.length>0){
-                      for(int i=0;i<favorite.data.length;i++){
-                        if(favorite.data[i][TableString.idProduct] == product.productNewModel.result[index].id){
-                          product.productNewModel.result[index].isFavorite = "1";
-                          break;
-                        }
-                        continue;
-                      }
-                    }
-                    return ProductWidget1(
-                      marginWidth: index==0?0:0,
-                      heroTag: "produkTerbaru"+product.productNewModel.result[index].id,
-                      isFavorite:product.productNewModel.result[index].isFavorite=="0"?false:true,
-                      id:product.productNewModel.result[index].id,
-                      title: product.productNewModel.result[index].title,
-                      price: product.productNewModel.result[index].price,
-                      productSale:"${product.productNewModel.result[index].terjual} terjual" ,
-                      image: product.productNewModel.result[index].image,
-                      isContributor: true,
-                      nameContributor: product.productNewModel.result[index].seller,
-                      imageContributor: product.productNewModel.result[index].sellerFoto,
-                      rateContributor: double.parse(product.productNewModel.result[index].rating.toString()),
-                    );
-                  },
-                ),
-              ),
-              if(!user.isLoadingLeaderBoard&&user.leaderBoardModel.result.length>0)Padding(
-                padding: scale.getPadding(0,2.5),
-                child: TitleSectionWidget(
-                  title: "Leaderboard",
-                  callback: (){},
-                  isAction: false,
-                ),
-              ),
-              if(!user.isLoadingLeaderBoard&&user.leaderBoardModel.result.length>0)Container(
-                padding: scale.getPadding(0.5,2.5),
-                child:ListView.separated(
-                  padding: EdgeInsets.zero,
-                    primary: false,
+                Container(
+                  padding: scale.getPadding(0.5,2.5),
+                  height: scale.getHeight(23),
+                  child:  product.isLoadingBestSeller?LoadingProductHorizontal():ListView.builder(
+                    padding: EdgeInsets.all(0.0),
+                    physics: ClampingScrollPhysics(),
                     shrinkWrap: true,
-                    itemBuilder: (context,index){
-                      final val = user.leaderBoardModel.result[index];
-                      return FunctionalWidget.wrapContent(
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            radius: 20,
-                            backgroundImage: NetworkImage(val.foto)
-                          ),
-                          title: Text(val.fullname,style: Theme.of(context).textTheme.headline2),
-                          subtitle: Text(val.bio,style: Theme.of(context).textTheme.subtitle1,maxLines: 1,overflow: TextOverflow.ellipsis),
-                          trailing: Container(
-                            width: scale.getWidth(10),
-                            child: FunctionalWidget.rating(context: context,rate:double.parse(val.rating.toString())),
-                          ),
-                        )
+                    scrollDirection: Axis.horizontal,
+                    itemCount: product.productBestSellerModel.result.length,
+                    itemBuilder: (BuildContext context, int index){
+                      if(favorite.data.length>0){
+                        for(int i=0;i<favorite.data.length;i++){
+                          if(favorite.data[i][TableString.idProduct] == product.productBestSellerModel.result[index].id){
+                            product.productBestSellerModel.result[index].isFavorite = "1";
+                            break;
+                          }
+                          continue;
+                        }
+                      }
+                      return ProductWidget1(
+                        marginWidth: index==0?0:1,
+                        heroTag: "produkTerlaris"+product.productBestSellerModel.result[index].id,
+                        isFavorite:product.productBestSellerModel.result[index].isFavorite=="0"?false:true,
+                        id:product.productBestSellerModel.result[index].id,
+                        title: product.productBestSellerModel.result[index].title,
+                        price: product.productBestSellerModel.result[index].price,
+                        productSale:"${product.productBestSellerModel.result[index].terjual} terjual" ,
+                        image: product.productBestSellerModel.result[index].image,
+                        isContributor: false,
                       );
                     },
-                    separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(0.5),);},
-                    itemCount: user.leaderBoardModel.result.length
+                  ),
                 ),
-              )
-            ],
+                Padding(
+                  padding: scale.getPadding(0,2.5),
+                  child: TitleSectionWidget(
+                    title: "Produk terbaru",
+                    callback: (){},
+                  ),
+                ),
+                product.isLoadingNew?LoadingProduct():Container(
+                  padding: scale.getPadding(0.5,2.5),
+                  child: new StaggeredGridView.countBuilder(
+                    padding: EdgeInsets.all(0.0),
+                    primary: false,
+                    shrinkWrap: true,
+                    crossAxisCount: 4,
+                    itemCount:product.productNewModel.result.length,
+                    staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+                    mainAxisSpacing: 10.0,
+                    crossAxisSpacing: 10.0,
+                    itemBuilder: (context,index){
+                      if(favorite.data.length>0){
+                        for(int i=0;i<favorite.data.length;i++){
+                          if(favorite.data[i][TableString.idProduct] == product.productNewModel.result[index].id){
+                            product.productNewModel.result[index].isFavorite = "1";
+                            break;
+                          }
+                          continue;
+                        }
+                      }
+                      return ProductWidget1(
+                        marginWidth: index==0?0:0,
+                        heroTag: "produkTerbaru"+product.productNewModel.result[index].id,
+                        isFavorite:product.productNewModel.result[index].isFavorite=="0"?false:true,
+                        id:product.productNewModel.result[index].id,
+                        title: product.productNewModel.result[index].title,
+                        price: product.productNewModel.result[index].price,
+                        productSale:"${product.productNewModel.result[index].terjual} terjual" ,
+                        image: product.productNewModel.result[index].image,
+                        isContributor: true,
+                        nameContributor: product.productNewModel.result[index].seller,
+                        imageContributor: product.productNewModel.result[index].sellerFoto,
+                        rateContributor: double.parse(product.productNewModel.result[index].rating.toString()),
+                      );
+                    },
+                  ),
+                ),
+                if(!user.isLoadingLeaderBoard&&user.leaderBoardModel.result.length>0)Padding(
+                  padding: scale.getPadding(0,2.5),
+                  child: TitleSectionWidget(
+                    title: "Leaderboard",
+                    callback: (){},
+                    isAction: false,
+                  ),
+                ),
+                if(!user.isLoadingLeaderBoard&&user.leaderBoardModel.result.length>0)Container(
+                  padding: scale.getPadding(0.5,2.5),
+                  child:ListView.separated(
+                      padding: EdgeInsets.zero,
+                      primary: false,
+                      shrinkWrap: true,
+                      itemBuilder: (context,index){
+                        final val = user.leaderBoardModel.result[index];
+                        return FunctionalWidget.wrapContent(
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  radius: 20,
+                                  backgroundImage: NetworkImage(val.foto)
+                              ),
+                              title: Text(val.fullname,style: Theme.of(context).textTheme.headline2),
+                              subtitle: Text(val.bio,style: Theme.of(context).textTheme.subtitle1,maxLines: 1,overflow: TextOverflow.ellipsis),
+                              trailing: Container(
+                                width: scale.getWidth(10),
+                                child: FunctionalWidget.rating(context: context,rate:double.parse(val.rating.toString())),
+                              ),
+                            )
+                        );
+                      },
+                      separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(0.5),);},
+                      itemCount: user.leaderBoardModel.result.length
+                  ),
+                )
+              ],
+            ),
+            onRefresh: ()=>onLoadService(),
           )
       ),
     );

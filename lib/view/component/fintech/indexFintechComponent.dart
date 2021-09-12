@@ -1,9 +1,11 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/helper/formatCurrencyHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/historyProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/fintech/historyMutationWidget.dart';
+import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:adscoin/view/widget/general/titleSectionWidget.dart';
 import 'package:adscoin/view/widget/home/cardSaldoWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -71,23 +73,39 @@ class _IndexFintechComponentState extends State<IndexFintechComponent> {
               flex: 1,
               child: Padding(
                 padding: scale.getPadding(0, 2.5),
-                child: FunctionalWidget.wrapContent(
-                    child: history.isLoadingHistoryMutation?LoadingBankMember():ListView.separated(
-                      padding: scale.getPadding(1,2),
-                        itemBuilder: (context,index){
-                          return HistoryMutationWidget(
-                            note: "Copywriting webstite",
-                            trxIn: index%2==0?120000.00:0.00,
-                            trxOut: index%2!=0?120000.700000:0.00,
-                            image: GeneralString.dummyImgProduct,
-                            status: "Pembayaran",
-                          );
+                child: history.isLoadingHistoryMutation?LoadingBankMember():ListView.separated(
+                      padding: scale.getPadding(0,0),
+                      itemBuilder: (context,index){
+                        final val = history.historyMutationModel.result[index];
+                        String nominal="+ ${MoneyFormat.toCurrency(double.parse(val.trxIn))}";
+                        Color colorNominal = ColorConfig.blackPrimaryColor;
+                        if(double.parse(val.trxIn)<1){
+                          nominal = "- ${MoneyFormat.toCurrency(double.parse(val.trxOut))}";
+                          colorNominal = ColorConfig.redColor;
+                        }
+                        Color color;
+                        if(val.type=="Penarikan")color = ColorConfig.bluePrimaryColor;
+                        else if(val.type=="Deposit")color = ColorConfig.yellowColor;
+                        else color = ColorConfig.purplePrimaryColor;
+                        return FunctionalWidget.wrapContent(
+                            child:ListTile(
 
-                        },
-                        separatorBuilder: (context,index){return Divider();},
-                        itemCount: history.historyMutationModel.result.length
-                    )
-                ),
+                              leading: ImageRoundedWidget(
+                                img: val.foto,
+                                height: scale.getHeight(3),
+                                width: scale.getWidth(8),
+                              ),
+                              title: Text(val.note,style: Theme.of(context).textTheme.subtitle1,),
+                              subtitle: Text(val.type,style: Theme.of(context).textTheme.subtitle1.copyWith(color:color),),
+                              trailing: Text(nominal,style: Theme.of(context).textTheme.subtitle1.copyWith(color: colorNominal),),
+                            )
+                        );
+
+                      },
+                      separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(0.5),);},
+                      itemCount: history.historyMutationModel.result.length
+                  )
+
               )
           ),
         ],

@@ -5,10 +5,13 @@ import 'dart:async';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/database/databaseInit.dart';
 import 'package:adscoin/database/table.dart';
+import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/helper/validateFormHelper.dart';
 import 'package:adscoin/model/auth/signInModel.dart';
 import 'package:adscoin/service/httpService.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/auth/otpComponent.dart';
+import 'package:adscoin/view/component/profile/disclaimerComponent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +22,8 @@ class AuthProvider with ChangeNotifier{
   bool timeUpFlag = false;
   Timer timer;
   DatabaseInit db = new DatabaseInit();
+  ValidateFormHelper valid = new ValidateFormHelper();
+
   timerUpdate() {
     timer = Timer(const Duration(seconds: 1), () async {
       timeCounter--;
@@ -42,6 +47,27 @@ class AuthProvider with ChangeNotifier{
     notifyListeners();
   }
 
+
+  Future postOtp({BuildContext context, dynamic data,Function(String res) callback})async{
+    dynamic field={
+      "nomor":data["phoneNumber"],
+      "type":"otp",
+      "nama":"",
+      "islogin":data["isLogin"]=="1"?"1":"0",
+      "isRegister":data["isLogin"]=="1"?"0":"1",
+    };
+    final res = await HttpService().post(
+        url: "auth/otp",
+        data: field,
+        context: context
+    );
+    field["otp"] = res["result"]["otp_anying"];
+    dataOtp = field;
+
+    callback(res["result"]["otp_anying"]);
+    // print(res);
+  }
+
   Future sendOtp({BuildContext context, dynamic data,bool isRedirect=true})async{
     final res = await HttpService().post(
       url: "auth/otp",
@@ -51,16 +77,15 @@ class AuthProvider with ChangeNotifier{
     data["otp"] = res["result"]["otp_anying"];
     if(isRedirect){
       Navigator.push(context, CupertinoPageRoute(builder: (context) =>  OtpComponent(
-        data: data,
         callback: (otp)async{
           final resLogin = await HttpService().post(
-              url: "auth",
-              data: {
-                "type":"otp",
-                "nohp":data["nomor"],
-                "otp_code":otp
-              },
-              context: context
+            url: "auth",
+            data: {
+              "type":"otp",
+              "nohp":data["nomor"],
+              "otp_code":otp
+            },
+            context: context
           );
           if(resLogin==null){
             isTrue=true;
@@ -92,18 +117,6 @@ class AuthProvider with ChangeNotifier{
             }
             final userStorage = Provider.of<UserProvider>(context, listen: false);
             await userStorage.getDataUser();
-            // userStorage.setStorage({
-            //   SessionString.sessIsLogin:StatusRoleString.masukAplikasi,
-            //   SessionString.sessId:dataUser.id,
-            //   SessionString.sessToken:dataUser.token,
-            //   SessionString.sessHavePin:dataUser.havePin,
-            //   SessionString.sessPhoto:dataUser.foto,
-            //   SessionString.sessName:dataUser.fullname,
-            //   SessionString.sessMobileNo:dataUser.mobileNo,
-            //   SessionString.sessReferral:dataUser.referral,
-            //   SessionString.sessStatus:dataUser.status,
-            //   SessionString.sessType:dataUser.type,
-            // });
             Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
           }
           notifyListeners();
@@ -122,6 +135,58 @@ class AuthProvider with ChangeNotifier{
   }
 
 
+
+
+
+  Future signUp({BuildContext context,Map<String,dynamic> fields})async{
+    final isValid = valid.validateEmptyForm(context: context,field:fields);
+    if(isValid){
+      FunctionalWidget.modal(
+          context: context,
+          child: Container(
+            height: MediaQuery.of(context).size.height/1.2,
+            child: DisclaimerComponent(
+              callback: ()async{
+                await postOtp(context: context,data: {"phoneNumber":fields["nomor"],"isLogin":"0"},callback: (otp){
+                  Navigator.push(context, CupertinoPageRoute(builder: (context) =>  OtpComponent(
+                    callback: (code)async{
+                      dynamic dataRegister={
+                        "fullname":fields["fullname"].toString(),
+                        "email":fields["email"].toString(),
+                        "mobile_no":fields["nomor"].toString(),
+                        "pin":fields["pin"].toString(),
+                        "sponsor":fields["referral_code"].toString(),
+                        "signup_source":"apps",
+                        "kode_otp":code.toString()
+                      };
+                      print(dataRegister);
+                      // print("CALLBAC OTP COMPONENT $code");
+                      final register = await HttpService().post(
+                          url: "auth/register",
+                          data: dataRegister,
+                          context: context
+                      );
+                      print("RESULT REGISTER $register");
+                      if(register!=null){
+                        FunctionalWidget.nofitDialog(context: context,msg: register["msg"],callback2: ()=>Navigator.of(context).pushNamedAndRemoveUntil(RouteString.signIn, (route) => false),label2: "Login");
+                      }
+                      notifyListeners();
+                    },
+                    isTrue: isTrue,
+                  )));
+                  notifyListeners();
+                });
+              },
+            ),
+          )
+      );
+
+      // final res = await HttpService().post(url: "auth/register",data: fields,context:context);
+      // print(sendOtp);
+
+    }
+    // notifyListeners();
+  }
 
 
 

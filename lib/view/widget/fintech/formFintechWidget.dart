@@ -21,25 +21,24 @@ class FormFintechWidget extends StatefulWidget {
 
 class _FormFintechWidgetState extends State<FormFintechWidget> {
   int idx=10;
-  MoneyMaskedTextControllerQ amountController = new MoneyMaskedTextControllerQ();
+  MoneyMaskedTextControllerQ amountController = MoneyMaskedTextControllerQ(initialValue:0.0,decimalSeparator: '', thousandSeparator: ',');
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    amountController = MoneyMaskedTextControllerQ(decimalSeparator: '', thousandSeparator: ',');
-    final config = Provider.of<SiteProvider>(context,listen: false);
-    config.getConfig(context: context);
+
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale = ScreenScaler()..init(context);
+    final config = Provider.of<SiteProvider>(context);
     bool isValid = false;
     if(amountController.text!=""&&int.parse(amountController.text.replaceAll(",",""))>0){
       isValid=true;
     }
-    final config = Provider.of<SiteProvider>(context);
     return ListView(
       padding: scale.getPadding(1,2.5),
       children: [
@@ -77,17 +76,23 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
                 BlacklistingTextInputFormatter.singleLineFormatter,
               ],
               onChanged: (e){
-                int amount;
-                for(int i=0;i<MoneyFormat.dataNominal.length;i++){
-                  if(MoneyFormat.dataNominal[i]==e){
-                    amount=i;
-                    break;
+                int index = 10;
+                if(e!=""){
+                  int amount;
+                  for(int i=0;i<MoneyFormat.dataNominal.length;i++){
+                    if(MoneyFormat.dataNominal[i]==e){
+                      amount=i;
+                      break;
+                    }
+                    continue;
                   }
-                  continue;
+                  idx = amount!=null?amount:10;
+                  setState(() {});
+                }else{
+                  index=10;
+                  amountController = MoneyMaskedTextControllerQ(initialValue:0.0,decimalSeparator: '', thousandSeparator: ',');
+                  this.setState(() {});
                 }
-                idx = amount!=null?amount:10;
-
-                setState(() {});
               },
             ),
           )
@@ -104,7 +109,7 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
               children: [
                 config.isLoadingConfig?BaseLoading(height: 1, width:10):Text("1 coin = Rp ${MoneyFormat.toFormat(double.parse(config.configModel.result[0].konversiCoin))}",style: Theme.of(context).textTheme.subtitle1,),
                 SizedBox(height: scale.getHeight(0.5)),
-                config.isLoadingConfig?BaseLoading(height: 1, width:20):Text("Total  = ${amountController.text} coin x Rp ${MoneyFormat.toFormat(double.parse(config.configModel.result[0].konversiCoin))} =  Rp ${MoneyFormat.toFormat(double.parse(config.configModel.result[0].konversiCoin)*double.parse(amountController.text))}",style: Theme.of(context).textTheme.subtitle1,),
+                config.isLoadingConfig?BaseLoading(height: 1, width:20):Text("Total  = ${MoneyFormat.toFormat(double.parse(amountController.text.replaceAll(",","")))} coin x Rp ${MoneyFormat.toFormat(double.parse(config.configModel.result[0].konversiCoin))} =  Rp ${MoneyFormat.toFormat(double.parse(config.configModel.result[0].konversiCoin)*double.parse(amountController.text.replaceAll(",","")))}",style: Theme.of(context).textTheme.subtitle1,),
               ],
             ),
           )

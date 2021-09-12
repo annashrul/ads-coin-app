@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MaskedTextControllerQ extends TextEditingController {
   MaskedTextControllerQ({String text, this.mask, Map<String, RegExp> translator})
@@ -127,7 +128,7 @@ class MoneyMaskedTextControllerQ extends TextEditingController {
   MoneyMaskedTextControllerQ(
       {double initialValue = 0.0,
         this.decimalSeparator = ',',
-        this.thousandSeparator = '',
+        this.thousandSeparator = '.',
         this.rightSymbol = '',
         this.leftSymbol = '',
         this.precision = 0}) {
@@ -153,7 +154,6 @@ class MoneyMaskedTextControllerQ extends TextEditingController {
 
   void updateValue(double value) {
     double valueToUse = value;
-
     if (value.toStringAsFixed(0).length > 12) {
       valueToUse = _lastValue;
     }
@@ -227,6 +227,7 @@ class MoneyMaskedTextControllerQ extends TextEditingController {
     return textRepresentation.reversed.join('');
   }
 }
+
 
 class MoneyFormat{
   static final formatter = new NumberFormat("#,###");
