@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 class ReferralComponent extends StatefulWidget {
   @override
@@ -57,7 +58,9 @@ class _ReferralComponentState extends State<ReferralComponent> {
               children: [
                 Expanded(
                     child: InTouchWidget(
-                        callback: (){},
+                        callback: ()async{
+                          await Share.share(member.referral);
+                        },
                         child: Container(
                           width: double.infinity,
                           padding: scale.getPadding(1,2),
@@ -88,7 +91,9 @@ class _ReferralComponentState extends State<ReferralComponent> {
                 SizedBox(width:scale.getWidth(1)),
 
                 InTouchWidget(
-                    callback: (){},
+                    callback: ()async{
+                      await Share.share(member.referral);
+                    },
                     child: Container(
                       padding: scale.getPadding(1,2),
                       decoration: BoxDecoration(

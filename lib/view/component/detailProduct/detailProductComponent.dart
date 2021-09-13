@@ -4,6 +4,7 @@ import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/GeneralProvider.dart';
 import 'package:adscoin/service/provider/favoriteProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
+import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
@@ -15,6 +16,7 @@ import 'package:flutter_html/style.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 
 // ignore: must_be_immutable
@@ -43,6 +45,7 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
     final general = Provider.of<GeneralProvider>(context);
     final product = Provider.of<ProductProvider>(context);
     final favorite = Provider.of<FavoriteProvider>(context);
+    final member = Provider.of<UserProvider>(context);
     bool isLoading=product.isLoadingDetailProduct;
     ScreenScaler scale= ScreenScaler()..init(context);
     return Scaffold(
@@ -117,10 +120,10 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
                         borderRadius:BorderRadius.circular(10)
                     ),
                     child:InkResponse(
-                      onTap: (){
+                      onTap: ()async{
 
                       },
-                      child:  Icon(FlutterIcons.share_alt_faw,color: Colors.white,),
+                      child:  Icon(FlutterIcons.web_mco,color: Colors.white,),
                     ),
                   ),
                 )
@@ -149,10 +152,10 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           context: context,
           title:"Harga",
           desc: isLoading?"loading ......":FunctionalWidget.toCoin(double.parse(product.detailProductModel.result.price)),
-          btnText: product.detailProductModel.result.statusBeli==1?"Ambil tulisan":"Beli sekarang",
-          callback: (){
+          btnText: isLoading?"loading ......":product.detailProductModel.result.statusBeli==1?"Ambil tulisan":"Beli sekarang",
+          callback: ()async{
             if(product.detailProductModel.result.statusBeli==1){
-
+              await Share.share(product.detailProductModel.result.content);
             }else{
               general.setConditionCheckoutAndDetail(true);
               Navigator.of(context).pushNamed(RouteString.checkout);

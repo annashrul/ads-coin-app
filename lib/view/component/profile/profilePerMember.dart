@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 class ProfilePerMember extends StatefulWidget {
   final String id;
@@ -42,6 +43,8 @@ class _ProfilePerMemberState extends State<ProfilePerMember> {
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
     final seller  = Provider.of<ProfileSellerProvider>(context);
+    // final member = Provider.of<UserProvider>(context);
+
     return Scaffold(
       appBar: FunctionalWidget.appBarHelper(context: context,title: "profile seller"),
       body: Container(
@@ -81,7 +84,9 @@ class _ProfilePerMemberState extends State<ProfilePerMember> {
                           SizedBox(width:scale.getWidth(1)),
 
                           InTouchWidget(
-                              callback: (){},
+                              callback: ()async{
+                                await Share.share(seller.profilePerMemberModel.result.referral);
+                              },
                               child: Container(
                                 padding: scale.getPadding(0.5,1),
                                 decoration: BoxDecoration(

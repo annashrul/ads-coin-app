@@ -15,10 +15,15 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:share/share.dart';
 
 
 
 class FunctionalWidget{
+  static share(String text)async{
+    await Share.share(text);
+
+  }
   static copy({BuildContext context,String text}){
     Clipboard.setData(new ClipboardData(text: text));
     toast(context: context,msg:"data berhasil disalin");

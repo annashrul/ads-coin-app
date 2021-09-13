@@ -125,15 +125,15 @@ class _ProfileComponentState extends State<ProfileComponent> {
                               colorIcon: ColorConfig.bluePrimaryColor,
                               callback: ()=>Navigator.of(context).pushNamed(RouteString.formProfile).then((value) => user.getDetailMember(context: context)),
                             ),
-                            divid(),
-                            CardAction(
+                            if(user.detailMemberModel.result.idType==1)divid(),
+                            if(user.detailMemberModel.result.idType==1)CardAction(
                               img:"Discount" ,
                               title: "Referral",
                               colorIcon: ColorConfig.bluePrimaryColor,
                               callback: ()=>Navigator.of(context).pushNamed(RouteString.referral),
                             ),
-                            if(user.type==RoleAccessString.contributor)divid(),
-                            if(user.type==RoleAccessString.contributor)CardAction(
+                            if(user.detailMemberModel.result.idType==1)divid(),
+                            if(user.detailMemberModel.result.idType==1)CardAction(
                               img:"Home1" ,
                               title: "Bank",
                               colorIcon: ColorConfig.bluePrimaryColor,
@@ -166,7 +166,7 @@ class _ProfileComponentState extends State<ProfileComponent> {
                     FunctionalWidget.wrapContent(
                         child:Column(
                           children: [
-                            if(user.type==RoleAccessString.contributor)CardAction(
+                            if(user.detailMemberModel.result.idType==1)CardAction(
                               img:"analytics1" ,
                               title: "Daftar produk",
                               colorIcon: ColorConfig.yellowColor,
@@ -175,7 +175,7 @@ class _ProfileComponentState extends State<ProfileComponent> {
                               },
                             ),
 
-                            if(user.type==RoleAccessString.contributor)divid(),
+                            if(user.detailMemberModel.result.idType==1)divid(),
                             CardAction(
                               img:"Chart" ,
                               title: "Laporan pembelian",
@@ -184,8 +184,8 @@ class _ProfileComponentState extends State<ProfileComponent> {
                                 Navigator.of(context).pushNamed(RouteString.historyPurchase);
                               },
                             ),
-                            if(user.type==RoleAccessString.contributor)divid(),
-                            if(user.type==RoleAccessString.contributor)CardAction(
+                            if(user.detailMemberModel.result.idType==1)divid(),
+                            if(user.detailMemberModel.result.idType==1)CardAction(
                               img:"analytics" ,
                               title: "Laporan penjualan",
                               colorIcon: ColorConfig.purplePrimaryColor,

@@ -1,10 +1,12 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/service/provider/listProductProvider.dart';
+import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 // ignore: must_be_immutable
 class AppBarWithActionWidget extends StatefulWidget {
@@ -20,6 +22,7 @@ class _AppBarWithActionWidgetState extends State<AppBarWithActionWidget> {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<ListProductProvider>(context,listen: false);
+    final member = Provider.of<UserProvider>(context,listen: false);
 
     ScreenScaler scale= ScreenScaler()..init(context);
     return SliverAppBar(
@@ -61,7 +64,11 @@ class _AppBarWithActionWidgetState extends State<AppBarWithActionWidget> {
               ),
             ),
             InkResponse(
-              onTap: (){},
+              onTap: ()async{
+                if(member.detailMemberModel.result.idType==1){
+                  await Share.share(member.referral);
+                }
+              },
               child: Icon(
                   FlutterIcons.share_alt_faw,
                   size: scale.getTextSize(15),
