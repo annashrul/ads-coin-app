@@ -18,6 +18,8 @@ class HttpService{
     if(res){
       final userStorage = Provider.of<UserProvider>(context, listen: false);
       ApiString.head["Authorization"] = "Bearer ${userStorage.token}";
+      print("################################ ApiString.head = ${ApiString.head}");
+
       final response = await client.get(ApiString.url+url, headers:ApiString.head).timeout(Duration(seconds: ApiString.timeOut));
       print("################################ URL = $url, STATUS = ${response.statusCode}");
       if (response.statusCode == 200){

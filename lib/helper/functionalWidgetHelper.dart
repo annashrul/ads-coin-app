@@ -4,8 +4,11 @@ import 'dart:io';
 
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/database/databaseInit.dart';
+import 'package:adscoin/database/table.dart';
 import 'package:adscoin/helper/dateHelper.dart';
 import 'package:adscoin/helper/formatCurrencyHelper.dart';
+import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,15 +18,44 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
 
 
 class FunctionalWidget{
-  static share(String text)async{
-    await Share.share(text);
+  static checkTokenExp({BuildContext context})async{
+    final provider = Provider.of<UserProvider>(context,listen:false);
+    final token = provider.token;
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+    bool isTokenExpired = JwtDecoder.isExpired(token);
+    if(isTokenExpired){
+      FunctionalWidget.nofitDialog(
+          context: context,
+          msg: "Sesi anda sudah berakhir. silahkan lakukan login ulang",
+          callback1: ()=>Navigator.of(context).pop(),
+          callback2: ()async{
+            DatabaseInit db = new DatabaseInit();
+            final res = await db.update(UserTable.TABLE_NAME, provider.id, {
+              SessionString.sessIsLogin:StatusRoleString.keluarAplikasi
+            });
+            if(res){
+              Navigator.of(context).pushNamedAndRemoveUntil(RouteString.signIn, (route) => false);
+            }else{
+              FunctionalWidget.toast(context: context,msg:"gagal keluar aplikasi");
+            }
+          },
+          label2: "Keluar"
+      );
+
+    }
+    print("####################### PAYLOAD TOKEN $isTokenExpired ########################################");
+
+    // return isTokenExpired;
 
   }
+
   static copy({BuildContext context,String text}){
     Clipboard.setData(new ClipboardData(text: text));
     toast(context: context,msg:"data berhasil disalin");

@@ -1,6 +1,3 @@
-
-
-
 class StatusDeposit{
   static const String paymentGateway = "1";
   static const String virtualAccount = "0";
@@ -10,8 +7,6 @@ class RoleAccessString{
   static const String contributor="Kontributor";
   static const String member="Member";
 }
-
-
 
 class RouteString{
   static const splash = "/";
@@ -50,7 +45,6 @@ class RouteString{
   static const success = "/success";
 }
 
-
 class TableString{
   static const String idProduct="idProduct";
   static const String titleProduct="titleProduct";
@@ -69,7 +63,6 @@ class TableString{
 
 
 }
-
 
 class TabIndexString{
   static const int tabHome = 0;
@@ -103,7 +96,6 @@ class GeneralString{
   static const String dummyImgUser = "https://freepikpsd.com/media/2019/10/user-png-image-9.png";
   static const String dummyImgProduct= "https://png.pngitem.com/pimgs/s/43-434027_product-beauty-skin-care-personal-care-liquid-tree.png";
   static const String lorem = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
-
 }
 
 class SiteString{
@@ -112,7 +104,7 @@ class SiteString{
 
 class ApiString{
   static const String onesignalAppId = "ad1a7344-2b2f-40d0-87c8-0f8ec150cb8f";
-  static const String url = "http://ptnetindo.com:6703/";
+  static const String url = "http://api.adscoin.id/";
   static const int timeOut = 60;
   static const String xProjectId = "8123268367ea27e094e71e290";
   static const String xRequestedFrom = "apps";

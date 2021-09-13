@@ -40,6 +40,7 @@ class _MainComponentState extends State<MainComponent> {
     print("didUpdateWidget");
   }
   void _selectTab(int tabItem) {
+
     setState(() {
       widget.index = tabItem;
       switch (tabItem) {
@@ -77,7 +78,8 @@ class _MainComponentState extends State<MainComponent> {
             selectedItemColor: Color(0xFFFFFFFF),
             unselectedItemColor: Color(0xFFE3B3AF),
             currentIndex: widget.index,
-            onTap: (int i) {
+            onTap: (int i) async{
+              await FunctionalWidget.checkTokenExp(context: context);
               this._selectTab(i);
             },
             // this will be set when a new tab is tapped
