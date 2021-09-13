@@ -61,6 +61,10 @@ class _SplashComponentState extends State<SplashComponent> {
             image: DecorationImage(image: assetImage)
         ),
       ),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.all(10),
+        child: Text("powered by sopowae",style: Theme.of(context).textTheme.headline1,textAlign: TextAlign.center,),
+      ),
     );
   }
 }

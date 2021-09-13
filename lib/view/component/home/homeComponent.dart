@@ -144,7 +144,7 @@ class _HomeComponentState extends State<HomeComponent> {
                   padding: scale.getPadding(0,2.5),
                   child: TitleSectionWidget(
                     title: "Produk terlaris",
-                    callback: (){},
+                    callback: ()=>Navigator.of(context).pushReplacementNamed(RouteString.main,arguments: TabIndexString.tabProduct)
                   ),
                 ),
                 Container(
@@ -184,7 +184,7 @@ class _HomeComponentState extends State<HomeComponent> {
                   padding: scale.getPadding(0,2.5),
                   child: TitleSectionWidget(
                     title: "Produk terbaru",
-                    callback: (){},
+                    callback: ()=>Navigator.of(context).pushReplacementNamed(RouteString.main,arguments: TabIndexString.tabProduct),
                   ),
                 ),
                 product.isLoadingNew?LoadingProduct():Container(
