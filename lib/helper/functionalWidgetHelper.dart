@@ -262,7 +262,7 @@ class FunctionalWidget{
     );
   }
 
-  static spaceText({BuildContext context,String title, String desc,Widget child}){
+  static spaceText({BuildContext context,String title, String desc,Widget child,double width=20}){
     ScreenScaler scale= ScreenScaler()..init(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -270,7 +270,7 @@ class FunctionalWidget{
       children: [
         Container(
           child: Text(title,style: Theme.of(context).textTheme.headline2.copyWith(color: Theme.of(context).textTheme.subtitle1.color)),
-          width: scale.getWidth(20),
+          width: scale.getWidth(width),
         ),
         Text(":",style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).textTheme.subtitle2.color)),
         SizedBox(width: scale.getWidth(1)),

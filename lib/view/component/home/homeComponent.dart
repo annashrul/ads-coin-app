@@ -3,6 +3,7 @@ import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/favoriteProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
+import 'package:adscoin/service/provider/promoProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/appBarWithActionWidget.dart';
@@ -30,11 +31,13 @@ class _HomeComponentState extends State<HomeComponent> {
     final product = Provider.of<ProductProvider>(context, listen: false);
     final user = Provider.of<UserProvider>(context, listen: false);
     final favorite = Provider.of<FavoriteProvider>(context, listen: false);
+    final promo = Provider.of<PromoProvider>(context, listen: false);
     favorite.get();
     user.getDetailMember(context: context);
     product.getNew(context: context);
     product.getBestSeller(context: context);
     user.getLeaderBoard(context: context);
+    promo.checkPromo(context: context);
   }
 
   @override
@@ -44,10 +47,12 @@ class _HomeComponentState extends State<HomeComponent> {
     final product = Provider.of<ProductProvider>(context, listen: false);
     final user = Provider.of<UserProvider>(context, listen: false);
     final favorite = Provider.of<FavoriteProvider>(context, listen: false);
+    final promo = Provider.of<PromoProvider>(context, listen: false);
     favorite.get();
     product.getNew(context: context);
     product.getBestSeller(context: context);
     user.getLeaderBoard(context: context);
+    promo.checkPromo(context: context);
   }
 
   @override
@@ -55,6 +60,7 @@ class _HomeComponentState extends State<HomeComponent> {
     final product = Provider.of<ProductProvider>(context);
     final favorite = Provider.of<FavoriteProvider>(context);
     final user = Provider.of<UserProvider>(context);
+    final promo = Provider.of<PromoProvider>(context);
 
     ScreenScaler scale= ScreenScaler()..init(context);
     return Scaffold(
@@ -100,7 +106,7 @@ class _HomeComponentState extends State<HomeComponent> {
                 Padding(
                   padding: scale.getPadding(1,2.5),
                   child: InTouchWidget(
-                    callback: (){},
+                    callback: ()=>Navigator.of(context).pushNamed(RouteString.detailPromo),
                     radius: 10,
                     child: Container(
                       decoration: BoxDecoration(
@@ -112,12 +118,22 @@ class _HomeComponentState extends State<HomeComponent> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                              child: Text("Situs kami memberi jaminan jam kerja tepat waktu dan penulisan memuaskan",style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white,fontWeight: FontWeight.w400))
+                              child: promo.isLoadingPromo?Column(
+                                children: [
+                                  BaseLoading(height: 1, width: 30),
+                                  SizedBox(height: scale.getHeight(0.5)),
+                                  BaseLoading(height: 1, width: 50),
+                                  SizedBox(height: scale.getHeight(0.5)),
+                                  BaseLoading(height: 1, width: 60),
+                                ],
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                              ):Text(promo.promoModel==null?"Situs kami memberi jaminan jam kerja tepat waktu dan penulisan memuaskan":promo.promoModel.result.deskripsi,style: Theme.of(context).textTheme.headline2.copyWith(color: Colors.white,fontWeight: FontWeight.w400),maxLines: 3,overflow: TextOverflow.ellipsis,)
                           ),
-                          CircleAvatar(
+                          promo.isLoadingPromo?BaseLoading(height: 4, width: 10,radius: 100):CircleAvatar(
                               backgroundColor: Colors.transparent,
                               radius: 30,
-                              backgroundImage: NetworkImage('https://www.iconpacks.net/icons/1/free-user-group-icon-296-thumb.png')
+                              backgroundImage: NetworkImage(promo.promoModel==null?'https://www.iconpacks.net/icons/1/free-user-group-icon-296-thumb.png':promo.promoModel.result.image)
                           )
                         ],
                       ),

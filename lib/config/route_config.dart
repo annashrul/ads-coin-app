@@ -27,7 +27,9 @@ import 'package:adscoin/view/component/product/favoriteComponent.dart';
 import 'package:adscoin/view/component/product/formProductComponent.dart';
 import 'package:adscoin/view/component/product/productContributorComponent.dart';
 import 'package:adscoin/view/component/profile/formProfileComponent.dart';
+import 'package:adscoin/view/component/profile/profilePerMember.dart';
 import 'package:adscoin/view/component/profile/referralComponent.dart';
+import 'package:adscoin/view/component/promo/detailPromoComponent.dart';
 import 'package:adscoin/view/component/site/infoAdsComponent.dart';
 import 'package:adscoin/view/component/splashComponent.dart';
 import 'package:flutter/cupertino.dart';
@@ -92,6 +94,10 @@ class RouteGenerator{
         return CupertinoPageRoute(builder: (_) => FavoriteComponent());
       case '${RouteString.referral}':
         return CupertinoPageRoute(builder: (_) => ReferralComponent());
+      case '${RouteString.profilePerMember}':
+        return CupertinoPageRoute(builder: (_) => ProfilePerMember(id: args));
+      case '${RouteString.detailPromo}':
+        return CupertinoPageRoute(builder: (_) => DetailPromoComponent());
 
 
       default:

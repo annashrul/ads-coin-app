@@ -74,7 +74,6 @@ class _FormProductContributorComponentState extends State<FormProductContributor
     return false;
   }
   DatabaseInit db = new DatabaseInit();
-
   Future autoSaveProduct(img)async{
     final data ={
       TableString.contentProduct:"$result",
@@ -124,15 +123,22 @@ class _FormProductContributorComponentState extends State<FormProductContributor
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.inactive:
+        print("######################################  AppLifecycleState.inactive ################################}");
         // store();
         break;
       case AppLifecycleState.resumed:
+        print("######################################  AppLifecycleState.resumed ################################}");
+
         // store();
         break;
       case AppLifecycleState.paused:
+        print("######################################  AppLifecycleState.paused ################################}");
+
         // store();
         break;
       case AppLifecycleState.detached:
+        print("######################################  AppLifecycleState.detached ################################}");
+
         // store();
 
         break;

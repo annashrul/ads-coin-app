@@ -11,7 +11,8 @@ import 'package:adscoin/service/provider/fintechProvider.dart';
 import 'package:adscoin/service/provider/historyProvider.dart';
 import 'package:adscoin/service/provider/listProductProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
-import 'package:adscoin/service/provider/profileProvider.dart';
+import 'package:adscoin/service/provider/profileSellerProvider.dart';
+import 'package:adscoin/service/provider/promoProvider.dart';
 import 'package:adscoin/service/provider/siteProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,8 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<FintechProvider>(create: (_) => FintechProvider()),
   ChangeNotifierProvider<SiteProvider>(create: (_) => SiteProvider()),
   ChangeNotifierProvider<BankMemberProvider>(create: (_) => BankMemberProvider()),
+  ChangeNotifierProvider<ProfileSellerProvider>(create: (_) => ProfileSellerProvider()),
+  ChangeNotifierProvider<PromoProvider>(create: (_) => PromoProvider()),
 ];
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

@@ -184,18 +184,6 @@ class ProductProvider with ChangeNotifier{
       }
     }
   }
-  // Future autoSaveProduct(Map<String, Object> data)async{
-  //   final get = await db.getData(ProductTable.TABLE_NAME);
-  //   print("##################### SAVE TO LOCAL DB $data");
-  //   await db.delete(ProductTable.TABLE_NAME);
-  //   if(get.length>0){
-  //     await db.update(ProductTable.TABLE_NAME,get[0]["id"],data);
-  //   }
-  //   else{
-  //     await db.insert(ProductTable.TABLE_NAME, data);
-  //   }
-  //   // notifyListeners();
-  // }
   Future updateToDraft({BuildContext context})async{
     FunctionalWidget.nofitDialog(
         context: context,
@@ -241,25 +229,6 @@ class ProductProvider with ChangeNotifier{
     }
     notifyListeners();
   }
-  // Future loadMoreLibrary(BuildContext context)async{
-  //   if(perPageLibrary<productLibraryModel.meta.total){
-  //     addListener(()=>isLoadMoreLibrary=true);
-  //     perPageLibrary+=10;
-  //     await getLibrary(context: context);
-  //     isLoadMoreLibrary=false;
-  //     notifyListeners();
-  //   }else{
-  //     addListener(()=>isLoadMoreLibrary=false);
-  //     notifyListeners();
-  //   }
-  // }
-  // void scrollListener({BuildContext context}) {
-  //   if (!isLoadingLibrary) {
-  //     if (controllerLibrary.position.pixels == controllerLibrary.position.maxScrollExtent) {
-  //       loadMoreLibrary(context);
-  //     }
-  //   }
-  // }
 
   int timeCounter = 0;
   bool timeUpFlag = false;

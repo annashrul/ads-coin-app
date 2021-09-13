@@ -101,7 +101,7 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           SizedBox(height: scale.getHeight(1)),
           FunctionalWidget.wrapContent(
             child: InTouchWidget(
-                callback: (){},
+                callback: ()=>Navigator.of(context).pushNamed(RouteString.profilePerMember,arguments: product.detailProductModel.result.idSeller),
                 child: ListTile(
                   leading: isLoading?BaseLoading(height: 4, width: 10,radius:100):CircleAvatar(
                       backgroundColor: Colors.transparent,
@@ -117,7 +117,9 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
                         borderRadius:BorderRadius.circular(10)
                     ),
                     child:InkResponse(
-                      onTap: (){},
+                      onTap: (){
+
+                      },
                       child:  Icon(FlutterIcons.share_alt_faw,color: Colors.white,),
                     ),
                   ),
@@ -147,11 +149,15 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           context: context,
           title:"Harga",
           desc: isLoading?"loading ......":FunctionalWidget.toCoin(double.parse(product.detailProductModel.result.price)),
-          btnText: "Beli sekarang",
+          btnText: product.detailProductModel.result.statusBeli==1?"Ambil tulisan":"Beli sekarang",
           callback: (){
+            if(product.detailProductModel.result.statusBeli==1){
 
-            general.setConditionCheckoutAndDetail(true);
-            Navigator.of(context).pushNamed(RouteString.checkout);
+            }else{
+              general.setConditionCheckoutAndDetail(true);
+              Navigator.of(context).pushNamed(RouteString.checkout);
+            }
+
           }
       ),
     );

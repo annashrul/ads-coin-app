@@ -22,8 +22,7 @@ class ImageRoundedWidget extends StatelessWidget {
       fit: fit,
       filterQuality: FilterQuality.high,
       errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
-        // return BaseLoading(height: height, width: width);
-        return Image.asset(GeneralString.imgLocal+"logo.png",width: width,);
+        return Image.asset(GeneralString.imgLocal+"logo.png",width: width,height: height,);
       },
       frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
         if (wasSynchronouslyLoaded) {

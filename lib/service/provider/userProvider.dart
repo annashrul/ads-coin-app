@@ -8,6 +8,7 @@ import 'package:adscoin/helper/validateFormHelper.dart';
 import 'package:adscoin/model/member/detailMemberModel.dart';
 import 'package:adscoin/model/member/leaderBoardModel.dart';
 import 'package:adscoin/model/member/listReferralMember.dart';
+import 'package:adscoin/model/member/profilePerMemberModel.dart';
 import 'package:adscoin/service/httpService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,6 +30,7 @@ class UserProvider with ChangeNotifier{
   LeaderBoardModel leaderBoardModel;
   DetailMemberModel detailMemberModel;
   ListReferralMember listReferralMember;
+
   Future getDetailMember({BuildContext context})async{
     if(detailMemberModel==null) isLoadingDetailMember=true;
     final res = await HttpService().get(url: "member/get/$idUser",context: context);
@@ -90,4 +92,8 @@ class UserProvider with ChangeNotifier{
     }
     notifyListeners();
   }
+
+
+
+
 }

@@ -36,6 +36,8 @@ class RouteString{
   static const indexFintechComponent = "/indexFintechComponent";
   static const historyMutation = "/historyMutation";
   static const referral = "/referral";
+  static const profilePerMember = "/profilePerMember";
+  static const detailPromo = "/detailPromo";
 
 
   static const topUp = "/topUp";

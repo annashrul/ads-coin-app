@@ -43,7 +43,7 @@ class _SplashComponentState extends State<SplashComponent> {
     assetImage = AssetImage("${GeneralString.imgLocal}ic_launcher.png");
     checkingRoute();
     final site = Provider.of<SiteProvider>(context,listen: false);
-    site.getConfig(context: context);
+    site.getConfigInfo(context: context);
   }
 
   @override

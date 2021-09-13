@@ -1,6 +1,7 @@
 
 import 'package:adscoin/model/site/allBankModel.dart';
 import 'package:adscoin/model/site/bankCompanyModel.dart';
+import 'package:adscoin/model/site/configInfoModel.dart';
 import 'package:adscoin/model/site/configModel.dart';
 import 'package:adscoin/service/httpService.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +10,8 @@ class SiteProvider with ChangeNotifier{
   BankCompanyModel bankCompanyModel;
   AllBankModel allBankModel;
   ConfigModel configModel;
-  bool isLoadingBank=true,isLoadingAllBank=true,isLoadingConfig=true;
+  ConfigInfoModel configInfoModel;
+  bool isLoadingBank=true,isLoadingAllBank=true,isLoadingConfig=true,isLoadingConfigInfo=true;
   int indexAllBank=0;
   setIndexAllBank(input){
     indexAllBank=input;
@@ -49,6 +51,15 @@ class SiteProvider with ChangeNotifier{
     isLoadingConfig=false;
     ConfigModel result=ConfigModel.fromJson(res);
     configModel=result;
+    notifyListeners();
+  }
+  Future getConfigInfo({BuildContext context})async{
+    if(configInfoModel==null) isLoadingConfigInfo=true;
+    final res = await HttpService().get(url: "site/config/info",context: context);
+    print(res);
+    isLoadingConfigInfo=false;
+    ConfigInfoModel result=ConfigInfoModel.fromJson(res);
+    configInfoModel=result;
     notifyListeners();
   }
 

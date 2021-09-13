@@ -1,14 +1,9 @@
 import 'dart:io';
 
 import 'package:adscoin/config/color_config.dart';
-import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
-import 'package:adscoin/helper/validateFormHelper.dart';
-import 'package:adscoin/service/provider/profileProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
-import 'package:adscoin/view/widget/general/appBarWithActionWidget.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
-import 'package:adscoin/view/widget/general/fieldWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:adscoin/view/widget/general/uploadWidget.dart';
 import 'package:flutter/material.dart';
