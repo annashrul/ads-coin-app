@@ -22,6 +22,7 @@ class AuthProvider with ChangeNotifier{
   bool timeUpFlag = false;
   Timer timer;
   DatabaseInit db = new DatabaseInit();
+  HttpService service = new HttpService();
   ValidateFormHelper valid = new ValidateFormHelper();
 
   timerUpdate() {
@@ -48,7 +49,7 @@ class AuthProvider with ChangeNotifier{
   }
 
 
-  Future postOtp({BuildContext context, dynamic data,Function(String res) callback})async{
+  postOtp({BuildContext context, dynamic data,Function(String res) callback})async{
     dynamic field={
       "nomor":data["phoneNumber"],
       "type":"otp",
@@ -56,7 +57,7 @@ class AuthProvider with ChangeNotifier{
       "islogin":data["isLogin"]=="1"?"1":"0",
       "isRegister":data["isLogin"]=="1"?"0":"1",
     };
-    final res = await HttpService().post(
+    final res = await service.post(
         url: "auth/otp",
         data: field,
         context: context
@@ -68,31 +69,27 @@ class AuthProvider with ChangeNotifier{
     // print(res);
   }
 
-  Future sendOtp({BuildContext context, dynamic data,bool isRedirect=true})async{
-    final res = await HttpService().post(
+  Future<void> sendOtp({BuildContext context, dynamic fields,bool isRedirect=true})async{
+    final res = await service.post(
       url: "auth/otp",
-      data: data,
+      data: fields,
       context: context
     );
-    data["otp"] = res["result"]["otp_anying"];
+    fields["otp"] = res["result"]["otp_anying"];
+    dataOtp = fields;
     if(isRedirect){
       Navigator.push(context, CupertinoPageRoute(builder: (context) =>  OtpComponent(
-        callback: (otp)async{
-          final resLogin = await HttpService().post(
+        callback: (otp) async{
+          final resLogin = await service.post(
             url: "auth",
             data: {
               "type":"otp",
-              "nohp":data["nomor"],
+              "nohp":fields["nomor"],
               "otp_code":otp
             },
             context: context
           );
-          if(resLogin==null){
-            isTrue=true;
-            await Future.delayed(Duration(seconds: 1));
-            isTrue=false;
-          }
-          else{
+          if(resLogin!=null){
             isTrue=false;
             SignInModel result = SignInModel.fromJson(resLogin);
             final dataUser = result.result;
@@ -112,14 +109,14 @@ class AuthProvider with ChangeNotifier{
             if(getUserLocal.length>0){
               await db.delete(UserTable.TABLE_NAME);
               await db.insert(UserTable.TABLE_NAME,storeDataUser);
-            }else{
+            }
+            else{
               await db.insert(UserTable.TABLE_NAME,storeDataUser);
             }
             final userStorage = Provider.of<UserProvider>(context, listen: false);
             await userStorage.getDataUser();
             Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
           }
-          notifyListeners();
         },
         isTrue: isTrue,
       )));
@@ -130,15 +127,15 @@ class AuthProvider with ChangeNotifier{
       timerUpdate();
       print("tidak redirect");
     }
-    dataOtp = data;
-    notifyListeners();
+
+
   }
 
 
 
 
 
-  Future signUp({BuildContext context,Map<String,dynamic> fields})async{
+  signUp({BuildContext context,Map<String,dynamic> fields})async{
     final isValid = valid.validateEmptyForm(context: context,field:fields);
     if(isValid){
       FunctionalWidget.modal(

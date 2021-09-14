@@ -41,7 +41,7 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<ProfileSellerProvider>(create: (_) => ProfileSellerProvider()),
   ChangeNotifierProvider<PromoProvider>(create: (_) => PromoProvider()),
 ];
-void main() {
+void main()  async  {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // transparent status bar

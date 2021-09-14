@@ -37,7 +37,7 @@ class _PinComponentState extends State<PinComponent> {
                     for (int i = 0; i < passcode.length; i++) {
                       code+= passcode[i].toString();
                     }
-                    widget.callback(code);
+                    await widget.callback(code);
                     return false;
                   },
                   onSuccess: () async{

@@ -13,9 +13,12 @@ import 'package:adscoin/model/product/productContributorModel.dart';
 import 'package:adscoin/model/product/productLibraryModel.dart';
 import 'package:adscoin/model/product/productNewModel.dart';
 import 'package:adscoin/service/httpService.dart';
+import 'package:adscoin/service/httpWithDio.dart';
 import 'package:adscoin/service/provider/categoryProvider.dart';
+import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' show Client;
 
 class ProductProvider with ChangeNotifier{
   bool isNoDataProductContributor=false;
@@ -68,19 +71,20 @@ class ProductProvider with ChangeNotifier{
   }
   Future getProductContributor({BuildContext context})async{
     if(productContributorModel==null) isLoadingProductContributor=true;
-    String url = "product/list/crud?page=1&perpage=$perPageProductContributor&status=$filterStatusProduct";
+    String url = "product/list/crud?page=1&perpage=$perPageProductContributor";
     if(anyProductContributor!="") url+="&q=$anyProductContributor";
-    final res = await HttpService().get(url: url,context: context);
-    isLoadingProductContributor=false;
-    isLoadMoreProductContributor=false;
+    if(filterStatusProduct!=2) url+="&status=$filterStatusProduct";
+    print("url $url");
+    var res= await HttpService().get(url: url,context: context);
     if(res["result"].length>0){
       ProductContributorModel result = ProductContributorModel.fromJson(res);
       productContributorModel = result;
-      notifyListeners();
     }else{
       productContributorModel=null;
-      notifyListeners();
     }
+    isLoadingProductContributor=false;
+    isLoadMoreProductContributor=false;
+    notifyListeners();
   }
   Future getBestSeller({BuildContext context})async{
     if(productBestSellerModel==null) isLoadingBestSeller=true;
@@ -146,7 +150,7 @@ class ProductProvider with ChangeNotifier{
     }
     // if()
   }
-  Future storeAutoSaveProduct({BuildContext context,String status,loading=false})async{
+  storeAutoSaveProduct({BuildContext context,String status,loading=false})async{
     final get = await db.getData(ProductTable.TABLE_NAME);
     if(get.length>0){
       File image;
@@ -159,10 +163,10 @@ class ProductProvider with ChangeNotifier{
         base64Image = 'data:image/' + type[1] + ';base64,' + base64Encode(image.readAsBytesSync());
       }
       final category = Provider.of<CategoryProvider>(context, listen: false);
-      final data= {
-        "title":get[0][TableString.titleProduct]==null?"-":get[0][TableString.titleProduct],
+      dynamic data= {
+        "title":get[0][TableString.titleProduct]==""?"-":get[0][TableString.titleProduct],
         "content":get[0][TableString.contentProduct],
-        "preview":get[0][TableString.previewProduct]==null?"-":get[0][TableString.previewProduct],
+        "preview":get[0][TableString.previewProduct]==""?"-":get[0][TableString.previewProduct],
         "id_category":get[0][TableString.idProduct]==null?category.categoryProductModel.result[category.indexSelectedCategoryForm].id:get[0][TableString.idProduct],
         "status":status,
         "image":base64Image,
@@ -174,27 +178,29 @@ class ProductProvider with ChangeNotifier{
       }else{
         res = await HttpService().put(url: "product/${dataEditProductContributor["id"]}",data: data,context: context,isLoading: loading);
       }
-      getProductContributor(context: context);
-      await db.delete(ProductTable.TABLE_NAME);
 
       if(res!=null){
+        await db.delete(ProductTable.TABLE_NAME);
         if(loading){
-          FunctionalWidget.nofitDialog(context: context,msg:"Data berhasil disimpan",callback2: ()=>Navigator.of(context).pushReplacementNamed(RouteString.productContributor));
+          Navigator.of(context).pop();
+          FunctionalWidget.toast(context: context,msg:"Data berhasil disimpan");
         }
       }
+      notifyListeners();
     }
   }
-  Future updateToDraft({BuildContext context})async{
+  updateToDraft({BuildContext context,String status})async{
     FunctionalWidget.nofitDialog(
         context: context,
         msg: "Anda yakin akan mengubah status produk ini ?",
         callback1: ()=>Navigator.of(context).pop(),
         callback2: ()async{
           Navigator.of(context).pop();
-          await HttpService().put(url: "product/${dataEditProductContributor["id"]}",data: {"status":"0"},context: context);
-          Navigator.of(context).pop();
+          final res = await HttpService().put(url: "product/${dataEditProductContributor["id"]}",data: {"status":status},context: context);
+          print(res);
           getProductContributor(context: context);
-          FunctionalWidget.toast(context: context,msg: "produk berhasil disimpan ke draft");
+          Navigator.of(context).pop();
+          FunctionalWidget.toast(context: context,msg: "produk berhasil disimpan ke ${status=="0"?"draft":"publish"}");
           notifyListeners();
           // print("RESPONSE $res");
         }

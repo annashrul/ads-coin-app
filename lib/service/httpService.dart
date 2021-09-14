@@ -5,22 +5,28 @@ import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/model/generalModel.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' show Client;
 import 'package:provider/provider.dart';
+// import 'package:http/http.dart' s http;
 
 
 class HttpService{
-  Client client = Client();
-
-  Future get({String url,BuildContext context})async{
+  get({String url,BuildContext context})async{
     final res = isNotError(context: context,callback: (){});
     if(res){
+      Map<String, String> head={
+        'X-Project-ID': ApiString.xProjectId,
+        'X-Requested-From': ApiString.xRequestedFrom,
+        'Authorization':''
+      };
       final userStorage = Provider.of<UserProvider>(context, listen: false);
-      ApiString.head["Authorization"] = "Bearer ${userStorage.token}";
-      print("################################ ApiString.head = ${ApiString.head}");
-
-      final response = await client.get(ApiString.url+url, headers:ApiString.head).timeout(Duration(seconds: ApiString.timeOut));
+      if(userStorage.token!=''){
+        head["Authorization"] = "Bearer ${userStorage.token}";
+      }
+      Client client = new Client();
+      final response = await client.get(ApiString.url+url, headers:head).timeout(Duration(seconds: ApiString.timeOut));
       print("################################ URL = $url, STATUS = ${response.statusCode}");
       if (response.statusCode == 200){
         final jsonResponse = json.decode(response.body);
@@ -37,26 +43,35 @@ class HttpService{
     }
   }
 
-  Future post({String url,dynamic data,BuildContext context,bool isLoading=true}) async {
-    final res = isNotError(context: context,callback: (){});
-    if(res){
-      if(isLoading)FunctionalWidget.loadingDialog(context);
+  post({String url,dynamic data,BuildContext context,bool isLoading=true,bool isToken=true}) async {
+    try{
+      if(isLoading) FunctionalWidget.loadingDialog(context);
+      Map<String, String> head={
+        "HttpHeaders.contentTypeHeader": 'application/json',
+        'X-Project-ID': ApiString.xProjectId,
+        'X-Requested-From': ApiString.xRequestedFrom,
+      };
       final userStorage = Provider.of<UserProvider>(context, listen: false);
-      ApiString.head["Authorization"] = "Bearer ${userStorage.token}";
-      final response = await client.post( ApiString.url+url,headers: ApiString.head,body:data).timeout(Duration(seconds: ApiString.timeOut));
+      if(userStorage.token!=''){
+        head["Authorization"] = "Bearer ${userStorage.token}";
+      }
+      print("=================== POST DATA $url = $head ============================");
+      Client client = new Client();
+      final response = await client.post( ApiString.url+url,headers:head,body:data);
       print("=================== POST DATA $url ${response.statusCode} ============================");
       if(response.statusCode==200){
         final jsonResponse =  json.decode(response.body);
         if(isLoading)Navigator.pop(context);
         print(jsonResponse);
         if(jsonResponse["status"]=="failed"){
-          if(isLoading)FunctionalWidget.nofitDialog(context: context,msg:jsonResponse["msg"],callback2: ()=>Navigator.of(context).pop());
+          if(isLoading)FunctionalWidget.nofitDialog(context: context,msg:jsonResponse["msg"],callback2: ()=>Navigator.of(context).popUntil((route) => route.isFirst));
           return null;
         }
         else{
           return jsonResponse;
         }
-      }else{
+      }
+      else{
         if(isLoading)Navigator.pop(context);
         final jsonResponse = json.decode(response.body);
         print("jsonResponse = $jsonResponse");
@@ -64,15 +79,40 @@ class HttpService{
         if(isLoading)FunctionalWidget.nofitDialog(context: context,msg: result.msg,callback2: ()=>Navigator.of(context).pop());
         return null;
       }
+    }on TimeoutException catch (e) {
+      print("###################################### GET TimeoutException");
+      return Navigator.pushNamed(context, "error",arguments: (){
+        print("TimeoutException");
+      });
+    } on SocketException catch (e) {
+      print("###################################### GET SocketException");
+      return Navigator.pushNamed(context, "error",arguments: (){
+        print("SocketException");
+      });
+    }
+    on Error catch (e) {
+      print("###################################### GET Error");
+      return Navigator.pushNamed(context, "error",arguments: (){
+        print("Error");
+      });
     }
   }
-  Future put({String url,dynamic data,BuildContext context,bool isLoading=true}) async {
-    final res = isNotError(context: context,callback: (){});
-    if(res){
+  Future<dynamic> put({String url,dynamic data,BuildContext context,bool isLoading=true}) async {
+    try{
       if(isLoading)FunctionalWidget.loadingDialog(context);
+      Map<String, String> head={
+        'X-Project-ID': ApiString.xProjectId,
+        'X-Requested-From': ApiString.xRequestedFrom,
+        'Authorization':''
+      };
       final userStorage = Provider.of<UserProvider>(context, listen: false);
-      ApiString.head["Authorization"] = "Bearer ${userStorage.token}";
-      final response = await client.put( ApiString.url+url,headers: ApiString.head,body:data).timeout(Duration(seconds: ApiString.timeOut));
+      if(userStorage.token!=''){
+        head["Authorization"] = "Bearer ${userStorage.token}";
+      }
+      print("=================== PUT DATA $url ============================");
+
+      Client client = new Client();
+      final response = await client.put( ApiString.url+url,headers:head,body:data);
       print("=================== PUT DATA $url ${response.statusCode} ============================");
       if(response.statusCode==200){
         final jsonResponse =  json.decode(response.body);
@@ -84,23 +124,49 @@ class HttpService{
         else{
           return jsonResponse;
         }
-      }else{
+
+      }
+      else{
         if(isLoading)Navigator.pop(context);
         final jsonResponse = json.decode(response.body);
-        GeneralModel result = GeneralModel.fromJson(jsonResponse.toJson());
-        if(isLoading)FunctionalWidget.nofitDialog(context: context,msg: result.msg,callback1: ()=>Navigator.of(context).pop());
+        // GeneralModel result = GeneralModel.fromJson(jsonResponse);
+        if(isLoading)FunctionalWidget.nofitDialog(context: context,msg: jsonResponse["msg"],callback2: ()=>Navigator.of(context).pop());
         return null;
 
       }
+    }on TimeoutException catch (e) {
+      print("###################################### GET TimeoutException");
+      return Navigator.pushNamed(context, "error",arguments: (){
+        print("TimeoutException");
+      });
+    } on SocketException catch (e) {
+      print("###################################### GET SocketException");
+      return Navigator.pushNamed(context, "error",arguments: (){
+        print("SocketException");
+      });
+    }
+    on Error catch (e) {
+      print("###################################### GET Error");
+      return Navigator.pushNamed(context, "error",arguments: (){
+        print("Error");
+      });
     }
   }
-  Future delete({String url,BuildContext context}) async{
+  delete({String url,BuildContext context}) async{
     final res = isNotError(context: context,callback: (){});
     if(res){
       FunctionalWidget.loadingDialog(context);
+      Map<String, String> head={
+        'X-Project-ID': ApiString.xProjectId,
+        'X-Requested-From': ApiString.xRequestedFrom,
+        'Authorization':''
+      };
       final userStorage = Provider.of<UserProvider>(context, listen: false);
-      ApiString.head["Authorization"] = "Bearer ${userStorage.token}";
-      final response = await client.delete(ApiString.url+url,headers: ApiString.head,).timeout(Duration(seconds: ApiString.timeOut));
+      if(userStorage.token!=''){
+        head["Authorization"] = "Bearer ${userStorage.token}";
+      }
+      Client client = new Client();
+      final response = await client.delete(ApiString.url+url,headers:head).timeout(Duration(seconds: ApiString.timeOut));
       Navigator.of(context).pop();
       if(response.statusCode==200){
         final jsonResponse =  json.decode(response.body);

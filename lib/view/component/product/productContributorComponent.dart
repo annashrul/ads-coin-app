@@ -103,38 +103,51 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
             Row(
               children: [
                 Container(
-                  width: scale.getWidth(30),
-                  child: BackroundButtonWidget(
-                    callback: (){
-                      product.setFilterStatusProductContributor(context: context,input: 1);
-                      // product.getProductContributor(context: context,where: "&status=1");
+                  margin: scale.getMarginLTRB(0, 0, 1, 0),
+                  decoration: BoxDecoration(
+                    color: product.filterStatusProduct==2?ColorConfig.bluePrimaryColor:ColorConfig.graySecondaryColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: FlatButton(
+                    onPressed: (){
+                      product.setFilterStatusProductContributor(context: context,input: 2);
                     },
-                    backgroundColor: product.filterStatusProduct==1?ColorConfig.bluePrimaryColor:ColorConfig.graySecondaryColor,
-                    color: product.filterStatusProduct==1?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,
-                    title: "Selesai",
+                    child: Text("Semua",style: Theme.of(context).textTheme.headline1.copyWith(color:product.filterStatusProduct==2?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,),textAlign: TextAlign.center,),
                   ),
                 ),
-                SizedBox(width: scale.getWidth(1)),
                 Container(
-                  width: scale.getWidth(30),
-                  child: BackroundButtonWidget(
-                    callback: (){
-                      product.setFilterStatusProductContributor(context: context,input: 0);
-                      // product.getProductContributor(context: context,where: "&status=0");
-
-                    },
-                    backgroundColor: product.filterStatusProduct==0?ColorConfig.bluePrimaryColor:ColorConfig.graySecondaryColor,
-                    color: product.filterStatusProduct==0?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,
-                    title: "Draf",
+                  margin: scale.getMarginLTRB(0, 0, 1, 0),
+                  decoration: BoxDecoration(
+                    color: product.filterStatusProduct==1?ColorConfig.bluePrimaryColor:ColorConfig.graySecondaryColor,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                )
+                  child: FlatButton(
+                    onPressed: (){
+                      product.setFilterStatusProductContributor(context: context,input: 1);
+                    },
+                    child: Text("Publish",style: Theme.of(context).textTheme.headline1.copyWith(color:product.filterStatusProduct==1?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,),textAlign: TextAlign.center,),
+                  ),
+                ),
+                Container(
+                  margin: scale.getMarginLTRB(0, 0, 0, 0),
+                  decoration: BoxDecoration(
+                    color: product.filterStatusProduct==0?ColorConfig.bluePrimaryColor:ColorConfig.graySecondaryColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: FlatButton(
+                    onPressed: (){
+                      product.setFilterStatusProductContributor(context: context,input: 0);
+                    },
+                    child: Text("Draft",style: Theme.of(context).textTheme.headline1.copyWith(color:product.filterStatusProduct==0?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,),textAlign: TextAlign.center,),
+                  ),
+                ),
               ],
             ),
             SizedBox(height: scale.getHeight(1)),
             InTouchWidget(
                 callback: (){
                   product.setIsAdd(true);
-                  Navigator.of(context).pushNamed(RouteString.formProductContributor);
+                  Navigator.of(context).pushNamed(RouteString.formProductContributor).whenComplete(() => product.getProductContributor(context: context));
                 },
                 child: Row(
                   children: [
@@ -153,9 +166,19 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
                     itemBuilder: (context,index){
                       final val = product.productContributorModel.result[index];
                       String heroTag="productContributor" + val.id;
+                      String status = "";Color colorStatus;
+                      if(val.status==0) {
+                        status = "Draft";
+                        colorStatus = ColorConfig.redColor;
+                      }
+                      if(val.status==1){
+                        status = "Publish";
+                        colorStatus = ColorConfig.bluePrimaryColor;
+                      }
                       return InTouchWidget(
                           radius: 10,
                           callback: (){
+                            product.setDataEditProductContributor(val.toJson());
                             FunctionalWidget.modal(
                                 context: context,
                                 child: OptionActionProductWidget(dataJson: val.toJson()..addAll({"heroTag":heroTag}))
@@ -199,11 +222,11 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
                                             SizedBox(width: scale.getWidth(1)),
                                             Row(
                                               children: [
-                                                Text("Pengerjaan",style: Theme.of(context).textTheme.subtitle1),
+                                                Text("status",style: Theme.of(context).textTheme.subtitle1),
                                                 SizedBox(width: scale.getWidth(1)),
                                                 Text(":",style: Theme.of(context).textTheme.subtitle1),
                                                 SizedBox(width: scale.getWidth(1)),
-                                                Text("2 hari",style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.blackPrimaryColor)),
+                                                Text(status.toString(),style: Theme.of(context).textTheme.subtitle1.copyWith(color:colorStatus)),
                                               ],
                                             ),
                                           ],
@@ -216,6 +239,7 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
                                               Text(FunctionalWidget.toCoin(double.parse(val.price)),style: Theme.of(context).textTheme.headline2),
                                               InTouchWidget(
                                                 callback: ()async{
+                                                  product.setDataEditProductContributor(val.toJson());
                                                   FunctionalWidget.modal(
                                                       context: context,
                                                       child: OptionActionProductWidget(dataJson: val.toJson()..addAll({"heroTag":heroTag}))

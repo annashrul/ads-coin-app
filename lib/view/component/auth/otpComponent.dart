@@ -77,7 +77,7 @@ class _OtpComponentState extends State<OtpComponent> {
                   for (int i = 0; i < passcode.length; i++) {
                     code+= passcode[i].toString();
                   }
-                  widget.callback(code);
+                  await widget.callback(code);
                   return false;
                 },
                 onSuccess: () async{
@@ -91,9 +91,8 @@ class _OtpComponentState extends State<OtpComponent> {
       bottomNavigationBar: Container(
         padding: EdgeInsets.only(left: 50,right: 50,bottom: 20),
         child: RedButtonWidget(
-          callback: (){
+          callback: ()async{
             if(auth.timeUpFlag){
-
               final sendData={
                 "nomor":auth.dataOtp["nomor"],
                 "type":auth.dataOtp["type"],
@@ -101,7 +100,7 @@ class _OtpComponentState extends State<OtpComponent> {
                 "islogin":auth.dataOtp["islogin"],
                 "isRegister":auth.dataOtp["isRegister"],
               };
-              auth.sendOtp(context: context,data: sendData,isRedirect: false);
+              await auth.sendOtp(context: context,fields: sendData,isRedirect: false);
             }
           },
           child: Row(

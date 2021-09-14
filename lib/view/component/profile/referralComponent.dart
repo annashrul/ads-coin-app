@@ -113,11 +113,26 @@ class _ReferralComponentState extends State<ReferralComponent> {
                 shrinkWrap: true,
                 itemBuilder: (context,index){
                   final val = member.listReferralMember.result[index];
+                  print("val.produkReward ${val.produkReward}");
+                  print("val.rewardCoin ${val.rewardCoin}");
+                  String textSubtitle = "";
+                  Color colorSub = ColorConfig.blackSecondaryColor;
+                  if(val.produkReward==""){
+                    textSubtitle="-";
+                  }else{
+                    if(val.rewardCoin=="0"){
+                      colorSub = ColorConfig.redColor;
+                      textSubtitle = "${val.rewardCoin} belum closing";
+                    }else{
+                      colorSub = Color(0xFF219653);
+                      textSubtitle = "Bonus : ${val.rewardCoin} coin";
+                    }
+                  }
                   return FunctionalWidget.wrapContent(
                     child: ListTile(
-                      leading: ImageRoundedWidget(img:val.foto,height: scale.getHeight(3),width: scale.getWidth(6),),
+                      leading: ImageRoundedWidget(img:val.foto,height: scale.getHeight(3),width: scale.getWidth(6),fit: BoxFit.cover,),
                       title: Text(val.fullname,style: Theme.of(context).textTheme.headline2),
-                      subtitle: Text(val.produkReward=="-"?val.rewardCoin:val.produkReward,style: Theme.of(context).textTheme.subtitle1),
+                      subtitle: Text(textSubtitle,style: Theme.of(context).textTheme.subtitle1.copyWith(color: colorSub)),
                     )
                   );
                 },

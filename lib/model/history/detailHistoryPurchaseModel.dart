@@ -59,6 +59,7 @@ class Result {
     this.sellerBio,
     this.createdAt,
     this.idSeller,
+    this.price,
   });
 
   String totalrecords;
@@ -78,6 +79,7 @@ class Result {
   String sellerBio;
   DateTime createdAt;
   String idSeller;
+  String price;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     totalrecords: json["totalrecords"],
@@ -97,6 +99,7 @@ class Result {
     sellerBio: json["seller_bio"],
     createdAt: DateTime.parse(json["created_at"]),
     idSeller: json["id_seller"],
+    price: json["price"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -117,5 +120,6 @@ class Result {
     "seller_bio": sellerBio,
     "created_at": createdAt.toIso8601String(),
     "id_seller": idSeller,
+    "price": price,
   };
 }

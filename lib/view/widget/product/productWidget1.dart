@@ -128,7 +128,7 @@ class ProductWidget1 extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if(isContributor) SizedBox(height: scale.getHeight(1)),
+                  SizedBox(height: scale.getHeight(1)),
                 ],
               ),
             )

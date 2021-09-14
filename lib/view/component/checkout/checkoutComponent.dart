@@ -104,8 +104,6 @@ class _CheckoutComponentState extends State<CheckoutComponent> {
         desc: FunctionalWidget.toCoin(double.parse(user.detailMemberModel.result.saldo)),
         btnText: "Bayar",
         callback: (){
-          // Navigator.of(context).pushNamed(RouteString.detailCheckout);
-          //
           Navigator.of(context).pushNamed(RouteString.pin,arguments:(code)async{
             product.storeCheckoutProduct(
               context: context,

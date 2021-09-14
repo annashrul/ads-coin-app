@@ -44,7 +44,7 @@ class _DetailHistoryPurchaseComponentState extends State<DetailHistoryPurchaseCo
                     Row(
                       children: [
                         ImageRoundedWidget(
-                          img: history.detailHistorySaleModel.result.imageProduct,
+                          img: history.detailHistoryPurchaseModel.result.imageProduct,
                           height: scale.getHeight(7),
                           width: scale.getWidth(15),
                         ),

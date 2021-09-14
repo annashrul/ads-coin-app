@@ -49,8 +49,8 @@ class _WithdrawComponentState extends State<WithdrawComponent> {
               FunctionalWidget.modal(
                   context: context,
                   child: ModalBankWidget(callback: (id){
-                    Navigator.of(context).pushNamed(RouteString.pin,arguments: (pin){
-                      fintech.createWithDraw(context: context,data: {
+                    Navigator.of(context).pushNamed(RouteString.pin,arguments: (pin)async{
+                      await fintech.createWithDraw(context: context,data: {
                         "id_bank":id,
                         "amount":amount.toString(),
                         "member_pin":pin.toString()

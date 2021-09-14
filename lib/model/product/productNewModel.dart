@@ -108,7 +108,7 @@ class Result {
   String idSeller;
   int status;
   String price;
-  int rating;
+  dynamic rating;
   String terjual;
   int statusBeli;
   String image;

@@ -8,14 +8,13 @@ import 'package:flutter/cupertino.dart';
 
 class FintechProvider with ChangeNotifier{
   DetailTopUpModel detailTopUpModel;
-  Future createTopUp({BuildContext context,dynamic data})async{
+  Future createTopUp({BuildContext context,dynamic field})async{
     final store = {
-      "payment_channel":data["paymentCode"],
-      "amount":data["amount"].toString(),
-      "member_pin":data["pin"].toString()
+      "payment_channel":field["paymentCode"],
+      "amount":field["amount"].toString(),
+      "member_pin":field["pin"].toString()
     };
     final res = await HttpService().post(url: "transaction/deposit",data: store,context: context);
-    print(res);
     if(res!=null){
       DetailTopUpModel result = DetailTopUpModel.fromJson(res);
       detailTopUpModel = result;

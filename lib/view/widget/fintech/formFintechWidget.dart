@@ -98,22 +98,8 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
           )
         ),
         SizedBox(height: scale.getHeight(1)),
-        Text("Konversi coin > rupiah",style: Theme.of(context).textTheme.headline2),
-        SizedBox(height: scale.getHeight(1)),
-        FunctionalWidget.wrapContent(
-          child: Padding(
-            padding: scale.getPadding(1,2),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                config.isLoadingConfig?BaseLoading(height: 1, width:10):Text("1 coin = Rp ${MoneyFormat.toFormat(double.parse(config.configModel.result[0].konversiCoin))}",style: Theme.of(context).textTheme.subtitle1,),
-                SizedBox(height: scale.getHeight(0.5)),
-                config.isLoadingConfig?BaseLoading(height: 1, width:20):Text("Total  = ${MoneyFormat.toFormat(double.parse(amountController.text.replaceAll(",","")))} coin x Rp ${MoneyFormat.toFormat(double.parse(config.configModel.result[0].konversiCoin))} =  Rp ${MoneyFormat.toFormat(double.parse(config.configModel.result[0].konversiCoin)*double.parse(amountController.text.replaceAll(",","")))}",style: Theme.of(context).textTheme.subtitle1,),
-              ],
-            ),
-          )
-        ),
+        Text("Total  Rp ${MoneyFormat.toFormat(double.parse(config.configModel.result[0].konversiCoin)*double.parse(amountController.text.replaceAll(",","")))}",style: Theme.of(context).textTheme.headline2),
+
         SizedBox(height: scale.getHeight(2)),
         BackroundButtonWidget(
           backgroundColor: isValid?ColorConfig.redColor:ColorConfig.graySecondaryColor,

@@ -31,7 +31,7 @@ class UserProvider with ChangeNotifier{
   DetailMemberModel detailMemberModel;
   ListReferralMember listReferralMember;
 
-  Future getDetailMember({BuildContext context})async{
+  getDetailMember({BuildContext context})async{
     if(detailMemberModel==null) isLoadingDetailMember=true;
     final res = await HttpService().get(url: "member/get/$idUser",context: context);
     isLoadingDetailMember=false;
@@ -39,7 +39,7 @@ class UserProvider with ChangeNotifier{
     detailMemberModel=result;
     notifyListeners();
   }
-  Future getLeaderBoard({BuildContext context})async{
+ getLeaderBoard({BuildContext context})async{
     if(leaderBoardModel==null) isLoadingLeaderBoard=true;
     final res = await HttpService().get(url: "member/top_kontributor?page=1&type=penjualan",context: context);
     isLoadingLeaderBoard=false;
@@ -51,7 +51,7 @@ class UserProvider with ChangeNotifier{
     }
     notifyListeners();
   }
-  Future getDataUser()async{
+  Future<void> getDataUser()async{
     final getUser = await db.getData(UserTable.TABLE_NAME);
     if(getUser.length>0){
       id = getUser[0]["id"];
@@ -65,18 +65,19 @@ class UserProvider with ChangeNotifier{
       referral =getUser[0][SessionString.sessReferral];
       status =getUser[0][SessionString.sessStatus];
       type =getUser[0][SessionString.sessType];
+      notifyListeners();
     }
-    notifyListeners();
   }
   ValidateFormHelper valid = new ValidateFormHelper();
-  Future store({BuildContext context,fields})async{
+  store({BuildContext context,fields})async{
     final isValid = valid.validateEmptyForm(context: context,field:fields);
     if(isValid){
       final res = await HttpService().put(url: "member/$idUser",data: fields,context:context);
       print("horeeeeeee $res");
-      FunctionalWidget.toast(context: context,msg: res["msg"]);
-      getDetailMember(context: context);
-      notifyListeners();
+      if(res!=null){
+        FunctionalWidget.toast(context: context,msg: res["msg"]);
+        getDetailMember(context: context);
+      }
     }
     notifyListeners();
   }
@@ -92,8 +93,5 @@ class UserProvider with ChangeNotifier{
     }
     notifyListeners();
   }
-
-
-
 
 }

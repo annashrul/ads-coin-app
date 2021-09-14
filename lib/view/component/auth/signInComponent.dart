@@ -14,7 +14,14 @@ class SignInComponent extends StatefulWidget {
 }
 
 class _SignInComponentState extends State<SignInComponent> {
+
   TextEditingController phoneNumberController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,7 @@ class _SignInComponentState extends State<SignInComponent> {
               Center(child: Image.asset(GeneralString.imgLocal+"logo.png",height: scale.getHeight(10))),
               SizedBox(height: scale.getHeight(5)),
               Text("Masukan Nomer Ponsel",style: Theme.of(context).textTheme.headline1),
-              Text("Masukan nomer ponsel untuk mendapatkan kode OTP",style: Theme.of(context).textTheme.subtitle1),
+              Center(child:Text("Masukan nomer ponsel untuk mendapatkan kode OTP",style: Theme.of(context).textTheme.subtitle1,textAlign: TextAlign.center,)),
               SizedBox(height: scale.getHeight(4)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,7 +58,7 @@ class _SignInComponentState extends State<SignInComponent> {
                         "islogin":"1",
                         "isRegister":"0"
                       };
-                      await auth.sendOtp(context: context,data: data);
+                      auth.sendOtp(context: context,fields: data,isRedirect: true);
                     },
                     child:Icon(Icons.arrow_right_alt,color: ColorConfig.graySecondaryColor),
                   )

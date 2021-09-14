@@ -21,37 +21,46 @@ class BankMemberProvider with ChangeNotifier{
     indexBank=input;
     notifyListeners();
   }
-  Future get({BuildContext context})async{
+  get({BuildContext context})async{
     if(bankMemberModel==null) isLoading=true;
     final res = await HttpService().get(url: "bank_member",context: context);
-    isLoading=false;
-    isLoadMore=false;
+    print("RESPONSE BANK $res");
     if(res["result"].length>0){
       BankMemberModel result=BankMemberModel.fromJson(res);
       bankMemberModel=result;
-      notifyListeners();
     }else{
       bankMemberModel=null;
-      notifyListeners();
     }
+    isLoading=false;
+    isLoadMore=false;
+    notifyListeners();
+
   }
 
-  Future store({BuildContext context,Map<dynamic,dynamic> data})async{
+  store({BuildContext context,Map<dynamic,dynamic> data})async{
     dynamic res;
     if(isAdd){
       data.remove("id");
       res = await HttpService().post(url: "bank_member",data: data,context: context);
     }else{
+      Navigator.of(context).pop();
       String id = data["id"];
       data.remove("id");
+      data.remove("bank_name");
+      print(data);
       res = await HttpService().put(url: "bank_member/$id",data: data,context: context);
+      print(res);
     }
     if(res!=null){
-      FunctionalWidget.nofitDialog(context: context,msg: "data berhasil disimpan",callback2: ()=>Navigator.of(context).pushNamed(RouteString.bankMember),callback1: ()=>Navigator.of(context).pop(),label2: "Lihat data");
+      get(context: context);
+      Navigator.of(context).pop();
+      FunctionalWidget.toast(context: context,msg: "data berhasil disimpan");
+      // FunctionalWidget.nofitDialog(context: context,msg: "data berhasil disimpan",callback2: ()=>Navigator.of(context).pushReplacementNamed(RouteString.bankMember),callback1: ()=>Navigator.of(context).pop(),label2: "Lihat data");
     }
+    notifyListeners();
   }
 
-  Future delete({BuildContext context})async{
+   delete({BuildContext context})async{
     FunctionalWidget.nofitDialog(
         context: context,
         msg: "Anda yakin akan menghapus data ini ?",

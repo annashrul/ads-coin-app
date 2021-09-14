@@ -68,10 +68,10 @@ class _HistoryMutationComponentState extends State<HistoryMutationComponent> {
               padding: scale.getPadding(0.5,2.5),
               itemBuilder: (context,index){
                 final val = history.historyMutationModel.result[index];
-                String nominal="+ ${MoneyFormat.toCurrency(double.parse(val.trxIn))}";
+                String nominal="+ ${FunctionalWidget.toCoin(double.parse(val.trxIn))}";
                 Color colorNominal = ColorConfig.blackPrimaryColor;
                 if(double.parse(val.trxIn)<1){
-                  nominal = "- ${MoneyFormat.toCurrency(double.parse(val.trxOut))}";
+                  nominal = "- ${FunctionalWidget.toCoin(double.parse(val.trxOut))}";
                   colorNominal = ColorConfig.redColor;
                 }
                 Color color;

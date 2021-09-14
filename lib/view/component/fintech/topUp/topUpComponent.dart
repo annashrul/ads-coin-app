@@ -46,8 +46,8 @@ class _TopUpComponentState extends State<TopUpComponent> {
                 child: MethodChannelComponent(callback: (code){
                   FunctionalWidget.modal(
                     context: context,
-                    child: PinComponent(callback: (pin){
-                      fintech.createTopUp(context: context,data: {
+                    child: PinComponent(callback: (pin)async{
+                      await fintech.createTopUp(context: context,field: {
                         "paymentCode":code,
                         "pin":pin,
                         "amount":amount

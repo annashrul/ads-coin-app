@@ -49,7 +49,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
       product.timerUpdate();
     }
   }
-  saveData(){
+  saveData(BuildContext context){
     final product = Provider.of<ProductProvider>(context, listen: false);
     FunctionalWidget.nofitDialog(
       context: context,
@@ -57,11 +57,16 @@ class _FormProductContributorComponentState extends State<FormProductContributor
       callback1: (){
         Navigator.of(context).pop();
         Navigator.of(context).pop();
+        // Navigator.of(context).pushReplacementNamed(RouteString.productContributor);
       },
       callback2: ()async{
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
         await product.storeAutoSaveProduct(context: context,status: "0");
+        Future.delayed(Duration(seconds: 1)).whenComplete((){
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        });
+        // Navigator.of(context).pushReplacementNamed(RouteString.productContributor);
+
       },
     );
   }
@@ -145,6 +150,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
     }
   }
 
+  final globalScaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -176,12 +182,13 @@ class _FormProductContributorComponentState extends State<FormProductContributor
       onPointerUp: (_)=>setTime(),
       child: WillPopScope(
         onWillPop: () async{
-          return nameController.text!=""||previewController.text!=""||result!=""&&result!="-"&&result!="<p><br></p>"?saveData():true ?? false;
+          return nameController.text!=""||previewController.text!=""||result!=""&&result!="-"&&result!="<p><br></p>"?saveData(context):true ?? false;
         },
         child: Scaffold(
+          key: globalScaffoldKey,
           appBar: FunctionalWidget.appBarHelper(context: context,title: product.isAdd?"Tambah produk":"Edit produk",callback: (){
             if(nameController.text!=""||previewController.text!=""||result!=""&&result!="-"&&result!="<p><br></p>"){
-              saveData();
+              saveData(context);
             }else{
               Navigator.of(context).pop();
             }
@@ -206,11 +213,10 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                                 callback: (res)async{
                                   setTime();
                                   autoSaveProduct(res["path"]);
-                                  setState((){
-                                    _image = res["preview"];
-                                    base64Image = res["path"];
-                                  });
+                                  _image = res["preview"];
+                                  base64Image = res["path"];
                                   Navigator.of(context).pop();
+                                  if(this.mounted) setState((){});
                                 }
                             )
                         );
@@ -225,7 +231,8 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                           children: [
                             Image.asset(GeneralString.imgLocalPng+"plus.png",height: scale.getHeight(2),),
                             SizedBox(height: scale.getHeight(0.5)),
-                            Text("Gambar produk",style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.bluePrimaryColor),)
+                            Text("Gambar produk",style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.bluePrimaryColor),),
+                            Text("opsional",style: Theme.of(context).textTheme.subtitle2)
                           ],
                         ),
                       ),
@@ -273,7 +280,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                 textInputAction: TextInputAction.done,
                 onChange: (e){
                   setTime();
-                  this.setState(() {});
+                  if(this.mounted) setState((){});
                 },
               ),
               SizedBox(height: scale.getHeight(1)),
@@ -327,7 +334,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                 textInputAction: TextInputAction.done,
                 onChange: (e){
                   setTime();
-                  this.setState(() {});
+                  if(this.mounted) setState((){});
                 },
               ),
               SizedBox(height: scale.getHeight(1)),
@@ -340,9 +347,9 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                     callbacks: Callbacks(
                       onChange: (String changed)async {
                         checkForm();
-                        setState(() {
-                          result = changed;
-                        });
+                        result = changed;
+                        if(this.mounted) setState((){});
+
                       },
                       onEnter: () {
                         setTime();

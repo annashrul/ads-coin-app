@@ -17,7 +17,7 @@ class RedButtonWidget extends StatelessWidget {
           color: ColorConfig.redColor
       ),
       child: InTouchWidget(
-          callback:this.callback,
+          callback:(){this.callback();},
           child: Container(
               padding: scale.getPadding(0.8, 3),
               child: this.child
@@ -64,7 +64,8 @@ class BackroundButtonWidget extends StatelessWidget {
   final Color color;
   final Color backgroundColor;
   final String title;
-  BackroundButtonWidget({this.callback,this.color,this.title,this.backgroundColor});
+  EdgeInsetsGeometry padding;
+  BackroundButtonWidget({this.callback,this.color,this.title,this.backgroundColor,this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +81,7 @@ class BackroundButtonWidget extends StatelessWidget {
         callback: (){callback();},
         child: Container(
           width: scale.getWidth(100),
-          padding: scale.getPadding(1, 3),
+          padding: padding==null?scale.getPadding(1, 3):padding,
           child: Text(title,style: Theme.of(context).textTheme.headline1.copyWith(color:color==null?ColorConfig.graySecondaryColor:color),textAlign: TextAlign.center,),
         ),
       ),

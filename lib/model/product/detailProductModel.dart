@@ -69,7 +69,7 @@ class Result {
   String idSeller;
   int status;
   String price;
-  int rating;
+  dynamic rating;
   String terjual;
   String image;
   DateTime createdAt;

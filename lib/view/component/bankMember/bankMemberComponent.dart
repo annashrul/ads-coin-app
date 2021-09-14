@@ -4,6 +4,7 @@ import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/bankMemberProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
+import 'package:adscoin/view/widget/general/noDataWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:adscoin/view/widget/member/bank/modalActionBank.dart';
 import 'package:flutter/material.dart';
@@ -50,35 +51,38 @@ class _BankMemberComponentState extends State<BankMemberComponent> {
             ),
           ),
           Expanded(
-              child: bank.isLoading?LoadingBankMember():ListView.separated(
-                  padding: scale.getPadding(0,2.5),
-                  itemBuilder: (context,index){
-                    final val = bank.bankMemberModel.result[index];
-                    return InTouchWidget(
-                        radius: 10,
-                        callback: (){
-                          bank.setIndexBank(index);
-                          FunctionalWidget.modal(context: context,child: ModalActionBankMember());
-                        },
-                        child: FunctionalWidget.wrapContent(
-                            child: ListTile(
-                              leading: ImageRoundedWidget(
-                                img: val.bankLogo,
-                                height: scale.getHeight(3),
-                                width: scale.getWidth(8),
-                              ),
-                              title: Text(val.accName,style: Theme.of(context).textTheme.headline2),
-                              subtitle: Text(val.accNo,style: Theme.of(context).textTheme.subtitle1),
-                              trailing: InTouchWidget(
-                                  callback: (){},
-                                  child: Icon(FlutterIcons.ios_more_ion)
-                              ),
-                            )
-                        )
-                    );
-                  },
-                  separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(1));},
-                  itemCount: bank.bankMemberModel.result.length
+              child: RefreshIndicator(
+                onRefresh: ()=>bank.get(context: context),
+                child: bank.isLoading?LoadingBankMember():bank.bankMemberModel==null?NoDataWidget():ListView.separated(
+                    padding: scale.getPadding(0,2.5),
+                    itemBuilder: (context,index){
+                      final val = bank.bankMemberModel.result[index];
+                      return InTouchWidget(
+                          radius: 10,
+                          callback: (){
+                            bank.setIndexBank(index);
+                            FunctionalWidget.modal(context: context,child: ModalActionBankMember());
+                          },
+                          child: FunctionalWidget.wrapContent(
+                              child: ListTile(
+                                leading: ImageRoundedWidget(
+                                  img: val.bankLogo,
+                                  height: scale.getHeight(3),
+                                  width: scale.getWidth(8),
+                                ),
+                                title: Text(val.accName,style: Theme.of(context).textTheme.headline2),
+                                subtitle: Text(val.accNo,style: Theme.of(context).textTheme.subtitle1),
+                                trailing: InTouchWidget(
+                                    callback: (){FunctionalWidget.modal(context: context,child: ModalActionBankMember());},
+                                    child: Icon(FlutterIcons.ios_more_ion)
+                                ),
+                              )
+                          )
+                      );
+                    },
+                    separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(1));},
+                    itemCount: bank.bankMemberModel.result.length
+                ),
               )
           )
         ],

@@ -106,12 +106,22 @@ class _HomeComponentState extends State<HomeComponent> {
                 Padding(
                   padding: scale.getPadding(1,2.5),
                   child: InTouchWidget(
-                    callback: ()=>Navigator.of(context).pushNamed(RouteString.detailPromo),
+                    callback: (){
+                      if(promo.promoModel!=null){
+                        Navigator.of(context).pushNamed(RouteString.detailPromo);
+                      }
+                    },
                     radius: 10,
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Color(0xFF2D9CDB),
-                          borderRadius: BorderRadius.circular(10)
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          fit:BoxFit.cover,
+                            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                            image: NetworkImage(
+                            !promo.isLoadingPromo||promo.promoModel==null?GeneralString.dummyImgProduct:promo.promoModel.result.image,
+                          )
+                        )
                       ),
                       padding: scale.getPadding(2, 2),
                       child: Row(
@@ -128,13 +138,9 @@ class _HomeComponentState extends State<HomeComponent> {
                                 ],
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                              ):Text(promo.promoModel==null?"Situs kami memberi jaminan jam kerja tepat waktu dan penulisan memuaskan":promo.promoModel.result.deskripsi,style: Theme.of(context).textTheme.headline2.copyWith(color: Colors.white,fontWeight: FontWeight.w400),maxLines: 3,overflow: TextOverflow.ellipsis,)
+                              ):Text(promo.promoModel==null?"Situs kami memberi jaminan jam kerja tepat waktu dan penulisan memuaskan":promo.promoModel.result.deskripsi,style: Theme.of(context).textTheme.headline2.copyWith(fontWeight: FontWeight.w400),maxLines: 3,overflow: TextOverflow.ellipsis,)
                           ),
-                          promo.isLoadingPromo?BaseLoading(height: 4, width: 10,radius: 100):CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                              radius: 30,
-                              backgroundImage: NetworkImage(promo.promoModel==null?'https://www.iconpacks.net/icons/1/free-user-group-icon-296-thumb.png':promo.promoModel.result.image)
-                          )
+
                         ],
                       ),
                     ),

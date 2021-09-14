@@ -67,7 +67,12 @@ class _CardSaldoWidgetState extends State<CardSaldoWidget> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          user.isLoadingDetailMember?BaseLoading(height: 1.5, width:5):Text("${MoneyFormat.toFormat(double.parse(user.detailMemberModel.result.saldo))}",style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.blackSecondaryColor,fontWeight:FontWeight.w400)),
+                          Row(
+                            children: [
+                              user.isLoadingDetailMember?BaseLoading(height: 1.5, width:5):Text("${MoneyFormat.toFormat(double.parse(user.detailMemberModel.result.saldo))}",style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.blackSecondaryColor,fontWeight:FontWeight.w400)),
+                              Text(" coin",style: Theme.of(context).textTheme.subtitle2.copyWith(color: ColorConfig.blackSecondaryColor,fontWeight:FontWeight.w400)),
+                            ],
+                          ),
                           SizedBox(height: scale.getHeight(0.2),),
                           Text("Saldo AdsCoin",style: Theme.of(context).textTheme.subtitle1),
                         ],
@@ -89,8 +94,8 @@ class _CardSaldoWidgetState extends State<CardSaldoWidget> {
                         Navigator.of(context).pushNamed(RouteString.topUp);
                       }
                   ),
-                  SizedBox(width: scale.getWidth(3)),
-                  cardWallet(
+                  if(!user.isLoadingDetailMember&&user.detailMemberModel.result.idType==1)SizedBox(width: scale.getWidth(3)),
+                  if(!user.isLoadingDetailMember&&user.detailMemberModel.result.idType==1)cardWallet(
                       context: context,
                       title: "Penarikan",
                       image: "topup",

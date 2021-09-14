@@ -22,7 +22,6 @@ class _DetailCheckoutComponentState extends State<DetailCheckoutComponent> {
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
     final product = Provider.of<ProductProvider>(context);
-
     return WillPopScope(
       child: Scaffold(
         body: Padding(

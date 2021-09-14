@@ -26,9 +26,8 @@ class _OptionActionProductWidgetState extends State<OptionActionProductWidget> {
           title: "Edit",
           callback: ()async{
             product.setIsAdd(false);
-            product.setDataEditProductContributor(widget.dataJson);
             product.setStatusProduct(widget.dataJson["status"]);
-            Navigator.of(context).pushNamed(RouteString.formProductContributor);
+            Navigator.of(context).pushNamed(RouteString.formProductContributor).whenComplete(() => product.getProductContributor(context: context));
           },
           img: "Edit",
         ),
@@ -39,10 +38,14 @@ class _OptionActionProductWidgetState extends State<OptionActionProductWidget> {
           },
           img: "Delete1",
         ),
-        if(product.filterStatusProduct==1)CardAction(
-          title: "Ubah menjadi draft",
+        CardAction(
+          title: "Ubah menjadi ${(product.filterStatusProduct==1?"draft":"publish")}",
           callback: ()async{
-            await product.updateToDraft(context: context);
+            if(widget.dataJson["status"]==0){
+              await product.updateToDraft(context: context,status: "1");
+            }else{
+              await product.updateToDraft(context: context,status: "0");
+            }
           },
           img: "analytics1",
         ),

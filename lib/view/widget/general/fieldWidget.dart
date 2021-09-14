@@ -61,7 +61,8 @@ class FieldWidget extends StatelessWidget {
           }
         },
         onChanged: (e){
-          onChange(e);
+          if(onChange!=null) onChange(e);
+
         },
       ),
     );

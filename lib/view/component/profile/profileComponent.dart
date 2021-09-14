@@ -266,8 +266,10 @@ class _ProfileComponentState extends State<ProfileComponent> {
                           callback1: ()=>Navigator.of(context).pop(),
                           callback2: ()async{
                             DatabaseInit db = new DatabaseInit();
+
                             final res = await db.update(UserTable.TABLE_NAME, user.id, {
-                              SessionString.sessIsLogin:StatusRoleString.keluarAplikasi
+                              SessionString.sessIsLogin:StatusRoleString.keluarAplikasi,
+                              SessionString.sessToken:"",
                             });
                             if(res){
                               Navigator.of(context).pushNamedAndRemoveUntil(RouteString.signIn, (route) => false);

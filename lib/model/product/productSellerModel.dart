@@ -99,6 +99,7 @@ class Result {
     this.statusBeli,
     this.image,
     this.createdAt,
+    this.isFavorite="0",
   });
 
   String id;
@@ -113,11 +114,12 @@ class Result {
   String idSeller;
   int status;
   String price;
-  int rating;
+  dynamic rating;
   String terjual;
   int statusBeli;
   String image;
   DateTime createdAt;
+  String isFavorite;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     id: json["id"],
@@ -136,6 +138,7 @@ class Result {
     terjual: json["terjual"],
     statusBeli: json["status_beli"],
     image: json["image"],
+    isFavorite: "0",
     createdAt: DateTime.parse(json["created_at"]),
   );
 
@@ -156,6 +159,7 @@ class Result {
     "terjual": terjual,
     "status_beli": statusBeli,
     "image": image,
+    "isFavorite": isFavorite,
     "created_at": createdAt.toIso8601String(),
   };
 }
