@@ -17,7 +17,9 @@ class _OptionActionProductWidgetState extends State<OptionActionProductWidget> {
   Widget build(BuildContext context) {
     ScreenScaler scale = ScreenScaler()..init(context);
     final product = Provider.of<ProductProvider>(context);
-    print(widget.dataJson);
+    dynamic status = StatusProduct.funcStatusProduct(widget.dataJson["status"].toString());
+    print(status);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -25,6 +27,7 @@ class _OptionActionProductWidgetState extends State<OptionActionProductWidget> {
         CardAction(
           title: "Edit",
           callback: ()async{
+            Navigator.of(context).pop();
             product.setIsAdd(false);
             product.setStatusProduct(widget.dataJson["status"]);
             Navigator.of(context).pushNamed(RouteString.formProductContributor).whenComplete(() => product.getProductContributor(context: context));
@@ -39,7 +42,7 @@ class _OptionActionProductWidgetState extends State<OptionActionProductWidget> {
           img: "Delete1",
         ),
         CardAction(
-          title: "Ubah menjadi ${(product.filterStatusProduct==1?"draft":"publish")}",
+          title: "Ubah menjadi ${widget.dataJson["status"]==1?"draft":"publish"}",
           callback: ()async{
             if(widget.dataJson["status"]==0){
               await product.updateToDraft(context: context,status: "1");
@@ -47,7 +50,7 @@ class _OptionActionProductWidgetState extends State<OptionActionProductWidget> {
               await product.updateToDraft(context: context,status: "0");
             }
           },
-          img: "analytics1",
+          img: widget.dataJson["status"]==1?"analytics1":"TickSquare",
         ),
         CardAction(
           title: "Lihat produk",

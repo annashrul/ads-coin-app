@@ -2,6 +2,7 @@
 
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/helper/validateFormHelper.dart';
 import 'package:adscoin/model/member/bankMemberModel.dart';
 import 'package:adscoin/service/httpService.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,26 +39,31 @@ class BankMemberProvider with ChangeNotifier{
   }
 
   store({BuildContext context,Map<dynamic,dynamic> data})async{
-    dynamic res;
-    if(isAdd){
-      data.remove("id");
-      res = await HttpService().post(url: "bank_member",data: data,context: context);
-    }else{
-      Navigator.of(context).pop();
-      String id = data["id"];
-      data.remove("id");
-      data.remove("bank_name");
-      print(data);
-      res = await HttpService().put(url: "bank_member/$id",data: data,context: context);
-      print(res);
+    ValidateFormHelper valid = new ValidateFormHelper();
+    final isValid = valid.validateEmptyForm(context: context,field:{"atas_nama":data["acc_name"],"no_rekening":data["acc_no"]});
+    if(isValid){
+      dynamic res;
+      if(isAdd){
+        data.remove("id");
+        res = await HttpService().post(url: "bank_member",data: data,context: context);
+      }else{
+        Navigator.of(context).pop();
+        String id = data["id"];
+        data.remove("id");
+        data.remove("bank_name");
+        print(data);
+        res = await HttpService().put(url: "bank_member/$id",data: data,context: context);
+        print(res);
+      }
+      if(res!=null){
+        get(context: context);
+        Navigator.of(context).pop();
+        FunctionalWidget.toast(context: context,msg: "data berhasil disimpan");
+        // FunctionalWidget.nofitDialog(context: context,msg: "data berhasil disimpan",callback2: ()=>Navigator.of(context).pushReplacementNamed(RouteString.bankMember),callback1: ()=>Navigator.of(context).pop(),label2: "Lihat data");
+      }
+      notifyListeners();
     }
-    if(res!=null){
-      get(context: context);
-      Navigator.of(context).pop();
-      FunctionalWidget.toast(context: context,msg: "data berhasil disimpan");
-      // FunctionalWidget.nofitDialog(context: context,msg: "data berhasil disimpan",callback2: ()=>Navigator.of(context).pushReplacementNamed(RouteString.bankMember),callback1: ()=>Navigator.of(context).pop(),label2: "Lihat data");
-    }
-    notifyListeners();
+
   }
 
    delete({BuildContext context})async{

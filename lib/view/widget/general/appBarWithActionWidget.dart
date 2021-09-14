@@ -1,5 +1,6 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
+import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/listProductProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +68,8 @@ class _AppBarWithActionWidgetState extends State<AppBarWithActionWidget> {
               onTap: ()async{
                 if(member.detailMemberModel.result.idType==1){
                   await Share.share(member.referral);
+                }else{
+                  FunctionalWidget.toast(context: context,msg: "anda belum menjadi kontributor");
                 }
               },
               child: Icon(

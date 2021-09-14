@@ -79,8 +79,21 @@ class _MainComponentState extends State<MainComponent> {
             unselectedItemColor: Color(0xFFE3B3AF),
             currentIndex: widget.index,
             onTap: (int i) async{
-              await FunctionalWidget.checkTokenExp(context: context);
-              this._selectTab(i);
+              final isToken = await FunctionalWidget.isTokenExpired(context);
+              if(isToken){
+                FunctionalWidget.nofitDialog(
+                  context: context,
+                  msg: "anda harus login ulang demi keamanan sistem",
+                  callback2: ()=>FunctionalWidget.processLogout(context),
+                  label2: "Keluar"
+                );
+                Future.delayed(Duration(seconds: 2)).whenComplete(() => FunctionalWidget.processLogout(context));
+              }else{
+                this._selectTab(i);
+              }
+              print(isToken);
+              // await FunctionalWidget.checkTokenExp(context: context);
+
             },
             // this will be set when a new tab is tapped
             items: [

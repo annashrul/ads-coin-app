@@ -15,6 +15,7 @@ import 'package:adscoin/view/widget/general/titleSectionWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:adscoin/view/widget/home/cardSaldoWidget.dart';
 import 'package:adscoin/view/widget/product/productWidget1.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
@@ -33,14 +34,31 @@ class ProfilePerMember extends StatefulWidget {
 }
 
 class _ProfilePerMemberState extends State<ProfilePerMember> {
+  ScrollController controller;
+  void scrollListener() {
+    final seller = Provider.of<ProfileSellerProvider>(context, listen: false);
+    if (!seller.isLoadingProduct) {
+      if (controller.position.pixels == controller.position.maxScrollExtent) {
+        seller.loadMoreContributor(context, widget.id);
 
+      }
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     final seller  = Provider.of<ProfileSellerProvider>(context,listen: false);
+    final favorite = Provider.of<FavoriteProvider>(context,listen: false);
+    favorite.get();
     seller.getProfile(context: context,id: widget.id);
     seller.getProduct(context: context,id: widget.id);
+    controller = new ScrollController()..addListener(scrollListener);
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    controller.removeListener(scrollListener);
   }
 
   @override
@@ -142,40 +160,51 @@ class _ProfilePerMemberState extends State<ProfilePerMember> {
             ),
             Divider(),
             Expanded(
-                child: seller.isLoadingProduct? LoadingProduct():seller.productSellerModel==null?NoDataWidget():new StaggeredGridView.countBuilder(
-                  padding: EdgeInsets.all(0.0),
-                  primary: false,
-                  shrinkWrap: true,
-                  crossAxisCount: 4,
-                  itemCount:seller.productSellerModel.result.length,
-                  staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                  itemBuilder: (context,index){
-                    final val = seller.productSellerModel.result[index];
-                    if(favorite.data.length>0){
-                      for(int i=0;i<favorite.data.length;i++){
-                        if(favorite.data[i][TableString.idProduct] == val.id){
-                          val.isFavorite = "1";
-                          break;
+                child: RefreshIndicator(
+                  onRefresh: ()=>seller.getProduct(context: context,id: widget.id),
+                  child: seller.isLoadingProduct? LoadingProduct():seller.productSellerModel==null?NoDataWidget():new StaggeredGridView.countBuilder(
+                    padding: EdgeInsets.all(0.0),
+                    primary: false,
+                    shrinkWrap: true,
+                    crossAxisCount: 4,
+                    controller: controller,
+                    itemCount:seller.productSellerModel.result.length,
+                    staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+                    mainAxisSpacing: 10.0,
+                    crossAxisSpacing: 10.0,
+                    itemBuilder: (context,index){
+                      final val = seller.productSellerModel.result[index];
+                      if(favorite.data.length>0){
+                        for(int i=0;i<favorite.data.length;i++){
+                          if(favorite.data[i][TableString.idProduct] == val.id){
+                            val.isFavorite = "1";
+                            break;
+                          }
+                          continue;
                         }
-                        continue;
                       }
-                    }
-                    return ProductWidget1(
-                      marginWidth: index==0?0:0,
-                      heroTag: "produkSeller"+val.id,
-                      isFavorite:true,
-                      id:val.id,
-                      title: val.title,
-                      price: val.price,
-                      productSale:"${val.terjual} terjual" ,
-                      image: val.image,
-                      isContributor: false,
-                    );
-                  },
+                      return ProductWidget1(
+                        marginWidth: index==0?0:0,
+                        heroTag: "produkSeller"+val.id,
+                        isFavorite:val.isFavorite=="1"?true:false,
+                        id:val.id,
+                        title: val.title,
+                        price: val.price,
+                        productSale:"${val.terjual} terjual" ,
+                        image: val.image,
+                        isContributor: false,
+                      );
+                    },
+                  ),
                 )
-            )
+            ),
+            seller.isLoadMoreProduct?Container(
+                alignment: Alignment.center,
+                padding: scale.getPaddingLTRB(0,1,0,0),
+                child:Center(
+                  child: CupertinoActivityIndicator(),
+                )
+            ):SizedBox(),
           ],
         ),
       ),

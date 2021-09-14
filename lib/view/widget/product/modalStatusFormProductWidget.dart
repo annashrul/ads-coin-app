@@ -19,7 +19,7 @@ class _ModalStatusFormProductWidgetState extends State<ModalStatusFormProductWid
       children: [
         CardAction(
           colorIcon: Colors.black,
-          icon:FlutterIcons.close_outline_mco,
+          img: "Paper",
           title: "Draft",
           callback: ()async{
             product.setStatusProduct(0);
@@ -28,8 +28,8 @@ class _ModalStatusFormProductWidgetState extends State<ModalStatusFormProductWid
         ),
         CardAction(
           colorIcon: Colors.black,
-          icon:FlutterIcons.check_outline_mco,
-          title: "Selesai",
+          img: "TickSquare",
+          title: "Publish",
           callback: ()async{
             product.setStatusProduct(1);
             Navigator.of(context).pop();

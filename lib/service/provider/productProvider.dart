@@ -232,7 +232,7 @@ class ProductProvider with ChangeNotifier{
       getProductContributor(context: context);
     }
     else{
-      isLoadingProductContributor=false;
+      isLoadMoreProductContributor=false;
     }
     notifyListeners();
   }

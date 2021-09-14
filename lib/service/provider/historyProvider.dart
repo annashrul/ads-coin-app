@@ -73,14 +73,15 @@ class HistoryProvider with ChangeNotifier{
       url+="&perpage=$perPageHistoryMutation&datefrom=${FunctionalWidget.convertDateToYMD(fromHistoryMutation)}&dateto=${FunctionalWidget.convertDateToYMD(toHistoryMutation)}";
     }
     final res = await HttpService().get(url: url,context: context);
-    isLoadingHistoryMutation=false;
-    isLoadMoreHistoryMutation=false;
+
     if(res["result"].length>0){
       HistoryMutationModel result = HistoryMutationModel.fromJson(res);
       historyMutationModel = result;
     }else{
       historyMutationModel=null;
     }
+    isLoadingHistoryMutation=false;
+    isLoadMoreHistoryMutation=false;
     notifyListeners();
   }
   loadMoreHistoryMutation(BuildContext context){

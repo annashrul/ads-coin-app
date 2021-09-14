@@ -6,6 +6,7 @@ import 'package:adscoin/service/provider/historyProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/fintech/historyMutationWidget.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
+import 'package:adscoin/view/widget/general/noDataWidget.dart';
 import 'package:adscoin/view/widget/general/titleSectionWidget.dart';
 import 'package:adscoin/view/widget/home/cardSaldoWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -73,7 +74,7 @@ class _IndexFintechComponentState extends State<IndexFintechComponent> {
               flex: 1,
               child: Padding(
                 padding: scale.getPadding(0, 2.5),
-                child: history.isLoadingHistoryMutation?LoadingBankMember():ListView.separated(
+                child: history.isLoadingHistoryMutation?LoadingBankMember():history.historyMutationModel==null?NoDataWidget():ListView.separated(
                       padding: scale.getPadding(0,0),
                       itemBuilder: (context,index){
                         final val = history.historyMutationModel.result[index];

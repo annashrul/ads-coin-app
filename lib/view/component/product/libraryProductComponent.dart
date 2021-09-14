@@ -1,5 +1,7 @@
 import 'package:adscoin/config/color_config.dart';
+import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
+import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/noDataWidget.dart';
 import 'package:adscoin/view/widget/product/productWidget1.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 class LibraryProductComponent extends StatefulWidget {
   @override
@@ -33,6 +36,7 @@ class _LibraryProductComponentState extends State<LibraryProductComponent> {
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
     final product = Provider.of<ProductProvider>(context);
+    final member = Provider.of<UserProvider>(context,listen: false);
 
     return Scaffold(
         appBar: AppBar(
@@ -72,7 +76,13 @@ class _LibraryProductComponentState extends State<LibraryProductComponent> {
                   ),
                 ),
                 InkResponse(
-                  onTap: (){},
+                  onTap: ()async{
+                    if(member.detailMemberModel.result.idType==1){
+                      await Share.share(member.referral);
+                    }else{
+                      FunctionalWidget.toast(context: context,msg: "anda belum menjadi kontributor");
+                    }
+                  },
                   child: Icon(
                       FlutterIcons.share_alt_faw,
                       size: scale.getTextSize(15),
@@ -82,7 +92,6 @@ class _LibraryProductComponentState extends State<LibraryProductComponent> {
               ],
             ),
           ),
-
         ),
         body: buildContent(context)
     );

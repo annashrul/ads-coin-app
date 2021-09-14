@@ -70,63 +70,69 @@ class AuthProvider with ChangeNotifier{
   }
 
   Future<void> sendOtp({BuildContext context, dynamic fields,bool isRedirect=true})async{
-    final res = await service.post(
-      url: "auth/otp",
-      data: fields,
-      context: context
-    );
-    fields["otp"] = res["result"]["otp_anying"];
-    dataOtp = fields;
-    if(isRedirect){
-      Navigator.push(context, CupertinoPageRoute(builder: (context) =>  OtpComponent(
-        callback: (otp) async{
-          final resLogin = await service.post(
-            url: "auth",
-            data: {
-              "type":"otp",
-              "nohp":fields["nomor"],
-              "otp_code":otp
-            },
-            context: context
-          );
-          if(resLogin!=null){
-            isTrue=false;
-            SignInModel result = SignInModel.fromJson(resLogin);
-            final dataUser = result.result;
-            final getUserLocal = await db.getData(UserTable.TABLE_NAME);
-            final storeDataUser =  {
-              SessionString.sessIsLogin:StatusRoleString.masukAplikasi,
-              SessionString.sessId:dataUser.id.toString(),
-              SessionString.sessToken:dataUser.token.toString(),
-              SessionString.sessHavePin:dataUser.havePin.toString(),
-              SessionString.sessPhoto:dataUser.foto.toString(),
-              SessionString.sessName:dataUser.fullname.toString(),
-              SessionString.sessMobileNo:dataUser.mobileNo.toString(),
-              SessionString.sessReferral:dataUser.referral.toString(),
-              SessionString.sessStatus:dataUser.status.toString(),
-              SessionString.sessType:dataUser.type.toString(),
-            };
-            if(getUserLocal.length>0){
-              await db.delete(UserTable.TABLE_NAME);
-              await db.insert(UserTable.TABLE_NAME,storeDataUser);
-            }
-            else{
-              await db.insert(UserTable.TABLE_NAME,storeDataUser);
-            }
-            final userStorage = Provider.of<UserProvider>(context, listen: false);
-            await userStorage.getDataUser();
-            Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
-          }
-        },
-        isTrue: isTrue,
-      )));
+    final isValid = valid.validateEmptyForm(context: context,field:{"nomor_ponsel":fields["nomor"]});
+    if(isValid){
+      final res = await service.post(
+          url: "auth/otp",
+          data: fields,
+          context: context
+      );
+      fields["otp"] = res["result"]["otp_anying"];
+      dataOtp = fields;
+      if(isRedirect){
+        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+            new CupertinoPageRoute(builder: (BuildContext context)=>OtpComponent(
+              callback: (otp) async{
+                final resLogin = await service.post(
+                    url: "auth",
+                    data: {
+                      "type":"otp",
+                      "nohp":fields["nomor"],
+                      "otp_code":otp
+                    },
+                    context: context
+                );
+                if(resLogin!=null){
+                  isTrue=false;
+                  SignInModel result = SignInModel.fromJson(resLogin);
+                  final dataUser = result.result;
+                  final getUserLocal = await db.getData(UserTable.TABLE_NAME);
+                  final storeDataUser =  {
+                    SessionString.sessIsLogin:StatusRoleString.masukAplikasi,
+                    SessionString.sessId:dataUser.id.toString(),
+                    SessionString.sessToken:dataUser.token.toString(),
+                    SessionString.sessHavePin:dataUser.havePin.toString(),
+                    SessionString.sessPhoto:dataUser.foto.toString(),
+                    SessionString.sessName:dataUser.fullname.toString(),
+                    SessionString.sessMobileNo:dataUser.mobileNo.toString(),
+                    SessionString.sessReferral:dataUser.referral.toString(),
+                    SessionString.sessStatus:dataUser.status.toString(),
+                    SessionString.sessType:dataUser.type.toString(),
+                  };
+                  if(getUserLocal.length>0){
+                    await db.delete(UserTable.TABLE_NAME);
+                    await db.insert(UserTable.TABLE_NAME,storeDataUser);
+                  }
+                  else{
+                    await db.insert(UserTable.TABLE_NAME,storeDataUser);
+                  }
+                  final userStorage = Provider.of<UserProvider>(context, listen: false);
+                  await userStorage.getDataUser();
+                  Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
+                }
+              },
+              isTrue: isTrue,
+            )), (Route<dynamic> route) => false
+        );
+      }
+      else{
+        setTimer(10);
+        notifyListeners();
+        timerUpdate();
+        print("tidak redirect");
+      }
     }
-    else{
-      setTimer(10);
-      notifyListeners();
-      timerUpdate();
-      print("tidak redirect");
-    }
+
 
 
   }

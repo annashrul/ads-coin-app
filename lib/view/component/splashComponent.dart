@@ -20,19 +20,23 @@ class _SplashComponentState extends State<SplashComponent> {
     await userStorage.getDataUser();
     print("userStorage.isLogin ${userStorage.isLogin}");
     if(userStorage.isLogin==null || userStorage.isLogin==StatusRoleString.baruInstall){
-      Navigator.of(context).pushNamed(RouteString.onBoarding);
+      Navigator.of(context).pushNamedAndRemoveUntil(RouteString.onBoarding, (route) => false);
     }
     else{
       final user = Provider.of<UserProvider>(context, listen: false);
       user.getDetailMember(context: context);
       if(userStorage.isLogin==StatusRoleString.keluarAplikasi){
-        Navigator.of(context).pushNamed(RouteString.signIn);
+        Navigator.of(context).pushNamedAndRemoveUntil(RouteString.signIn, (route) => false);
       }
       else{
-        Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
+        final isToken = await FunctionalWidget.isTokenExpired(context);
+        if(isToken){
+          FunctionalWidget.processLogout(context);
+        }else{
+          Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
+        }
       }
     }
-
   }
 
 

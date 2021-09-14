@@ -2,6 +2,16 @@ class StatusDeposit{
   static const String paymentGateway = "1";
   static const String virtualAccount = "0";
 }
+class StatusProduct{
+  static funcStatusProduct(status){
+    if(int.parse(status)==0){
+      return {"index":"0","title":"Draft"};
+    }
+    if(int.parse(status)==1){
+      return {"index":"1","title":"Publish"};
+    }
+  }
+}
 class RoleAccessString{
   static const String contributor="Kontributor";
   static const String member="Member";

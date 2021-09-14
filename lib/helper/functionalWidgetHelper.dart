@@ -25,34 +25,28 @@ import 'package:share/share.dart';
 
 
 class FunctionalWidget{
-  static checkTokenExp({BuildContext context})async{
+  static isTokenExpired(BuildContext context)async{
     final provider = Provider.of<UserProvider>(context,listen:false);
     final token = provider.token;
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
     bool isTokenExpired = JwtDecoder.isExpired(token);
-    if(isTokenExpired){
-      FunctionalWidget.nofitDialog(
-          context: context,
-          msg: "Sesi anda sudah berakhir. silahkan lakukan login ulang",
-          callback1: ()=>Navigator.of(context).pop(),
-          callback2: ()async{
-            DatabaseInit db = new DatabaseInit();
-            final res = await db.update(UserTable.TABLE_NAME, provider.id, {
-              SessionString.sessIsLogin:StatusRoleString.keluarAplikasi
-            });
-            if(res){
-              Navigator.of(context).pushNamedAndRemoveUntil(RouteString.signIn, (route) => false);
-            }else{
-              FunctionalWidget.toast(context: context,msg:"gagal keluar aplikasi");
-            }
-          },
-          label2: "Keluar"
-      );
-
-    }
     print("####################### PAYLOAD TOKEN $isTokenExpired ########################################");
+    return isTokenExpired;
+  }
 
-    // return isTokenExpired;
+
+  static processLogout(BuildContext context)async{
+    final provider = Provider.of<UserProvider>(context,listen:false);
+    DatabaseInit db = new DatabaseInit();
+    final res = await db.update(UserTable.TABLE_NAME, provider.id, {
+      SessionString.sessIsLogin:StatusRoleString.keluarAplikasi
+    });
+    if(res){
+      Navigator.of(context).pushNamedAndRemoveUntil(RouteString.signIn, (route) => false);
+    }else{
+      FunctionalWidget.toast(context: context,msg:"gagal keluar aplikasi");
+    }
+
 
   }
 
@@ -244,7 +238,7 @@ class FunctionalWidget{
       children: [
         Icon(AntDesign.star,size: scale.getTextSize(9),color: ColorConfig.yellowColor,),
         SizedBox(width: scale.getWidth(1)),
-        Text(rate.toString(),style: Theme.of(context).textTheme.subtitle1)
+        Text(rate.toStringAsFixed(2).toString(),style: Theme.of(context).textTheme.subtitle1)
       ],
     );
   }

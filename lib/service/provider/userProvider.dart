@@ -39,7 +39,7 @@ class UserProvider with ChangeNotifier{
     detailMemberModel=result;
     notifyListeners();
   }
- getLeaderBoard({BuildContext context})async{
+  getLeaderBoard({BuildContext context})async{
     if(leaderBoardModel==null) isLoadingLeaderBoard=true;
     final res = await HttpService().get(url: "member/top_kontributor?page=1&type=penjualan",context: context);
     isLoadingLeaderBoard=false;
@@ -70,14 +70,11 @@ class UserProvider with ChangeNotifier{
   }
   ValidateFormHelper valid = new ValidateFormHelper();
   store({BuildContext context,fields})async{
-    final isValid = valid.validateEmptyForm(context: context,field:fields);
-    if(isValid){
-      final res = await HttpService().put(url: "member/$idUser",data: fields,context:context);
-      print("horeeeeeee $res");
-      if(res!=null){
-        FunctionalWidget.toast(context: context,msg: res["msg"]);
-        getDetailMember(context: context);
-      }
+    final res = await HttpService().put(url: "member/$idUser",data: fields,context:context);
+    print("horeeeeeee $res");
+    if(res!=null){
+      FunctionalWidget.toast(context: context,msg: res["msg"]);
+      getDetailMember(context: context);
     }
     notifyListeners();
   }

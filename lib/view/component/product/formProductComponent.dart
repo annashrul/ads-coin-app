@@ -174,7 +174,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
       if(nameController.text!=""||previewController.text!=""||result!=""&&result!="-"&&result!="<p><br></p>") autoSaveProduct(base64Image);
     }
     if(statusProduct==0)statusController.text="Draft";
-    else statusController.text="Selesai";
+    else statusController.text="Publish";
 
     return Listener(
       onPointerDown: (_)=>setTime(), // best place to reset timer imo
@@ -241,7 +241,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                   if(base64Image!="-")Container(
                     margin: scale.getMarginLTRB(1,0,0,0),
                     width: scale.getWidth(30),
-                    height: scale.getHeight(8),
+                    height: scale.getHeight(9.5),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         image: DecorationImage(
@@ -250,10 +250,10 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                         )
                     ),
                   ),
-                  if(!product.isAdd)Container(
+                  if(!product.isAdd&&base64Image=="-")Container(
                     margin: scale.getMarginLTRB(1,0,0,0),
                     width: scale.getWidth(30),
-                    height: scale.getHeight(8),
+                    height: scale.getHeight(9.5),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         image: DecorationImage(
