@@ -23,6 +23,10 @@ class _LibraryProductComponentState extends State<LibraryProductComponent> {
     super.initState();
     final product = Provider.of<ProductProvider>(context, listen: false);
     product.getLibrary(context: context);
+    this.setState(() {
+      anyController.text = product.anyProductLibrary;
+
+    });
   }
 
   @override

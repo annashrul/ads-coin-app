@@ -39,6 +39,11 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
     final product = Provider.of<ProductProvider>(context, listen: false);
     product.getProductContributor(context: context);
     controller = new ScrollController()..addListener(scrollListener);
+    // product.anyProductContributor
+    this.setState(() {
+
+      anyController.text = product.anyProductContributor;
+    });
   }
   @override
   void dispose() {

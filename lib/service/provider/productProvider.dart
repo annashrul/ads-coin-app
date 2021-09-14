@@ -176,6 +176,7 @@ class ProductProvider with ChangeNotifier{
       if(isAdd){
         res = await HttpService().post(url: "product",data: data,context: context,isLoading: loading);
       }else{
+        Navigator.of(context).pop();
         res = await HttpService().put(url: "product/${dataEditProductContributor["id"]}",data: data,context: context,isLoading: loading);
       }
 
