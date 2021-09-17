@@ -53,6 +53,7 @@ class _HomeComponentState extends State<HomeComponent> {
     product.getBestSeller(context: context);
     user.getLeaderBoard(context: context);
     promo.checkPromo(context: context);
+    user.getDetailMember(context: context);
   }
 
   @override
@@ -149,6 +150,7 @@ class _HomeComponentState extends State<HomeComponent> {
                 Padding(
                   padding: scale.getPadding(0,2.5),
                   child: TitleSectionWidget(
+                    isAction: false,
                     title: "Produk terlaris",
                     callback: ()=>Navigator.of(context).pushReplacementNamed(RouteString.main,arguments: TabIndexString.tabProduct)
                   ),

@@ -22,8 +22,8 @@ class _AppBarWithActionWidgetState extends State<AppBarWithActionWidget> {
   TextEditingController anyController;
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<ListProductProvider>(context,listen: false);
-    final member = Provider.of<UserProvider>(context,listen: false);
+    final product = Provider.of<ListProductProvider>(context);
+    final member = Provider.of<UserProvider>(context);
 
     ScreenScaler scale= ScreenScaler()..init(context);
     return SliverAppBar(

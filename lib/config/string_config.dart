@@ -105,8 +105,8 @@ class SiteString{
 }
 class ApiString{
   static const String onesignalAppId = "ad1a7344-2b2f-40d0-87c8-0f8ec150cb8f";
-  // static const String url = "http://api.adscoin.id/";
-  static const String url = "http://ptnetindo.com:6696/";
+  static const String url = "https://api.adscoin.id/";
+  // static const String url = "http://ptnetindo.com:6696/";
   static const int timeOut = 60;
   static const String xProjectId = "8123268367ea27e094e71e290";
   static const String xRequestedFrom = "apps";

@@ -24,8 +24,7 @@ class _CardSaldoWidgetState extends State<CardSaldoWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    final user = Provider.of<UserProvider>(context, listen: false);
-    user.getDetailMember(context: context);
+
   }
 
   @override
