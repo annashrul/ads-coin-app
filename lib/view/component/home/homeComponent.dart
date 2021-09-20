@@ -257,7 +257,7 @@ class _HomeComponentState extends State<HomeComponent> {
                                   backgroundImage: NetworkImage(val.foto)
                               ),
                               title: Text(val.fullname,style: Theme.of(context).textTheme.headline2),
-                              subtitle: Text(val.bio,style: Theme.of(context).textTheme.subtitle1,maxLines: 1,overflow: TextOverflow.ellipsis),
+                              subtitle: Text(val.bio!=null?val.bio:"-",style: Theme.of(context).textTheme.subtitle1,maxLines: 1,overflow: TextOverflow.ellipsis),
                               trailing: Container(
                                 width: scale.getWidth(10),
                                 child: FunctionalWidget.rating(context: context,rate:double.parse(val.rating.toString())),

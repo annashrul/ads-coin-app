@@ -13,6 +13,7 @@ import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/auth/otpComponent.dart';
 import 'package:adscoin/view/component/profile/disclaimerComponent.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
 class AuthProvider with ChangeNotifier{
@@ -77,60 +78,68 @@ class AuthProvider with ChangeNotifier{
           data: fields,
           context: context
       );
-      fields["otp"] = res["result"]["otp_anying"];
-      dataOtp = fields;
-      if(isRedirect){
-        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-            new CupertinoPageRoute(builder: (BuildContext context)=>OtpComponent(
-              callback: (otp) async{
-                final resLogin = await service.post(
-                    url: "auth",
-                    data: {
-                      "type":"otp",
-                      "nohp":fields["nomor"],
-                      "otp_code":otp
-                    },
-                    context: context
-                );
-                if(resLogin!=null){
-                  isTrue=false;
-                  SignInModel result = SignInModel.fromJson(resLogin);
-                  final dataUser = result.result;
-                  final getUserLocal = await db.getData(UserTable.TABLE_NAME);
-                  final storeDataUser =  {
-                    SessionString.sessIsLogin:StatusRoleString.masukAplikasi,
-                    SessionString.sessId:dataUser.id.toString(),
-                    SessionString.sessToken:dataUser.token.toString(),
-                    SessionString.sessHavePin:dataUser.havePin.toString(),
-                    SessionString.sessPhoto:dataUser.foto.toString(),
-                    SessionString.sessName:dataUser.fullname.toString(),
-                    SessionString.sessMobileNo:dataUser.mobileNo.toString(),
-                    SessionString.sessReferral:dataUser.referral.toString(),
-                    SessionString.sessStatus:dataUser.status.toString(),
-                    SessionString.sessType:dataUser.type.toString(),
-                  };
-                  if(getUserLocal.length>0){
-                    await db.delete(UserTable.TABLE_NAME);
-                    await db.insert(UserTable.TABLE_NAME,storeDataUser);
+      print(res["result"]["note"]);
+      if(res["result"]["note"] == "gagal"){
+        FunctionalWidget.toast(context: context,msg: res["msg"]);
+      }else{
+        fields["otp"] = res["result"]["otp_anying"];
+        dataOtp = fields;
+        if(isRedirect){
+          Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+              new CupertinoPageRoute(builder: (BuildContext context)=>OtpComponent(
+                callback: (otp) async{
+                  final devideId = await FunctionalWidget.getDevideId();
+                  final resLogin = await service.post(
+                      url: "auth",
+                      data: {
+                        "type":"otp",
+                        "nohp":fields["nomor"],
+                        "otp_code":otp,
+                        "deviceid":"$devideId"
+                      },
+                      context: context
+                  );
+                  if(resLogin!=null){
+                    isTrue=false;
+                    SignInModel result = SignInModel.fromJson(resLogin);
+                    final dataUser = result.result;
+                    final getUserLocal = await db.getData(UserTable.TABLE_NAME);
+                    final storeDataUser =  {
+                      SessionString.sessIsLogin:StatusRoleString.masukAplikasi,
+                      SessionString.sessId:dataUser.id.toString(),
+                      SessionString.sessToken:dataUser.token.toString(),
+                      SessionString.sessHavePin:dataUser.havePin.toString(),
+                      SessionString.sessPhoto:dataUser.foto.toString(),
+                      SessionString.sessName:dataUser.fullname.toString(),
+                      SessionString.sessMobileNo:dataUser.mobileNo.toString(),
+                      SessionString.sessReferral:dataUser.referral.toString(),
+                      SessionString.sessStatus:dataUser.status.toString(),
+                      SessionString.sessType:dataUser.type.toString(),
+                    };
+                    if(getUserLocal.length>0){
+                      await db.delete(UserTable.TABLE_NAME);
+                      await db.insert(UserTable.TABLE_NAME,storeDataUser);
+                    }
+                    else{
+                      await db.insert(UserTable.TABLE_NAME,storeDataUser);
+                    }
+                    final userStorage = Provider.of<UserProvider>(context, listen: false);
+                    await userStorage.getDataUser();
+                    Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
                   }
-                  else{
-                    await db.insert(UserTable.TABLE_NAME,storeDataUser);
-                  }
-                  final userStorage = Provider.of<UserProvider>(context, listen: false);
-                  await userStorage.getDataUser();
-                  Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
-                }
-              },
-              isTrue: isTrue,
-            )), (Route<dynamic> route) => false
-        );
+                },
+                isTrue: isTrue,
+              )), (Route<dynamic> route) => false
+          );
+        }
+        else{
+          setTimer(10);
+          notifyListeners();
+          timerUpdate();
+          print("tidak redirect");
+        }
       }
-      else{
-        setTimer(10);
-        notifyListeners();
-        timerUpdate();
-        print("tidak redirect");
-      }
+
     }
 
 
@@ -153,6 +162,7 @@ class AuthProvider with ChangeNotifier{
                 await postOtp(context: context,data: {"phoneNumber":fields["nomor"],"isLogin":"0"},callback: (otp){
                   Navigator.push(context, CupertinoPageRoute(builder: (context) =>  OtpComponent(
                     callback: (code)async{
+                      final devideId = await FunctionalWidget.getDevideId();
                       dynamic dataRegister={
                         "fullname":fields["fullname"].toString(),
                         "email":fields["email"].toString(),
@@ -160,10 +170,9 @@ class AuthProvider with ChangeNotifier{
                         "pin":fields["pin"].toString(),
                         "sponsor":fields["referral_code"].toString(),
                         "signup_source":"apps",
-                        "kode_otp":code.toString()
+                        "kode_otp":code.toString(),
+                        "deviceid":"$devideId"
                       };
-                      print(dataRegister);
-                      // print("CALLBAC OTP COMPONENT $code");
                       final register = await HttpService().post(
                           url: "auth/register",
                           data: dataRegister,

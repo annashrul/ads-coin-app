@@ -26,6 +26,7 @@ class RouteString{
   static const pin = "/pin";
   static const home = "/home";
   static const main = "/main";
+  static const search = "/search";
   static const detailProduct = "/detailProduct";
   static const checkout = "/checkout";
   static const detailCheckout = "/detailCheckout";

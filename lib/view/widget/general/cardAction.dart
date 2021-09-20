@@ -11,7 +11,8 @@ class CardAction extends StatelessWidget {
   String title;
   Color colorIcon;
   String img;
-  CardAction({this.icon,this.title,this.colorIcon,this.callback,this.img});
+  Widget actionIcon;
+  CardAction({this.icon,this.title,this.colorIcon,this.callback,this.img,this.actionIcon});
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
@@ -30,7 +31,7 @@ class CardAction extends StatelessWidget {
                   Text(title,style: Theme.of(context).textTheme.headline2),
                 ],
               ),
-              Icon(Icons.arrow_forward_ios_outlined,size: scale.getTextSize(10),color: ColorConfig.graySecondaryColor,),
+              actionIcon!=null?actionIcon:Icon(Icons.arrow_forward_ios_outlined,size: scale.getTextSize(10),color: ColorConfig.graySecondaryColor,),
             ],
           ),
         )

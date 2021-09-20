@@ -60,22 +60,22 @@ class Result {
     this.foto,
   });
 
-  String id;
-  String fullname;
-  String mobileNo;
-  String saldo;
-  String totalPayment;
-  String referral;
-  String email;
-  String deviceId;
-  String signupSource;
+  dynamic id;
+  dynamic fullname;
+  dynamic mobileNo;
+  dynamic saldo;
+  dynamic totalPayment;
+  dynamic referral;
+  dynamic email;
+  dynamic deviceId;
+  dynamic signupSource;
   int status;
   DateTime createdAt;
-  String bio;
-  String website;
-  String type;
+  dynamic bio;
+  dynamic website;
+  dynamic type;
   int idType;
-  String foto;
+  dynamic foto;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     id: json["id"],

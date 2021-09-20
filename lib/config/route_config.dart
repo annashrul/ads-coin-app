@@ -30,6 +30,7 @@ import 'package:adscoin/view/component/profile/formProfileComponent.dart';
 import 'package:adscoin/view/component/profile/profilePerMember.dart';
 import 'package:adscoin/view/component/profile/referralComponent.dart';
 import 'package:adscoin/view/component/promo/detailPromoComponent.dart';
+import 'package:adscoin/view/component/searchComponent.dart';
 import 'package:adscoin/view/component/site/infoAdsComponent.dart';
 import 'package:adscoin/view/component/splashComponent.dart';
 import 'package:flutter/cupertino.dart';
@@ -98,6 +99,8 @@ class RouteGenerator{
         return CupertinoPageRoute(builder: (_) => ProfilePerMember(id: args));
       case '${RouteString.detailPromo}':
         return CupertinoPageRoute(builder: (_) => DetailPromoComponent());
+      case '${RouteString.search}':
+        return CupertinoPageRoute(builder: (_) => SearchComponent(any: args));
 
 
       default:

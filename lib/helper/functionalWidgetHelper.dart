@@ -19,12 +19,21 @@ import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
 
 
 class FunctionalWidget{
+
+  static getDevideId()async{
+    var status = await OneSignal.shared.getPermissionSubscriptionState();
+    String onesignalUserId = status.subscriptionStatus.userId;
+    return onesignalUserId;
+  }
+
+
   static isTokenExpired(BuildContext context)async{
     final provider = Provider.of<UserProvider>(context,listen:false);
     final token = provider.token;

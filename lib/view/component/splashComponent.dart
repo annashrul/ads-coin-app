@@ -67,7 +67,7 @@ class _SplashComponentState extends State<SplashComponent> {
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.all(10),
-        child: Text("powered by sopowae",style: Theme.of(context).textTheme.headline1,textAlign: TextAlign.center,),
+        child: Text("By Shopowae",style: Theme.of(context).textTheme.headline1,textAlign: TextAlign.center,),
       ),
     );
   }

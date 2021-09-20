@@ -1,15 +1,15 @@
 // To parse this JSON data, do
 //
-//     final leaderBoardModel = leaderBoardModelFromJson(jsonString);
+//     final memberSearchModel = memberSearchModelFromJson(jsonString);
 
 import 'dart:convert';
 
-LeaderBoardModel leaderBoardModelFromJson(String str) => LeaderBoardModel.fromJson(json.decode(str));
+MemberSearchModel memberSearchModelFromJson(String str) => MemberSearchModel.fromJson(json.decode(str));
 
-String leaderBoardModelToJson(LeaderBoardModel data) => json.encode(data.toJson());
+String memberSearchModelToJson(MemberSearchModel data) => json.encode(data.toJson());
 
-class LeaderBoardModel {
-  LeaderBoardModel({
+class MemberSearchModel {
+  MemberSearchModel({
     this.result,
     this.meta,
     this.total,
@@ -23,7 +23,7 @@ class LeaderBoardModel {
   String msg;
   String status;
 
-  factory LeaderBoardModel.fromJson(Map<String, dynamic> json) => LeaderBoardModel(
+  factory MemberSearchModel.fromJson(Map<String, dynamic> json) => MemberSearchModel(
     result: List<Result>.from(json["result"].map((x) => Result.fromJson(x))),
     meta: Meta.fromJson(json["meta"]),
     total: List<dynamic>.from(json["total"].map((x) => x)),
@@ -86,6 +86,7 @@ class Result {
     this.id,
     this.fullname,
     this.mobileNo,
+    this.email,
     this.saldo,
     this.totalPayment,
     this.referral,
@@ -107,6 +108,7 @@ class Result {
   dynamic id;
   dynamic fullname;
   dynamic mobileNo;
+  dynamic email;
   dynamic saldo;
   dynamic totalPayment;
   dynamic referral;
@@ -128,6 +130,7 @@ class Result {
     id: json["id"],
     fullname: json["fullname"],
     mobileNo: json["mobile_no"],
+    email: json["email"],
     saldo: json["saldo"],
     totalPayment: json["total_payment"],
     referral: json["referral"],
@@ -135,11 +138,11 @@ class Result {
     signupSource: json["signup_source"],
     status: json["status"],
     createdAt: DateTime.parse(json["created_at"]),
-    bio: json["bio"],
-    website: json["website"],
+    bio: json["bio"] == null ? null : json["bio"],
+    website: json["website"] == null ? null : json["website"],
     totalReferral: json["total_referral"],
     copyTerjual: json["copy_terjual"],
-    rating: json["rating"],
+    rating: json["rating"].toDouble(),
     typeId: json["type_id"],
     type: json["type"],
     foto: json["foto"],
@@ -150,6 +153,7 @@ class Result {
     "id": id,
     "fullname": fullname,
     "mobile_no": mobileNo,
+    "email": email,
     "saldo": saldo,
     "total_payment": totalPayment,
     "referral": referral,
@@ -157,8 +161,8 @@ class Result {
     "signup_source": signupSource,
     "status": status,
     "created_at": createdAt.toIso8601String(),
-    "bio": bio,
-    "website": website,
+    "bio": bio == null ? null : bio,
+    "website": website == null ? null : website,
     "total_referral": totalReferral,
     "copy_terjual": copyTerjual,
     "rating": rating,

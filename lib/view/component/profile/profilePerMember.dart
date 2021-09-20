@@ -40,7 +40,6 @@ class _ProfilePerMemberState extends State<ProfilePerMember> {
     if (!seller.isLoadingProduct) {
       if (controller.position.pixels == controller.position.maxScrollExtent) {
         seller.loadMoreContributor(context, widget.id);
-
       }
     }
   }
@@ -65,11 +64,9 @@ class _ProfilePerMemberState extends State<ProfilePerMember> {
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
     final seller  = Provider.of<ProfileSellerProvider>(context);
-    // final member = Provider.of<UserProvider>(context);
     final favorite = Provider.of<FavoriteProvider>(context);
-
     return Scaffold(
-      appBar: FunctionalWidget.appBarHelper(context: context,title: "profile seller"),
+      appBar: FunctionalWidget.appBarHelper(context: context,title: "profile kontributor"),
       body: Container(
         padding: scale.getPadding(1,2.5),
         child: Column(
@@ -95,7 +92,7 @@ class _ProfilePerMemberState extends State<ProfilePerMember> {
                       children: [
                         Container(
                           child: Text("Nama",style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).textTheme.headline1.color)),
-                          width: scale.getWidth(30),
+                          width: scale.getWidth(20),
                         ),
                         Text(":",style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).textTheme.subtitle2.color)),
                         SizedBox(width: scale.getWidth(1)),
@@ -108,7 +105,7 @@ class _ProfilePerMemberState extends State<ProfilePerMember> {
                       children: [
                         Container(
                           child: Text("Rating",style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).textTheme.headline1.color)),
-                          width: scale.getWidth(30),
+                          width: scale.getWidth(20),
                         ),
                         Text(":",style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).textTheme.subtitle2.color)),
                         SizedBox(width: scale.getWidth(1)),
@@ -121,7 +118,7 @@ class _ProfilePerMemberState extends State<ProfilePerMember> {
                       children: [
                         Container(
                           child: Text("Penjualan",style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).textTheme.headline1.color)),
-                          width: scale.getWidth(30),
+                          width: scale.getWidth(20),
                         ),
                         Text(":",style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).textTheme.subtitle2.color)),
                         SizedBox(width: scale.getWidth(1)),
@@ -134,21 +131,24 @@ class _ProfilePerMemberState extends State<ProfilePerMember> {
                       children: [
                         Container(
                           child: Text("Website",style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).textTheme.headline1.color)),
-                          width: scale.getWidth(30),
+                          width: scale.getWidth(20),
                         ),
                         Text(":",style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).textTheme.subtitle2.color)),
                         SizedBox(width: scale.getWidth(1)),
                         seller.isLoadingProfile?BaseLoading(height: 1, width:20):InkResponse(
                           onTap: ()async{
-                            _launchURL(seller.profilePerMemberModel.result.website);
+                            if(seller.profilePerMemberModel.result.website!=null){
+                              _launchURL(seller.profilePerMemberModel.result.website);
+
+                            }
                           },
-                          child: Text(seller.profilePerMemberModel.result.website,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.bluePrimaryColor)),
+                          child: Text(seller.profilePerMemberModel.result.website==null?"-":seller.profilePerMemberModel.result.website,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.bluePrimaryColor)),
                         )
                       ],
                     ),
                     Container(
                       width: scale.getWidth(60),
-                      child: seller.isLoadingProfile?BaseLoading(height: 1, width:20):Text(seller.profilePerMemberModel.result.bio,style: Theme.of(context).textTheme.subtitle1,),
+                      child: seller.isLoadingProfile?BaseLoading(height: 1, width:20):Text(seller.profilePerMemberModel.result.bio==null?"-":seller.profilePerMemberModel.result.bio,style: Theme.of(context).textTheme.subtitle1,),
                     )
                   ],
                 )

@@ -8,6 +8,7 @@ import 'package:adscoin/helper/validateFormHelper.dart';
 import 'package:adscoin/model/member/detailMemberModel.dart';
 import 'package:adscoin/model/member/leaderBoardModel.dart';
 import 'package:adscoin/model/member/listReferralMember.dart';
+import 'package:adscoin/model/member/memberSearchModel.dart';
 import 'package:adscoin/model/member/profilePerMemberModel.dart';
 import 'package:adscoin/service/httpService.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,11 +26,17 @@ class UserProvider with ChangeNotifier{
   dynamic referral="";
   dynamic status="";
   dynamic type="";
+
+  String anySearchMember="";
+
   DatabaseInit db = new DatabaseInit();
-  bool isLoadingLeaderBoard=true,isLoadingDetailMember=true,isLoadingListReferral=true;
+  bool isLoadingLeaderBoard=true,isLoadingDetailMember=true,isLoadingListReferral=true,isLoadingSearchMember=true;
+  bool isLoadMoreSearchMember=false;
+  int perPageSearchMember=10;
   LeaderBoardModel leaderBoardModel;
   DetailMemberModel detailMemberModel;
   ListReferralMember listReferralMember;
+  MemberSearchModel memberSearchModel;
 
   getDetailMember({BuildContext context})async{
     if(detailMemberModel==null) isLoadingDetailMember=true;
@@ -71,7 +78,6 @@ class UserProvider with ChangeNotifier{
   ValidateFormHelper valid = new ValidateFormHelper();
   store({BuildContext context,fields})async{
     final res = await HttpService().put(url: "member/$idUser",data: fields,context:context);
-    print("horeeeeeee $res");
     if(res!=null){
       FunctionalWidget.toast(context: context,msg: res["msg"]);
       getDetailMember(context: context);
@@ -90,5 +96,38 @@ class UserProvider with ChangeNotifier{
     }
     notifyListeners();
   }
+  Future getSearchMember({BuildContext context})async{
+    String url = "member?kontributor=true";
+    if(memberSearchModel==null) isLoadingSearchMember=true;
+    if(anySearchMember!="") url+="&q=$anySearchMember";
+    final res = await HttpService().get(url: url,context: context);
 
+    if(res["result"].length>0){
+      MemberSearchModel result=MemberSearchModel.fromJson(res);
+      memberSearchModel=result;
+    }else{
+      memberSearchModel=null;
+    }
+    isLoadingSearchMember=false;
+    isLoadMoreSearchMember=false;
+    notifyListeners();
+  }
+
+  setAnySearchMember(context,input){
+    isLoadingSearchMember=true;
+    anySearchMember=input;
+    getSearchMember(context: context);
+    notifyListeners();
+  }
+  loadMoreSearchMember(BuildContext context){
+    if(perPageSearchMember<memberSearchModel.meta.total){
+      isLoadMoreSearchMember=true;
+      perPageSearchMember+=10;
+      getSearchMember(context: context);
+    }
+    else{
+      isLoadMoreSearchMember=false;
+    }
+    notifyListeners();
+  }
 }

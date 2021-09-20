@@ -45,6 +45,7 @@ class _AppBarWithActionWidgetState extends State<AppBarWithActionWidget> {
               ),
               child: TextField(
                 controller: anyController,
+                readOnly: true,
                 decoration: InputDecoration(
                   contentPadding: scale.getPadding(1,0),
                   hintStyle: Theme.of(context).textTheme.subtitle1,
@@ -59,9 +60,13 @@ class _AppBarWithActionWidgetState extends State<AppBarWithActionWidget> {
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.search,
                 onSubmitted: (e){
-                  product.setQ(context: context,input: e);
-                  Navigator.of(context).pushReplacementNamed(RouteString.main,arguments: TabIndexString.tabProduct);
+                  // product.setQ(context: context,input: e);
+                  Navigator.of(context).pushNamed(RouteString.search,arguments: e.toString());
                 },
+                onTap: (){
+                  Navigator.of(context).pushNamed(RouteString.search,arguments: "");
+                },
+
               ),
             ),
             InkResponse(

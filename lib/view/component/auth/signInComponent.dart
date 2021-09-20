@@ -56,7 +56,7 @@ class _SignInComponentState extends State<SignInComponent> {
                         "type":"otp",
                         "nama":"",
                         "islogin":"1",
-                        "isRegister":"0"
+                        "isRegister":"0",
                       };
                       auth.sendOtp(context: context,fields: data,isRedirect: true);
                     },
