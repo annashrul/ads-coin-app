@@ -20,6 +20,7 @@ class BaseLoading extends StatelessWidget {
       highlightColor: Colors.grey[100],
       enabled: true,
       child: Container(
+        margin: scale.getMarginLTRB(0, 0,0,0.1),
         width:scale.getWidth(this.width),
         height: scale.getHeight(this.height),
         decoration: BoxDecoration(

@@ -24,7 +24,6 @@ class _AppBarWithActionWidgetState extends State<AppBarWithActionWidget> {
   Widget build(BuildContext context) {
     final product = Provider.of<ListProductProvider>(context);
     final member = Provider.of<UserProvider>(context);
-
     ScreenScaler scale= ScreenScaler()..init(context);
     return SliverAppBar(
       titleSpacing: 0.0,
@@ -72,16 +71,25 @@ class _AppBarWithActionWidgetState extends State<AppBarWithActionWidget> {
             InkResponse(
               onTap: ()async{
                 if(member.detailMemberModel.result.idType==1){
-                  await Share.share(member.referral);
+                  await Share.share("https://reg.adscoin.id/${member.referral}");
                 }else{
                   FunctionalWidget.toast(context: context,msg: "anda belum menjadi kontributor");
                 }
               },
-              child: Icon(
-                  FlutterIcons.share_alt_faw,
-                  size: scale.getTextSize(15),
-                  color:ColorConfig.graySecondaryColor
+              child: Container(
+                padding: scale.getPadding(0.7,2),
+                decoration: BoxDecoration(
+                  border: Border.all(color:Color(0xFF219653),width: 2),
+                  color: Color(0xFFF2F2F2),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child:Icon(FlutterIcons.share_alt_faw,color: Color(0xFF219653),),
               ),
+              // child: Icon(
+              //     FlutterIcons.share_alt_faw,
+              //     size: scale.getTextSize(15),
+              //     color:ColorConfig.graySecondaryColor
+              // ),
             )
           ],
         ),

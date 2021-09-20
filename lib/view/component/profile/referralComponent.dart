@@ -5,6 +5,7 @@ import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
@@ -18,6 +19,15 @@ class ReferralComponent extends StatefulWidget {
 
 class _ReferralComponentState extends State<ReferralComponent> {
 
+  ScrollController controller;
+  void scrollListener() {
+    final referral = Provider.of<UserProvider>(context, listen: false);
+    if (!referral.isLoadingListReferral) {
+      if (controller.position.pixels == controller.position.maxScrollExtent) {
+        referral.loadMoreListReferral(context);
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -25,8 +35,14 @@ class _ReferralComponentState extends State<ReferralComponent> {
     super.initState();
     final referral = Provider.of<UserProvider>(context,listen: false);
     referral.getListReferral(context: context);
-  }
+    controller = new ScrollController()..addListener(scrollListener);
 
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    controller.removeListener(scrollListener);
+  }
   @override
   Widget build(BuildContext context) {
     final member = Provider.of<UserProvider>(context);
@@ -34,6 +50,7 @@ class _ReferralComponentState extends State<ReferralComponent> {
     return Scaffold(
       appBar: FunctionalWidget.appBarHelper(context: context,title: "Kode referral"),
       body: SingleChildScrollView(
+        controller: controller,
         padding: scale.getPadding(1,2.5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +76,7 @@ class _ReferralComponentState extends State<ReferralComponent> {
                 Expanded(
                     child: InTouchWidget(
                         callback: ()async{
-                          await Share.share(member.referral);
+                          await Share.share("https://reg.adscoin.id/${member.referral}");
                         },
                         child: Container(
                           width: double.infinity,
@@ -92,7 +109,7 @@ class _ReferralComponentState extends State<ReferralComponent> {
 
                 InTouchWidget(
                     callback: ()async{
-                      await Share.share(member.referral);
+                      await Share.share("https://reg.adscoin.id/${member.referral}");
                     },
                     child: Container(
                       padding: scale.getPadding(1,2),
@@ -111,27 +128,28 @@ class _ReferralComponentState extends State<ReferralComponent> {
                 physics: ClampingScrollPhysics(),
                 primary: false,
                 shrinkWrap: true,
+
                 itemBuilder: (context,index){
                   final val = member.listReferralMember.result[index];
-                  print("val.produkReward ${val.produkReward}");
-                  print("val.rewardCoin ${val.rewardCoin}");
                   String textSubtitle = "";
                   Color colorSub = ColorConfig.blackSecondaryColor;
                   if(val.produkReward==""){
                     textSubtitle="-";
-                  }else{
+                  }
+                  else{
                     if(val.rewardCoin=="0"){
                       colorSub = ColorConfig.redColor;
-                      textSubtitle = "${val.rewardCoin} belum closing";
+                      textSubtitle = "belum closing";
                     }else{
                       colorSub = Color(0xFF219653);
                       textSubtitle = "Bonus : ${val.rewardCoin} coin";
                     }
                   }
+
                   return FunctionalWidget.wrapContent(
                     child: ListTile(
                       leading: ImageRoundedWidget(img:val.foto,height: scale.getHeight(3),width: scale.getWidth(6),fit: BoxFit.cover,),
-                      title: Text(val.fullname,style: Theme.of(context).textTheme.headline2),
+                      title: Text(val.fullname==null?"-":val.fullname,style: Theme.of(context).textTheme.headline2),
                       subtitle: Text(textSubtitle,style: Theme.of(context).textTheme.subtitle1.copyWith(color: colorSub)),
                     )
                   );
@@ -141,7 +159,8 @@ class _ReferralComponentState extends State<ReferralComponent> {
             )
           ],
         ),
-      )
+      ),
+      bottomNavigationBar: member.isLoadMoreListReferral?CupertinoActivityIndicator():SizedBox(),
     );
   }
 }

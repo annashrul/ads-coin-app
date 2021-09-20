@@ -1,4 +1,5 @@
 import 'package:adscoin/config/color_config.dart';
+import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/siteProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'home/homeComponent.dart';
 
@@ -31,6 +33,39 @@ class _MainComponentState extends State<MainComponent> {
     config.getConfig(context: context);
     _selectTab(widget.index);
     super.initState();
+    OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.notification);
+    var settings = {
+      OSiOSSettings.autoPrompt: false,
+      OSiOSSettings.promptBeforeOpeningPushUrl: true
+    };
+    OneSignal.shared.init(ApiString.onesignalAppId, iOSSettings: settings);
+    OneSignal.shared.setNotificationOpenedHandler((notification) {
+      var notify = notification.notification.payload.additionalData;
+      String type=notify["section"];
+      print("============================ NOTIFIKASI ONSIGNAL $type =============================");
+      if(type == NotifikasiString.transaksiWallet){
+        Navigator.of(context).pushNamed(RouteString.indexFintechComponent);
+      }
+      else if(type == NotifikasiString.referral){
+        Navigator.of(context).pushNamed(RouteString.referral);
+      }
+      else if(type == NotifikasiString.reminder){
+        Navigator.of(context).pushNamed(RouteString.productContributor);
+      }
+      else if(type == NotifikasiString.riwayatBeli){
+        Navigator.of(context).pushNamed(RouteString.historyPurchase);
+      }
+      else if(type == NotifikasiString.suspend){
+        Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabProfile);
+      }
+      else if(type == NotifikasiString.blockir){
+        FunctionalWidget.processLogout(context);
+      }
+      else{
+        Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
+      }
+      print("============================ NOTIFIKASI ONSIGNAL =============================");
+    });
   }
 
   @override
@@ -44,16 +79,16 @@ class _MainComponentState extends State<MainComponent> {
     setState(() {
       widget.index = tabItem;
       switch (tabItem) {
-        case 0:
+        case TabIndexString.tabHome:
           currentWidget = HomeComponent();
           break;
-        case 1:
+        case TabIndexString.tabProduct:
           currentWidget = ProductComponent();
           break;
-        case 2:
+        case TabIndexString.tabLibrary:
           currentWidget = LibraryProductComponent();
           break;
-        case 3:
+        case TabIndexString.tabProfile:
           currentWidget = ProfileComponent();
           break;
       }

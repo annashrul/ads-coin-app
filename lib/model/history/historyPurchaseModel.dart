@@ -99,25 +99,27 @@ class Result {
     this.sellerBio,
     this.createdAt,
     this.idSeller,
+    this.rating,
   });
 
-  String totalrecords;
-  String kdTrx;
-  String idMember;
-  String fullname;
-  String paymentChannel;
-  String biayaAdmin;
-  String grandTotal;
+  dynamic totalrecords;
+  dynamic kdTrx;
+  dynamic idMember;
+  dynamic fullname;
+  dynamic paymentChannel;
+  dynamic biayaAdmin;
+  dynamic grandTotal;
   int status;
-  String idProduct;
-  String title;
-  String preview;
-  String imageProduct;
-  String seller;
-  String sellerFoto;
-  String sellerBio;
+  dynamic idProduct;
+  dynamic title;
+  dynamic preview;
+  dynamic imageProduct;
+  dynamic seller;
+  dynamic sellerFoto;
+  dynamic sellerBio;
   DateTime createdAt;
-  String idSeller;
+  dynamic idSeller;
+  dynamic rating;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     totalrecords: json["totalrecords"],
@@ -137,6 +139,7 @@ class Result {
     sellerBio: json["seller_bio"],
     createdAt: DateTime.parse(json["created_at"]),
     idSeller: json["id_seller"],
+    rating: json["rating"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -157,5 +160,6 @@ class Result {
     "seller_bio": sellerBio,
     "created_at": createdAt.toIso8601String(),
     "id_seller": idSeller,
+    "rating": rating,
   };
 }

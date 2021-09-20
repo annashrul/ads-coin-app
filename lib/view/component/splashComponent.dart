@@ -23,8 +23,6 @@ class _SplashComponentState extends State<SplashComponent> {
       Navigator.of(context).pushNamedAndRemoveUntil(RouteString.onBoarding, (route) => false);
     }
     else{
-      final user = Provider.of<UserProvider>(context, listen: false);
-      user.getDetailMember(context: context);
       if(userStorage.isLogin==StatusRoleString.keluarAplikasi){
         Navigator.of(context).pushNamedAndRemoveUntil(RouteString.signIn, (route) => false);
       }
@@ -33,7 +31,15 @@ class _SplashComponentState extends State<SplashComponent> {
         if(isToken){
           FunctionalWidget.processLogout(context);
         }else{
-          Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
+          await userStorage.getDetailMember(context: context);
+          if(userStorage.detailMemberModel!=null){
+            if(userStorage.detailMemberModel.result.status==0){
+              print("########################## STATUS USER SUDAH TIDAK AKTIF");
+              FunctionalWidget.processLogout(context);
+            }else{
+              Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
+            }
+          }
         }
       }
     }
@@ -48,6 +54,7 @@ class _SplashComponentState extends State<SplashComponent> {
     checkingRoute();
     final site = Provider.of<SiteProvider>(context,listen: false);
     site.getConfigInfo(context: context);
+
   }
 
   @override

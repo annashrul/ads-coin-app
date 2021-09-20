@@ -40,7 +40,7 @@ class _DetailCheckoutComponentState extends State<DetailCheckoutComponent> {
                   child: Icon(FlutterIcons.check_outline_mco,size: scale.getTextSize(20),color: ColorConfig.graySecondaryColor,),
                 ),
                 SizedBox(height:scale.getHeight(2)),
-                Text("CopyWriting berhasil dipesan",style: Theme.of(context).textTheme.headline1),
+                Text("AdsCopy berhasil dipesan",style: Theme.of(context).textTheme.headline1),
                 SizedBox(height:scale.getHeight(2)),
                 SmoothStarRating(
                     allowHalfRating: false,

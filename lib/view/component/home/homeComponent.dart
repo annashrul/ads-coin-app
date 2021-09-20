@@ -62,7 +62,6 @@ class _HomeComponentState extends State<HomeComponent> {
     final favorite = Provider.of<FavoriteProvider>(context);
     final user = Provider.of<UserProvider>(context);
     final promo = Provider.of<PromoProvider>(context);
-
     ScreenScaler scale= ScreenScaler()..init(context);
     return Scaffold(
       body: NestedScrollView(
@@ -157,7 +156,7 @@ class _HomeComponentState extends State<HomeComponent> {
                 ),
                 Container(
                   padding: scale.getPadding(0.5,2.5),
-                  height: scale.getHeight(23),
+                  height: scale.getHeight(30),
                   child:  product.isLoadingBestSeller?LoadingProductHorizontal():ListView.builder(
                     padding: EdgeInsets.all(0.0),
                     physics: ClampingScrollPhysics(),
@@ -183,7 +182,10 @@ class _HomeComponentState extends State<HomeComponent> {
                         price: product.productBestSellerModel.result[index].price,
                         productSale:"${product.productBestSellerModel.result[index].terjual} terjual" ,
                         image: product.productBestSellerModel.result[index].image,
-                        isContributor: false,
+                        isContributor: true,
+                        nameContributor: product.productBestSellerModel.result[index].seller,
+                        imageContributor: product.productBestSellerModel.result[index].sellerFoto,
+                        rateContributor: double.parse(product.productBestSellerModel.result[index].rating.toString()),
                       );
                     },
                   ),
@@ -251,6 +253,7 @@ class _HomeComponentState extends State<HomeComponent> {
                         final val = user.leaderBoardModel.result[index];
                         return FunctionalWidget.wrapContent(
                             child: ListTile(
+                              onTap: ()=>Navigator.of(context).pushNamed(RouteString.profilePerMember,arguments: val.id),
                               leading: CircleAvatar(
                                   backgroundColor: Colors.transparent,
                                   radius: 20,

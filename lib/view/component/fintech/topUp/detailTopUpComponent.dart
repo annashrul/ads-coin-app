@@ -13,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:getwidget/components/accordion/gf_accordion.dart';
 import 'package:intl/intl.dart';
@@ -51,7 +52,9 @@ class _DetailTopUpComponentState extends State<DetailTopUpComponent> with Ticker
     final fintech = Provider.of<FintechProvider>(context);
     final val = fintech.detailTopUpModel.result;
     return Scaffold(
-      appBar: FunctionalWidget.appBarWithFilterHelper(context: context,title: "Informasi pembayaran",action: <Widget>[
+      appBar: FunctionalWidget.appBarWithFilterHelper(context: context,title: "Informasi pembayaran",callback:(){
+        FunctionalWidget.backToHome(context);
+      },action: <Widget>[
         IconButton(
             onPressed: (){
               fintech.refreshStatus(context: context);
@@ -68,7 +71,18 @@ class _DetailTopUpComponentState extends State<DetailTopUpComponent> with Ticker
               // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Jumlah yang harus dibayar",style: Theme.of(context).textTheme.headline2,textAlign: TextAlign.center,),
-                Text("Rp "+MoneyFormat.toCurrency(double.parse(val.totalPay)),style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.bluePrimaryColor,fontWeight: FontWeight.bold,fontSize: scale.getTextSize(14))),
+                InTouchWidget(
+                    callback: (){
+                      FunctionalWidget.copy(context: context,text:MoneyFormat.toCurrency(double.parse(val.totalPay)) );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Rp "+MoneyFormat.toCurrency(double.parse(val.totalPay)),style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.bluePrimaryColor,fontWeight: FontWeight.bold,fontSize: scale.getTextSize(14))),
+                        Icon(Icons.copy,size: scale.getTextSize(8))
+                      ],
+                    )
+                ),
               ],
             )
           ),

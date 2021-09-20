@@ -45,54 +45,63 @@ class Result {
     this.id,
     this.fullname,
     this.mobileNo,
+    this.email,
     this.saldo,
     this.totalPayment,
     this.referral,
-    this.email,
     this.deviceId,
     this.signupSource,
     this.status,
     this.createdAt,
     this.bio,
     this.website,
-    this.type,
+    this.totalReferral,
+    this.copyTerjual,
+    this.rating,
     this.idType,
+    this.type,
     this.foto,
   });
 
-  dynamic id;
-  dynamic fullname;
-  dynamic mobileNo;
-  dynamic saldo;
-  dynamic totalPayment;
-  dynamic referral;
-  dynamic email;
-  dynamic deviceId;
-  dynamic signupSource;
+  String id;
+  String fullname;
+  String mobileNo;
+  String email;
+  String saldo;
+  String totalPayment;
+  String referral;
+  String deviceId;
+  String signupSource;
   int status;
   DateTime createdAt;
-  dynamic bio;
-  dynamic website;
-  dynamic type;
+  String bio;
+  String website;
+  String totalReferral;
+  String copyTerjual;
+  double rating;
   int idType;
-  dynamic foto;
+  String type;
+  String foto;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     id: json["id"],
     fullname: json["fullname"],
     mobileNo: json["mobile_no"],
+    email: json["email"],
     saldo: json["saldo"],
     totalPayment: json["total_payment"],
     referral: json["referral"],
-    email: json["email"],
     deviceId: json["device_id"],
     signupSource: json["signup_source"],
     status: json["status"],
     createdAt: DateTime.parse(json["created_at"]),
     bio: json["bio"],
     website: json["website"],
-    type: json["type"],
+    totalReferral: json["total_referral"],
+    copyTerjual: json["copy_terjual"],
+    rating: json["rating"].toDouble(),
     idType: json["id_type"],
+    type: json["type"],
     foto: json["foto"],
   );
 
@@ -100,18 +109,21 @@ class Result {
     "id": id,
     "fullname": fullname,
     "mobile_no": mobileNo,
+    "email": email,
     "saldo": saldo,
     "total_payment": totalPayment,
     "referral": referral,
-    "email": email,
     "device_id": deviceId,
     "signup_source": signupSource,
     "status": status,
     "created_at": createdAt.toIso8601String(),
     "bio": bio,
     "website": website,
-    "type": type,
+    "total_referral": totalReferral,
+    "copy_terjual": copyTerjual,
+    "rating": rating,
     "id_type": idType,
+    "type": type,
     "foto": foto,
   };
 }

@@ -1,3 +1,17 @@
+class NotifikasiString{
+  static const String transaksiWallet="transaksi_wallet";
+  static const String reminder="reminder";
+  static const String suspend ="suspend";
+  static const String referral ="referral";
+  static const String riwayatBeli ="riwayat_beli";
+  static const String blockir ="blockir";
+}
+
+class StatusMember{
+  static const int tidakAktif = 0;
+  static const int aktif = 1;
+}
+
 class StatusDeposit{
   static const String paymentGateway = "1";
   static const String virtualAccount = "0";
@@ -74,7 +88,8 @@ class TableString{
 class TabIndexString{
   static const int tabHome = 0;
   static const int tabProduct = 1;
-  static const int tabProfile = 2;
+  static const int tabLibrary = 2;
+  static const int tabProfile = 3;
 }
 class StatusRoleString{
   static const String baruInstall = "0";
@@ -107,7 +122,6 @@ class SiteString{
 class ApiString{
   static const String onesignalAppId = "ad1a7344-2b2f-40d0-87c8-0f8ec150cb8f";
   static const String url = "https://api.adscoin.id/";
-  // static const String url = "http://ptnetindo.com:6696/";
   static const int timeOut = 60;
   static const String xProjectId = "8123268367ea27e094e71e290";
   static const String xRequestedFrom = "apps";

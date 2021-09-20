@@ -68,7 +68,7 @@ class _CardSaldoWidgetState extends State<CardSaldoWidget> {
                         children: [
                           Row(
                             children: [
-                              user.isLoadingDetailMember?BaseLoading(height: 1.5, width:5):Text("${MoneyFormat.toFormat(double.parse(user.detailMemberModel.result.saldo))}",style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.blackSecondaryColor,fontWeight:FontWeight.w400)),
+                              user.isLoadingDetailMember?BaseLoading(height: 1.5, width:5):Text("${MoneyFormat.toFormat(double.parse(user.saldo))}",style: Theme.of(context).textTheme.headline2.copyWith(color: ColorConfig.blackSecondaryColor,fontWeight:FontWeight.w400)),
                               Text(" coin",style: Theme.of(context).textTheme.subtitle2.copyWith(color: ColorConfig.blackSecondaryColor,fontWeight:FontWeight.w400)),
                             ],
                           ),

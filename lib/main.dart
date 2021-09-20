@@ -75,6 +75,7 @@ class _MyAppState extends State<MyApp> {
       OSiOSSettings.promptBeforeOpeningPushUrl: true
     };
     OneSignal.shared.init(ApiString.onesignalAppId, iOSSettings: settings);
+
     final user = Provider.of<UserProvider>(context, listen: false);
     user.getDataUser();
   }

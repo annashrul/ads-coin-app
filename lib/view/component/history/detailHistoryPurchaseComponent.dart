@@ -1,3 +1,4 @@
+import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/historyProvider.dart';
@@ -6,6 +7,7 @@ import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class DetailHistoryPurchaseComponent extends StatefulWidget {
   final String id;
@@ -26,7 +28,7 @@ class _DetailHistoryPurchaseComponentState extends State<DetailHistoryPurchaseCo
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
     final history = Provider.of<HistoryProvider>(context);
-
+    print(history.detailHistoryPurchaseModel.result.toJson());
     return Scaffold(
       appBar: FunctionalWidget.appBarHelper(context: context,title: "Detail pembelian"),
       body: history.isLoadingDetailHistoryPurchase?LoadingDetailHistoryPurchaseOrSale():ListView(
@@ -89,7 +91,10 @@ class _DetailHistoryPurchaseComponentState extends State<DetailHistoryPurchaseCo
                   ],
                 ),
               )
-          )
+          ),
+          SizedBox(height: scale.getHeight(1)),
+
+
         ],
       ),
 

@@ -174,20 +174,26 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
                       String status = "";Color colorStatus;
                       if(val.status==0) {
                         status = "Draft";
-                        colorStatus = ColorConfig.redColor;
+                        colorStatus = ColorConfig.yellowColor;
                       }
                       if(val.status==1){
                         status = "Publish";
                         colorStatus = ColorConfig.bluePrimaryColor;
                       }
+                      if(val.status==2){
+                        status = "Blocked";
+                        colorStatus = ColorConfig.redColor;
+                      }
                       return InTouchWidget(
                           radius: 10,
                           callback: (){
-                            product.setDataEditProductContributor(val.toJson());
-                            FunctionalWidget.modal(
-                                context: context,
-                                child: OptionActionProductWidget(dataJson: val.toJson()..addAll({"heroTag":heroTag}))
-                            );
+                            if(val.status!=2){
+                              product.setDataEditProductContributor(val.toJson());
+                              FunctionalWidget.modal(
+                                  context: context,
+                                  child: OptionActionProductWidget(dataJson: val.toJson()..addAll({"heroTag":heroTag}))
+                              );
+                            }
                           },
                           child:FunctionalWidget.wrapContent(
                               child: Container(

@@ -30,7 +30,7 @@ class _OptionActionProductWidgetState extends State<OptionActionProductWidget> {
             Navigator.of(context).pop();
             product.setIsAdd(false);
             product.setStatusProduct(widget.dataJson["status"]);
-            Navigator.of(context).pushNamed(RouteString.formProductContributor).whenComplete(() => product.getProductContributor(context: context));
+            Navigator.of(context).pushNamed(RouteString.formProductContributor);
           },
           img: "Edit",
         ),

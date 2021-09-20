@@ -26,13 +26,15 @@ class UserProvider with ChangeNotifier{
   dynamic referral="";
   dynamic status="";
   dynamic type="";
+  dynamic idType="";
+  dynamic saldo="";
 
   String anySearchMember="";
 
   DatabaseInit db = new DatabaseInit();
   bool isLoadingLeaderBoard=true,isLoadingDetailMember=true,isLoadingListReferral=true,isLoadingSearchMember=true;
-  bool isLoadMoreSearchMember=false;
-  int perPageSearchMember=10;
+  bool isLoadMoreSearchMember=false,isLoadMoreListReferral=false;
+  int perPageSearchMember=10,perPageListReferral=10;
   LeaderBoardModel leaderBoardModel;
   DetailMemberModel detailMemberModel;
   ListReferralMember listReferralMember;
@@ -41,9 +43,18 @@ class UserProvider with ChangeNotifier{
   getDetailMember({BuildContext context})async{
     if(detailMemberModel==null) isLoadingDetailMember=true;
     final res = await HttpService().get(url: "member/get/$idUser",context: context);
-    isLoadingDetailMember=false;
     DetailMemberModel result=DetailMemberModel.fromJson(res);
     detailMemberModel=result;
+    idUser = detailMemberModel.result.id;
+    photo =detailMemberModel.result.foto;
+    name =detailMemberModel.result.fullname;
+    mobileNo =detailMemberModel.result.mobileNo;
+    referral =detailMemberModel.result.referral;
+    status =detailMemberModel.result.status;
+    type =detailMemberModel.result.type;
+    idType =detailMemberModel.result.idType;
+    saldo =detailMemberModel.result.saldo;
+    isLoadingDetailMember=false;
     notifyListeners();
   }
   getLeaderBoard({BuildContext context})async{
@@ -85,15 +96,17 @@ class UserProvider with ChangeNotifier{
     notifyListeners();
   }
   Future getListReferral({BuildContext context})async{
-    if(listReferralMember==null) isLoadingLeaderBoard=true;
-    final res = await HttpService().get(url: "member/referral?page=1",context: context);
-    isLoadingListReferral=false;
+    if(listReferralMember==null) isLoadingListReferral=true;
+    final res = await HttpService().get(url: "member/referral?page=1&perpage=$perPageListReferral",context: context);
+    print("TOTAL ${res["meta"]["total"]}");
     if(res["result"].length>0){
       ListReferralMember result=ListReferralMember.fromJson(res);
       listReferralMember=result;
     }else{
       listReferralMember=null;
     }
+    isLoadingListReferral=false;
+    isLoadMoreListReferral=false;
     notifyListeners();
   }
   Future getSearchMember({BuildContext context})async{
@@ -112,6 +125,18 @@ class UserProvider with ChangeNotifier{
     isLoadMoreSearchMember=false;
     notifyListeners();
   }
+  loadMoreListReferral(BuildContext context){
+    if(perPageListReferral<listReferralMember.meta.total){
+      isLoadMoreListReferral=true;
+      perPageListReferral+=10;
+      getListReferral(context: context);
+    }
+    else{
+      isLoadMoreListReferral=false;
+    }
+    notifyListeners();
+  }
+
 
   setAnySearchMember(context,input){
     isLoadingSearchMember=true;

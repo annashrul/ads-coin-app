@@ -37,7 +37,7 @@ class ProductProvider with ChangeNotifier{
   int statusProduct=0;
   int filterStatusProduct=0;
   String anyProductContributor="",anyProductLibrary="";
-
+  dynamic detailCheckout;
   setAnyProductContributor(BuildContext context,input){
     anyProductContributor=input;
     isLoadingProductContributor=true;
@@ -136,7 +136,8 @@ class ProductProvider with ChangeNotifier{
     if(res!=null){
       Navigator.of(context).pushNamed(RouteString.detailCheckout);
     }
-    // if()
+    notifyListeners();
+
   }
   Future storeRateProduct({BuildContext context,int rate})async{
     dynamic data={
@@ -176,16 +177,17 @@ class ProductProvider with ChangeNotifier{
       if(isAdd){
         res = await HttpService().post(url: "product",data: data,context: context,isLoading: loading);
       }else{
-        Navigator.of(context).pop();
+        // Navigator.of(context).pop();
         res = await HttpService().put(url: "product/${dataEditProductContributor["id"]}",data: data,context: context,isLoading: loading);
       }
-
       if(res!=null){
-        await db.delete(ProductTable.TABLE_NAME);
+
         if(loading){
           Navigator.of(context).pop();
           FunctionalWidget.toast(context: context,msg:"Data berhasil disimpan");
         }
+        await db.delete(ProductTable.TABLE_NAME);
+        await getProductContributor(context: context);
       }
       notifyListeners();
     }

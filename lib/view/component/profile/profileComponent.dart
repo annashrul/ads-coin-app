@@ -7,6 +7,7 @@ import 'package:adscoin/service/provider/historyProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/service/provider/siteProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
+import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/component/site/infoAdsComponent.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
 import 'package:adscoin/view/widget/general/cardAction.dart';
@@ -48,7 +49,7 @@ class _ProfileComponentState extends State<ProfileComponent> {
     final user  = Provider.of<UserProvider>(context);
     final product = Provider.of<ProductProvider>(context);
     final config = Provider.of<SiteProvider>(context);
-
+    bool isLoading=user.isLoadingDetailMember;
     return Scaffold(
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
@@ -74,7 +75,7 @@ class _ProfileComponentState extends State<ProfileComponent> {
                               CircleAvatar(
                                   backgroundColor: Colors.transparent,
                                   radius: 30,
-                                  backgroundImage: NetworkImage(user.detailMemberModel.result.foto)
+                                  backgroundImage: NetworkImage(isLoading?GeneralString.dummyImgUser:user.detailMemberModel.result.foto)
                               ),
                               Container(
                                 padding: scale.getPadding(0.2,1),
@@ -88,9 +89,9 @@ class _ProfileComponentState extends State<ProfileComponent> {
                           )
                       ),
                       SizedBox(height: scale.getHeight(1)),
-                      Text(user.detailMemberModel.result.fullname,style: Theme.of(context).textTheme.headline1.copyWith(color:Colors.white)),
-                      Text(user.detailMemberModel.result.mobileNo,style: Theme.of(context).textTheme.subtitle1),
-                      Text(user.detailMemberModel.result.type,style: Theme.of(context).textTheme.subtitle2),
+                      isLoading?BaseLoading(height: 1, width: 30):Text(user.detailMemberModel.result.fullname,style: Theme.of(context).textTheme.headline1.copyWith(color:Colors.white)),
+                      isLoading?BaseLoading(height: 1, width: 40):Text(user.detailMemberModel.result.mobileNo,style: Theme.of(context).textTheme.subtitle1.copyWith(color: Colors.grey[200])),
+                      isLoading?BaseLoading(height: 1, width: 20):Text(user.detailMemberModel.result.type,style: Theme.of(context).textTheme.subtitle2.copyWith(color: Colors.grey[200])),
                     ],
                   ),
                 ),
@@ -125,15 +126,15 @@ class _ProfileComponentState extends State<ProfileComponent> {
                               colorIcon: ColorConfig.bluePrimaryColor,
                               callback: ()=>Navigator.of(context).pushNamed(RouteString.formProfile).then((value) => user.getDetailMember(context: context)),
                             ),
-                            if(user.detailMemberModel.result.idType==1)divid(),
-                            if(user.detailMemberModel.result.idType==1)CardAction(
+                            if(!isLoading&&user.detailMemberModel.result.idType==1)divid(),
+                            if(!isLoading&&user.detailMemberModel.result.idType==1)CardAction(
                               img:"Discount" ,
                               title: "Referral",
                               colorIcon: ColorConfig.bluePrimaryColor,
                               callback: ()=>Navigator.of(context).pushNamed(RouteString.referral),
                             ),
-                            if(user.detailMemberModel.result.idType==1)divid(),
-                            if(user.detailMemberModel.result.idType==1)CardAction(
+                            if(!isLoading&&user.detailMemberModel.result.idType==1)divid(),
+                            if(!isLoading&&user.detailMemberModel.result.idType==1)CardAction(
                               img:"Home1" ,
                               title: "Bank",
                               colorIcon: ColorConfig.bluePrimaryColor,
@@ -155,18 +156,18 @@ class _ProfileComponentState extends State<ProfileComponent> {
                     TitleSectionWidget(
                       title: "Produk",
                       callback: ()async{
-                        if(user.type==RoleAccessString.contributor){
+                        if(!isLoading&&user.detailMemberModel.result.idType==1){
                           await product.setIsAdd(true);
                           Navigator.of(context).pushNamed(RouteString.formProductContributor);
                         }
                       },
-                      titleAction: user.type==RoleAccessString.contributor?"Tambah produk":"",
+                      titleAction: !isLoading&&user.detailMemberModel.result.idType==1?"Tambah produk":"",
                     ),
                     SizedBox(height: scale.getHeight(1)),
                     FunctionalWidget.wrapContent(
                         child:Column(
                           children: [
-                            if(user.detailMemberModel.result.idType==1)CardAction(
+                            if(!isLoading&&user.detailMemberModel.result.idType==1)CardAction(
                               img:"analytics1" ,
                               title: "Daftar produk",
                               colorIcon: ColorConfig.yellowColor,
@@ -175,7 +176,7 @@ class _ProfileComponentState extends State<ProfileComponent> {
                               },
                             ),
 
-                            if(user.detailMemberModel.result.idType==1)divid(),
+                            if(!isLoading&&user.detailMemberModel.result.idType==1)divid(),
                             CardAction(
                               img:"Chart" ,
                               title: "Laporan pembelian",
@@ -184,8 +185,8 @@ class _ProfileComponentState extends State<ProfileComponent> {
                                 Navigator.of(context).pushNamed(RouteString.historyPurchase);
                               },
                             ),
-                            if(user.detailMemberModel.result.idType==1)divid(),
-                            if(user.detailMemberModel.result.idType==1)CardAction(
+                            if(!isLoading&&user.detailMemberModel.result.idType==1)divid(),
+                            if(!isLoading&&user.detailMemberModel.result.idType==1)CardAction(
                               img:"analytics" ,
                               title: "Laporan penjualan",
                               colorIcon: ColorConfig.purplePrimaryColor,

@@ -70,7 +70,7 @@ class _HistoryMutationComponentState extends State<HistoryMutationComponent> {
                 final val = history.historyMutationModel.result[index];
                 String nominal="+ ${FunctionalWidget.toCoin(double.parse(val.trxIn))}";
                 Color colorNominal = ColorConfig.blackPrimaryColor;
-                if(double.parse(val.trxIn)<1){
+                if(double.parse(val.trxOut)>0){
                   nominal = "- ${FunctionalWidget.toCoin(double.parse(val.trxOut))}";
                   colorNominal = ColorConfig.redColor;
                 }

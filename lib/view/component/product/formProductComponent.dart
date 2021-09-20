@@ -37,11 +37,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
   File _image;
   String base64Image="-";
   MoneyMaskedTextControllerQ priceController = new MoneyMaskedTextControllerQ();
-  String result = "-";
-  final HtmlEditorController contentController = HtmlEditorController();
-
   void setTime(){
-    contentController.resetHeight();
     final product = Provider.of<ProductProvider>(context, listen: false);
     if(product.timeUpFlag){
       product.setTimer(1);
@@ -57,7 +53,6 @@ class _FormProductContributorComponentState extends State<FormProductContributor
       callback1: (){
         Navigator.of(context).pop();
         Navigator.of(context).pop();
-        // Navigator.of(context).pushReplacementNamed(RouteString.productContributor);
       },
       callback2: ()async{
         await product.storeAutoSaveProduct(context: context,status: "0");
@@ -65,23 +60,19 @@ class _FormProductContributorComponentState extends State<FormProductContributor
           Navigator.of(context).pop();
           Navigator.of(context).pop();
         });
-        // Navigator.of(context).pushReplacementNamed(RouteString.productContributor);
-
       },
     );
   }
   checkForm(){
-    if(nameController.text!=""&&previewController.text!=""){
-      if(result!=""&&result!="-"&&result!="<p><br></p>"){
-        return true;
-      }
+    if(nameController.text!=""&&previewController.text!=""&&descriptionController.text!=""){
+      return true;
     }
     return false;
   }
   DatabaseInit db = new DatabaseInit();
   Future autoSaveProduct(img)async{
     final data ={
-      TableString.contentProduct:"$result",
+      TableString.contentProduct:"${descriptionController.text}",
       TableString.titleProduct:"${nameController.text}",
       TableString.imageProduct:"$img",
       TableString.previewProduct:"${previewController.text}",
@@ -112,9 +103,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
       final dataEdit = product.dataEditProductContributor;
       nameController.text=dataEdit["title"];
       previewController.text=dataEdit["preview"];
-      Future.delayed(Duration(seconds: 2)).then((value){
-        contentController.setText(dataEdit["content"]);
-      });
+      descriptionController.text=dataEdit["content"];
     }
   }
   @override
@@ -160,7 +149,6 @@ class _FormProductContributorComponentState extends State<FormProductContributor
     final check = checkForm();
     int indexCategory=category.indexSelectedCategoryForm;
     int statusProduct=product.statusProduct;
-    // Future.delayed(Duration(seconds: 2)).then((value)=>contentController.resetHeight());
     if(category.categoryProductModel!=null){
         if(!category.isLoading){
           categoryController.text = category.categoryProductModel.result[indexCategory].title;
@@ -168,10 +156,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
       }
 
     if(product.timeUpFlag){
-      print("nameController.text = ${nameController.text}");
-      print("previewController.text = ${previewController.text}");
-      print("result.text = $result");
-      if(nameController.text!=""||previewController.text!=""||result!=""&&result!="-"&&result!="<p><br></p>") autoSaveProduct(base64Image);
+      if(nameController.text!=""||previewController.text!=""||descriptionController.text!="") autoSaveProduct(base64Image);
     }
     if(statusProduct==0)statusController.text="Draft";
     else statusController.text="Publish";
@@ -182,12 +167,12 @@ class _FormProductContributorComponentState extends State<FormProductContributor
       onPointerUp: (_)=>setTime(),
       child: WillPopScope(
         onWillPop: () async{
-          return nameController.text!=""||previewController.text!=""||result!=""&&result!="-"&&result!="<p><br></p>"?saveData(context):true ?? false;
+          return nameController.text!=""||previewController.text!=""||descriptionController.text!=""?saveData(context):true ?? false;
         },
         child: Scaffold(
           key: globalScaffoldKey,
           appBar: FunctionalWidget.appBarHelper(context: context,title: product.isAdd?"Tambah produk":"Edit produk",callback: (){
-            if(nameController.text!=""||previewController.text!=""||result!=""&&result!="-"&&result!="<p><br></p>"){
+            if(nameController.text!=""||previewController.text!=""||descriptionController.text!=""){
               saveData(context);
             }else{
               Navigator.of(context).pop();
@@ -322,14 +307,13 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Ringkasan",style: Theme.of(context).textTheme.headline2),
-                  Text("${previewController.text.length}/100",style: Theme.of(context).textTheme.subtitle2,)
+                  Text("${previewController.text.length}/200",style: Theme.of(context).textTheme.subtitle2,)
                 ],
               ),
-
               FieldWidget(
                 controller: previewController,
                 maxLines: 5,
-                maxLength: 100,
+                maxLength: 200,
                 textInputType: TextInputType.text,
                 textInputAction: TextInputAction.done,
                 onChange: (e){
@@ -339,48 +323,17 @@ class _FormProductContributorComponentState extends State<FormProductContributor
               ),
               SizedBox(height: scale.getHeight(1)),
               Text("Konten",style: Theme.of(context).textTheme.headline2),
-              Container(
-                height: scale.getHeight(51),
-                child: HtmlEditor(
-                    hint: "tulis konten disini ..",
-                    controller: contentController,
-                    callbacks: Callbacks(
-                      onChange: (String changed)async {
-                        checkForm();
-                        result = changed;
-                        if(this.mounted) setState((){});
+              FieldWidget(
+                controller: descriptionController,
+                maxLines: 20,
+                textInputType: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                onChange: (e){
+                  setTime();
+                  if(this.mounted) setState((){});
+                },
+              ),
 
-                      },
-                      onEnter: () {
-                        setTime();
-                      },
-                      onFocus: () {
-
-                        setTime();
-                      },
-                      onBlur: () {
-                        setTime();
-                      },
-                      onBlurCodeview: () {
-                        setTime();
-                      },
-                      onKeyDown: (keyCode) {
-                        setTime();
-                      },
-                      onKeyUp: (keyCode) {
-                        setTime();
-                      },
-                      onPaste: () {
-                        setTime();
-                        print("######################### PASTE");
-                      },
-                    ),
-                    toolbar: [
-                      Style(),
-                      Font(buttons: [FontButtons.bold, FontButtons.underline, FontButtons.italic])
-                    ]
-                ),
-              )
             ],
           ),
           bottomNavigationBar: Container(

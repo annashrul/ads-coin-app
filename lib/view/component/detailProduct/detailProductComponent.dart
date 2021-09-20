@@ -112,7 +112,7 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
                       backgroundImage: NetworkImage(product.detailProductModel.result.sellerFoto)
                   ),
                   title: isLoading?BaseLoading(height: 1, width: 10):Text(product.detailProductModel.result.seller,style: Theme.of(context).textTheme.headline2,),
-                  subtitle: isLoading?BaseLoading(height: 1, width: 1):Text(product.detailProductModel.result.sellerBio,style: Theme.of(context).textTheme.subtitle1,maxLines: 1,overflow: TextOverflow.ellipsis,),
+                  subtitle: isLoading?BaseLoading(height: 1, width: 1):Text(product.detailProductModel.result.sellerBio==null?"-":product.detailProductModel.result.sellerBio,style: Theme.of(context).textTheme.subtitle1,maxLines: 1,overflow: TextOverflow.ellipsis,),
                   trailing:isLoading?BaseLoading(height: 4, width: 10,radius:10):Container(
                     padding: scale.getPadding(0.5, 1.5),
                     decoration: BoxDecoration(
@@ -155,7 +155,7 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           btnText: isLoading?"loading ......":product.detailProductModel.result.statusBeli==1?"Ambil tulisan":"Beli sekarang",
           callback: ()async{
             if(product.detailProductModel.result.statusBeli==1){
-              await Share.share(product.detailProductModel.result.content);
+              await Share.share(removeAllHtmlTags(product.detailProductModel.result.content));
             }else{
               general.setConditionCheckoutAndDetail(true);
               Navigator.of(context).pushNamed(RouteString.checkout);
@@ -164,5 +164,13 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           }
       ),
     );
+  }
+  String removeAllHtmlTags(String htmlText) {
+    RegExp exp = RegExp(
+        r"<[^>]*>",
+        multiLine: true,
+        caseSensitive: true
+    );
+    return htmlText.replaceAll(exp, '');
   }
 }
