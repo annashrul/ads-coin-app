@@ -32,6 +32,7 @@ class _SplashComponentState extends State<SplashComponent> {
           FunctionalWidget.processLogout(context);
         }else{
           await userStorage.getDetailMember(context: context);
+          print("########################## CHECK DATA USER ${userStorage.detailMemberModel}");
           if(userStorage.detailMemberModel!=null){
             if(userStorage.detailMemberModel.result.status==0){
               print("########################## STATUS USER SUDAH TIDAK AKTIF");
@@ -39,6 +40,9 @@ class _SplashComponentState extends State<SplashComponent> {
             }else{
               Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
             }
+          }else{
+            print(" ####################### DATA USER TIDAK ADA ########################################");
+            FunctionalWidget.processLogout(context);
           }
         }
       }
@@ -62,9 +66,9 @@ class _SplashComponentState extends State<SplashComponent> {
     precacheImage(assetImage, context);
     super.didChangeDependencies();
   }
-
   @override
   Widget build(BuildContext context) {
+    // return ReadingApp();
     return Scaffold(
       body: Container(
         alignment: Alignment.center,
@@ -77,5 +81,6 @@ class _SplashComponentState extends State<SplashComponent> {
         child: Text("By Shopowae",style: Theme.of(context).textTheme.headline1,textAlign: TextAlign.center,),
       ),
     );
+
   }
 }

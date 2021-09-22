@@ -42,6 +42,7 @@ class UserProvider with ChangeNotifier{
 
   getDetailMember({BuildContext context})async{
     if(detailMemberModel==null) isLoadingDetailMember=true;
+    print("##################### ID USER $idUser");
     final res = await HttpService().get(url: "member/get/$idUser",context: context);
     DetailMemberModel result=DetailMemberModel.fromJson(res);
     detailMemberModel=result;

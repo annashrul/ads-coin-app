@@ -78,7 +78,7 @@ class AuthProvider with ChangeNotifier{
           data: fields,
           context: context
       );
-      print(res["result"]["note"]);
+      print(res);
       if(res["result"]["note"] == "gagal"){
         FunctionalWidget.toast(context: context,msg: res["msg"]);
       }else{

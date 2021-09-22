@@ -81,17 +81,20 @@ class HttpService{
       }
     }on TimeoutException catch (e) {
       print("###################################### GET TimeoutException");
+      return FunctionalWidget.toast(context: context,msg: "terjadi kesalahan koneksi");
       return Navigator.pushNamed(context, "error",arguments: (){
         print("TimeoutException");
       });
     } on SocketException catch (e) {
       print("###################################### GET SocketException");
+      return FunctionalWidget.toast(context: context,msg: "terjadi kesalahan koneksi");
       return Navigator.pushNamed(context, "error",arguments: (){
         print("SocketException");
       });
     }
     on Error catch (e) {
       print("###################################### GET Error");
+      return FunctionalWidget.toast(context: context,msg: "terjadi kesalahan koneksi");
       return Navigator.pushNamed(context, "error",arguments: (){
         print("Error");
       });

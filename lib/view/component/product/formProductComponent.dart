@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
+// import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:provider/provider.dart';
 
 class FormProductContributorComponent extends StatefulWidget {
@@ -34,6 +35,8 @@ class _FormProductContributorComponentState extends State<FormProductContributor
   TextEditingController categoryController = new TextEditingController();
   TextEditingController previewController = new TextEditingController();
   TextEditingController statusController = new TextEditingController();
+  final HtmlEditorController contentController = HtmlEditorController();
+  String result = "-";
   File _image;
   String base64Image="-";
   MoneyMaskedTextControllerQ priceController = new MoneyMaskedTextControllerQ();
@@ -64,7 +67,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
     );
   }
   checkForm(){
-    if(nameController.text!=""&&previewController.text!=""&&descriptionController.text!=""){
+    if(nameController.text!=""&&previewController.text!=""&&descriptionController.text!=""||descriptionController.text!="<p><br></p>"){
       return true;
     }
     return false;
@@ -104,11 +107,23 @@ class _FormProductContributorComponentState extends State<FormProductContributor
       nameController.text=dataEdit["title"];
       previewController.text=dataEdit["preview"];
       descriptionController.text=dataEdit["content"];
+      Future.delayed(Duration(seconds: 3)).then((value){
+        contentController.setText("${dataEdit["content"]}");
+        print("############################ DATA EDIT ${dataEdit["content"]}");
+      }).whenComplete(() =>  print("############################ DATA EDIT COMPLETED"));
     }
   }
-  @override
+  // @override
+  // void dispose() {
+  //   WidgetsBinding.instance.removeObserver(this);
+  //   super.dispose();
+  // }
+  @mustCallSuper
+  @protected
   void dispose() {
+    // TODO: implement dispose
     WidgetsBinding.instance.removeObserver(this);
+    print('######################################  DISPOSE ################################');
     super.dispose();
   }
   @override
@@ -154,12 +169,13 @@ class _FormProductContributorComponentState extends State<FormProductContributor
           categoryController.text = category.categoryProductModel.result[indexCategory].title;
         }
       }
-
     if(product.timeUpFlag){
-      if(nameController.text!=""||previewController.text!=""||descriptionController.text!="") autoSaveProduct(base64Image);
+      if(nameController.text!=""||previewController.text!=""||descriptionController.text!=""||descriptionController.text!="<p><br></p>") autoSaveProduct(base64Image);
     }
     if(statusProduct==0)statusController.text="Draft";
     else statusController.text="Publish";
+
+
 
     return Listener(
       onPointerDown: (_)=>setTime(), // best place to reset timer imo
@@ -167,17 +183,16 @@ class _FormProductContributorComponentState extends State<FormProductContributor
       onPointerUp: (_)=>setTime(),
       child: WillPopScope(
         onWillPop: () async{
-          return nameController.text!=""||previewController.text!=""||descriptionController.text!=""?saveData(context):true ?? false;
+          return nameController.text!=""||previewController.text!=""||descriptionController.text!=""||descriptionController.text!="<p><br></p>"?saveData(context):true ?? false;
         },
         child: Scaffold(
           key: globalScaffoldKey,
           appBar: FunctionalWidget.appBarHelper(context: context,title: product.isAdd?"Tambah produk":"Edit produk",callback: (){
-            if(nameController.text!=""||previewController.text!=""||descriptionController.text!=""){
+            if(nameController.text!=""||previewController.text!=""||descriptionController.text!=""||descriptionController.text!="<p><br></p>"){
               saveData(context);
             }else{
               Navigator.of(context).pop();
             }
-
           }),
           body: ListView(
             primary: true,
@@ -321,18 +336,61 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                   if(this.mounted) setState((){});
                 },
               ),
+              // SizedBox(height: scale.getHeight(1)),
+              // Text("Konten",style: Theme.of(context).textTheme.headline2),
+              // FieldWidget(
+              //   controller: descriptionController,
+              //   maxLines: 20,
+              //   textInputType: TextInputType.text,
+              //   textInputAction: TextInputAction.done,
+              //   onChange: (e){
+              //     setTime();
+              //     if(this.mounted) setState((){});
+              //   },
+              // ),
               SizedBox(height: scale.getHeight(1)),
               Text("Konten",style: Theme.of(context).textTheme.headline2),
-              FieldWidget(
-                controller: descriptionController,
-                maxLines: 20,
-                textInputType: TextInputType.text,
-                textInputAction: TextInputAction.done,
-                onChange: (e){
-                  setTime();
-                  if(this.mounted) setState((){});
-                },
-              ),
+              Container(
+                height: scale.getHeight(51),
+                child: HtmlEditor(
+                    options: HtmlEditorOptions(
+                      adjustHeightForKeyboard: false,
+                      autoAdjustHeight: false
+                    ),
+                    hint: "tulis konten disini ..",
+                    controller: contentController,
+                    callbacks: Callbacks(
+                      onChange: (String changed)async {
+                        setState(() {
+                          descriptionController.text = changed;
+                        });
+                      },
+                      onEnter: () {
+
+                      },
+                      onFocus: () {
+                      },
+                      onBlur: () {
+                      },
+                      onBlurCodeview: () {
+                      },
+                      onKeyDown: (keyCode) {
+                      },
+                      onKeyUp: (keyCode) {
+                      },
+                      onPaste: () {
+                        print("################################## ACTION onPaste");
+                      },
+                    ),
+                    toolbar: [
+                      Style(),
+                      Paragraph(),
+                      FontSetting(),
+                      Font(buttons: [FontButtons.bold, FontButtons.underline, FontButtons.italic,FontButtons.clear])
+                    ]
+
+                ),
+              )
 
             ],
           ),

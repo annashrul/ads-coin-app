@@ -24,7 +24,6 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'config/color_config.dart';
 
-
 List<SingleChildWidget> providers = [
   ChangeNotifierProvider<GeneralProvider>(create: (_) => GeneralProvider()),
   ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
@@ -121,6 +120,8 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
+
 
 
 

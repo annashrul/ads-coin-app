@@ -6,6 +6,7 @@ import 'package:adscoin/service/provider/listProductProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/noDataWidget.dart';
+import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:adscoin/view/widget/home/modalSearchWidget.dart';
 import 'package:adscoin/view/widget/product/productWidget1.dart';
 import 'package:flutter/cupertino.dart';
@@ -44,6 +45,18 @@ class _SearchComponentState extends State<SearchComponent> {
       }
     }
   }
+
+  void handleSearch(e){
+    final product = Provider.of<ListProductProvider>(context,listen: false);
+    final user = Provider.of<UserProvider>(context,listen: false);
+    if(searchBy=="produk"){
+      product.setAnySearchProduct(context: context,input: e.toString());
+    }else{
+      user.setAnySearchMember(context, e);
+    }
+  }
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -79,70 +92,105 @@ class _SearchComponentState extends State<SearchComponent> {
           margin: scale.getMarginLTRB(0, 1, 0, 1),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Expanded(
-                child:  Container(
-                  padding: scale.getPadding(0, 2),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Color(0xFFF2F2F2)
+                child:  TextField(
+                  autofocus: true,
+                  focusNode: anyFocus,
+                  controller: anyController,
+                  decoration: InputDecoration(
+                    hintText: "Pencarian $searchBy",
+                    hintStyle: Theme.of(context).textTheme.subtitle2,
+                    contentPadding: scale.getPadding(0,0),
+                    // border: InputBorder.none,
+
                   ),
-                  child: TextField(
-                    autofocus: true,
-                    focusNode: anyFocus,
-                    controller: anyController,
-                    decoration: InputDecoration(
-                      labelText: "Pencarian berdasarkan $searchBy",
-                      labelStyle: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.bluePrimaryColor),
-                      contentPadding: scale.getPadding(1,0),
-                      border: InputBorder.none,
-                      suffixIcon: Icon(FlutterIcons.search_fea,color: Theme.of(context).textTheme.subtitle1.color,),
-                      suffixIconConstraints: BoxConstraints(
-                          minHeight: scale.getHeight(1),
-                          minWidth: scale.getWidth(1)
-                      ),
-                    ),
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.search,
-                    onSubmitted: (e){
-                      if(searchBy=="produk"){
-                        product.setAnySearchProduct(context: context,input: e.toString());
-                      }else{
-                        user.setAnySearchMember(context, e);
-                      }
-                    },
-                  ),
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.search,
+                  onSubmitted: (e){
+                    handleSearch(e);
+                  },
                 ),
               ),
               SizedBox(width: scale.getWidth(1)),
-              InkResponse(
-                onTap: ()async{
-                  FunctionalWidget.modal(
-                      context: context,
-                      child: ModalSearchWidget(
-                        callback: (e){
-                          print(e);
-                          setState(() {
-                            searchBy = e;
-                            anyFocus.requestFocus();
-                          });
-                        },
-                        any: searchBy,
+              Row(
+                children: [
+                  Container(
+                    margin: scale.getMarginLTRB(0, 0, 1, 0),
+                    decoration: BoxDecoration(
+                      color:searchBy=="produk"?ColorConfig.bluePrimaryColor:ColorConfig.graySecondaryColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: InTouchWidget(
+                      callback: (){
+                        setState(() {
+                          searchBy="produk";
+                        });
+                        handleSearch(anyController.text);
+                      },
+                      child: Padding(
+                        padding: scale.getPadding(0.5, 1),
+                        child: Text("Produk",style: Theme.of(context).textTheme.subtitle1.copyWith(color:searchBy=="produk"?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,),textAlign: TextAlign.center,),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: scale.getMarginLTRB(0, 0, 1, 0),
+                    decoration: BoxDecoration(
+                      color:searchBy=="kontributor"?ColorConfig.bluePrimaryColor:ColorConfig.graySecondaryColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: InTouchWidget(
+                      callback: (){
+                        setState(() {
+                          searchBy="kontributor";
+                        });
+                        handleSearch(anyController.text);
+                      },
+                      child: Padding(
+                        padding: scale.getPadding(0.5, 1),
+                        child: Text("Kontributor",style: Theme.of(context).textTheme.subtitle1.copyWith(color:searchBy=="kontributor"?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,),textAlign: TextAlign.center,),
                       )
-                  );
-                },
-                child: Icon(
-                  FlutterIcons.filter_ant,
-                  size: scale.getTextSize(15),
-                ),
-              )
+                    ),
+                  ),
+
+                ],
+              ),
+              // InkResponse(
+              //   onTap: ()async{
+              //     FunctionalWidget.modal(
+              //         context: context,
+              //         child: ModalSearchWidget(
+              //           callback: (e){
+              //             print(e);
+              //             setState(() {
+              //               searchBy = e;
+              //               anyFocus.requestFocus();
+              //             });
+              //           },
+              //           any: searchBy,
+              //         )
+              //     );
+              //   },
+              //   child: Icon(
+              //     FlutterIcons.filter_ant,
+              //     size: scale.getTextSize(15),
+              //   ),
+              // )
             ],
           ),
         ),
       ),
       body: Padding(
         padding: scale.getPadding(1,0),
-        child: searchBy=="produk"?productSearch(context):memberSearch(context),
+        child: Column(
+          children: [
+            Expanded(
+                child:searchBy=="produk"?productSearch(context):memberSearch(context)
+            )
+          ],
+        ),
       ),
       bottomNavigationBar: product.isLoadMoreProductSearch||user.isLoadMoreSearchMember?CupertinoActivityIndicator():SizedBox(),
     );

@@ -2,6 +2,7 @@ import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/service/provider/authProvider.dart';
 import 'package:adscoin/view/widget/general/fieldWidget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
 import '../../widget/general/buttonWidget.dart';
@@ -38,8 +39,8 @@ class _SignInComponentState extends State<SignInComponent> {
             children: [
               Center(child: Image.asset(GeneralString.imgLocal+"logo.png",height: scale.getHeight(10))),
               SizedBox(height: scale.getHeight(5)),
-              Text("Masukan Nomer Ponsel",style: Theme.of(context).textTheme.headline1),
-              Center(child:Text("Masukan nomer ponsel untuk mendapatkan kode OTP",style: Theme.of(context).textTheme.subtitle1,textAlign: TextAlign.center,)),
+              Text("Masukkan Nomor Ponsel",style: Theme.of(context).textTheme.headline1),
+              Center(child:Text("Masukkan nomor ponsel untuk mendapatkan kode OTP",style: Theme.of(context).textTheme.subtitle1,textAlign: TextAlign.center,)),
               SizedBox(height: scale.getHeight(4)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,8 +54,8 @@ class _SignInComponentState extends State<SignInComponent> {
                     callback: ()async{
                       final data = {
                         "nomor":phoneNumberController.text,
-                        "type":"otp",
-                        "nama":"",
+                        "type":"sms",
+                        "nama":"tatang",
                         "islogin":"1",
                         "isRegister":"0",
                       };
@@ -79,7 +80,7 @@ class _SignInComponentState extends State<SignInComponent> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text("Belum memiliki akun ? ",style: Theme.of(context).textTheme.subtitle1),
-              Text("Sign up",style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.yellowColor)),
+              Text("Sign up",style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold)),
             ],
           ),
         ),

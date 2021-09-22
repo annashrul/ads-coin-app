@@ -10,6 +10,8 @@ class PromoProvider with ChangeNotifier{
   Future checkPromo({BuildContext context})async{
     if(promoModel==null) isLoadingPromo=true;
     final res=await HttpService().get(url: "promo/check",context: context);
+    print("######################## PROMO =$res");
+
     if(res is GeneralModel){
       promoModel=null;
     }else{

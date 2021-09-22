@@ -124,7 +124,7 @@ class _SignUpComponentState extends State<SignUpComponent> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text("sudah memiliki akun ? ",style: Theme.of(context).textTheme.subtitle1),
-              Text("Sign in",style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.yellowColor)),
+              Text("Sign in",style:  Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold)),
             ],
           ),
         ),

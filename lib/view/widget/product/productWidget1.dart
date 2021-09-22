@@ -103,7 +103,7 @@ class ProductWidget1 extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(price+" coin",overflow:TextOverflow.ellipsis,maxLines: 1,style: Theme.of(context).textTheme.headline1),
+                      Text(price+" coin",overflow:TextOverflow.ellipsis,maxLines: 1,style: Theme.of(context).textTheme.headline2),
                       Text(productSale,overflow:TextOverflow.ellipsis,maxLines: 1,style: Theme.of(context).textTheme.subtitle1),
                     ],
                   ),
