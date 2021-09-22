@@ -14,7 +14,11 @@ class FintechProvider with ChangeNotifier{
       "amount":field["amount"].toString(),
       "member_pin":field["pin"].toString()
     };
-    final res = await HttpService().post(url: "transaction/deposit",data: store,context: context);
+    final res = await HttpService().post(url: "transaction/deposit",data: store,context: context,callback: (){
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    });
     if(res!=null){
       DetailTopUpModel result = DetailTopUpModel.fromJson(res);
       detailTopUpModel = result;
@@ -23,7 +27,11 @@ class FintechProvider with ChangeNotifier{
     }
   }
   Future createWithDraw({BuildContext context,dynamic data})async{
-    final res = await HttpService().post(url: "transaction/withdrawal",data: data,context: context);
+    final res = await HttpService().post(url: "transaction/withdrawal",data: data,context: context,callback: (){
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    });
     if(res!=null){
       FunctionalWidget.modal(
         context: context,

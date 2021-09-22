@@ -17,7 +17,7 @@ class TitleSectionWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(title,style: Theme.of(context).textTheme.headline1),
-            if(isAction)Text(titleAction==null?"Lihat semua":titleAction,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.yellowColor)),
+            if(isAction)Text(titleAction==null?"Lihat semua":titleAction,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.bluePrimaryColor)),
           ],
         )
     );

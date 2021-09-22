@@ -73,10 +73,13 @@ class BankMemberProvider with ChangeNotifier{
         callback1: ()=>Navigator.of(context).pop(),
         callback2: ()async{
           Navigator.of(context).pop();
-          await HttpService().delete(url: "bank_member/${bankMemberModel.result[indexBank].id}",context: context);
-          Navigator.of(context).pop();
-          get(context: context);
-          FunctionalWidget.toast(context: context,msg: "data berhasil dihapus");
+          final res = await HttpService().delete(url: "bank_member/${bankMemberModel.result[indexBank].id}",context: context);
+          if(res!=null){
+            Navigator.of(context).pop();
+            get(context: context);
+            FunctionalWidget.toast(context: context,msg: "data berhasil dihapus");
+          }
+
           notifyListeners();
           // print("RESPONSE $res");
         }

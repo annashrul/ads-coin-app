@@ -172,19 +172,19 @@ class ProductProvider with ChangeNotifier{
         "status":status,
         "image":base64Image,
       };
-      print("################### DATA = $data");
       dynamic res;
       if(isAdd){
         res = await HttpService().post(url: "product",data: data,context: context,isLoading: loading);
       }else{
-        // Navigator.of(context).pop();
         res = await HttpService().put(url: "product/${dataEditProductContributor["id"]}",data: data,context: context,isLoading: loading);
       }
       if(res!=null){
-
         if(loading){
-          Navigator.of(context).pop();
+          // Navigator.of(context).pop();
           FunctionalWidget.toast(context: context,msg:"Data berhasil disimpan");
+          if(!isAdd){
+            Navigator.of(context).pop();
+          }
         }
         await db.delete(ProductTable.TABLE_NAME);
         await getProductContributor(context: context);

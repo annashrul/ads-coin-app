@@ -58,6 +58,7 @@ class AuthProvider with ChangeNotifier{
       "islogin":data["isLogin"]=="1"?"1":"0",
       "isRegister":data["isLogin"]=="1"?"0":"1",
     };
+    print(field);
     final res = await service.post(
         url: "auth/otp",
         data: field,
@@ -65,9 +66,8 @@ class AuthProvider with ChangeNotifier{
     );
     field["otp"] = res["result"]["otp_anying"];
     dataOtp = field;
-
     callback(res["result"]["otp_anying"]);
-    // print(res);
+    print(res);
   }
 
   Future<void> sendOtp({BuildContext context, dynamic fields,bool isRedirect=true})async{

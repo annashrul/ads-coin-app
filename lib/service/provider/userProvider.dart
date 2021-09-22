@@ -88,9 +88,10 @@ class UserProvider with ChangeNotifier{
     }
   }
   ValidateFormHelper valid = new ValidateFormHelper();
-  store({BuildContext context,fields})async{
+  store({BuildContext context,fields,isPin=false})async{
     final res = await HttpService().put(url: "member/$idUser",data: fields,context:context);
     if(res!=null){
+      if(isPin){Navigator.of(context).pop();}
       FunctionalWidget.toast(context: context,msg: res["msg"]);
       getDetailMember(context: context);
     }

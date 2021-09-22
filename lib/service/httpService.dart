@@ -43,7 +43,7 @@ class HttpService{
     }
   }
 
-  post({String url,dynamic data,BuildContext context,bool isLoading=true,bool isToken=true}) async {
+  post({String url,dynamic data,BuildContext context,bool isLoading=true,bool isToken=true,Function callback}) async {
     try{
       if(isLoading) FunctionalWidget.loadingDialog(context);
       Map<String, String> head={
@@ -64,7 +64,10 @@ class HttpService{
         if(isLoading)Navigator.pop(context);
         print(jsonResponse);
         if(jsonResponse["status"]=="failed"){
-          if(isLoading)FunctionalWidget.nofitDialog(context: context,msg:jsonResponse["msg"],callback2: ()=>Navigator.of(context).popUntil((route) => route.isFirst));
+          if(isLoading)FunctionalWidget.nofitDialog(context: context,msg:jsonResponse["msg"],callback2: (){
+            if(callback==null)Navigator.of(context).pop();
+            else callback();
+          });
           return null;
         }
         else{
@@ -171,6 +174,8 @@ class HttpService{
       Client client = new Client();
       final response = await client.delete(ApiString.url+url,headers:head).timeout(Duration(seconds: ApiString.timeOut));
       Navigator.of(context).pop();
+      print("=================== DELETE DATA $url ${response.statusCode} ============================");
+
       if(response.statusCode==200){
         final jsonResponse =  json.decode(response.body);
         if(jsonResponse["status"]=="failed"){
@@ -184,8 +189,8 @@ class HttpService{
       }
       else{
         final jsonResponse = json.decode(response.body);
-        GeneralModel result = GeneralModel.fromJson(jsonResponse.toJson());
-        FunctionalWidget.nofitDialog(context: context,msg: result.msg,callback1: ()=>Navigator.of(context).pop());
+        // GeneralModel result = GeneralModel.fromJson(jsonResponse.toJson());
+        FunctionalWidget.nofitDialog(context: context,msg:jsonResponse["msg"],callback2: ()=>Navigator.of(context).pop());
         return null;
       }
     }

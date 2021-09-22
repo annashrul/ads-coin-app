@@ -67,7 +67,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
     );
   }
   checkForm(){
-    if(nameController.text!=""&&previewController.text!=""&&descriptionController.text!=""||descriptionController.text!="<p><br></p>"){
+    if(nameController.text!=""&&previewController.text!=""&&descriptionController.text!=""){
       return true;
     }
     return false;
@@ -112,6 +112,13 @@ class _FormProductContributorComponentState extends State<FormProductContributor
         print("############################ DATA EDIT ${dataEdit["content"]}");
       }).whenComplete(() =>  print("############################ DATA EDIT COMPLETED"));
     }
+    Future.delayed(Duration(seconds: 3)).then((value){
+     contentController.getText().then((value) => print("######################### VALUE $value"));
+     print("######################### VALUE ${nameController.text}");
+     print("######################### VALUE ${previewController.text}");
+     print("######################### VALUE ${descriptionController.text}");
+
+    }).whenComplete(() =>  print("############################ DATA EDIT COMPLETED"));
   }
   // @override
   // void dispose() {
@@ -170,7 +177,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
         }
       }
     if(product.timeUpFlag){
-      if(nameController.text!=""||previewController.text!=""||descriptionController.text!=""||descriptionController.text!="<p><br></p>") autoSaveProduct(base64Image);
+      if(nameController.text!=""||previewController.text!=""||descriptionController.text!="") autoSaveProduct(base64Image);
     }
     if(statusProduct==0)statusController.text="Draft";
     else statusController.text="Publish";
@@ -183,12 +190,12 @@ class _FormProductContributorComponentState extends State<FormProductContributor
       onPointerUp: (_)=>setTime(),
       child: WillPopScope(
         onWillPop: () async{
-          return nameController.text!=""||previewController.text!=""||descriptionController.text!=""||descriptionController.text!="<p><br></p>"?saveData(context):true ?? false;
+          return nameController.text!=""||previewController.text!=""||descriptionController.text!=""?saveData(context):true ?? false;
         },
         child: Scaffold(
           key: globalScaffoldKey,
           appBar: FunctionalWidget.appBarHelper(context: context,title: product.isAdd?"Tambah produk":"Edit produk",callback: (){
-            if(nameController.text!=""||previewController.text!=""||descriptionController.text!=""||descriptionController.text!="<p><br></p>"){
+            if(nameController.text!=""||previewController.text!=""||descriptionController.text!=""){
               saveData(context);
             }else{
               Navigator.of(context).pop();
@@ -270,12 +277,12 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Judul",style: Theme.of(context).textTheme.headline2),
-                  Text("${nameController.text.length}/30",style: Theme.of(context).textTheme.subtitle2,)
+                  Text("${nameController.text.length}/50",style: Theme.of(context).textTheme.subtitle2,)
                 ],
               ),
               FieldWidget(
                 controller: nameController,
-                maxLength: 30,
+                maxLength: 50,
                 textInputType: TextInputType.text,
                 textInputAction: TextInputAction.done,
                 onChange: (e){
@@ -336,18 +343,6 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                   if(this.mounted) setState((){});
                 },
               ),
-              // SizedBox(height: scale.getHeight(1)),
-              // Text("Konten",style: Theme.of(context).textTheme.headline2),
-              // FieldWidget(
-              //   controller: descriptionController,
-              //   maxLines: 20,
-              //   textInputType: TextInputType.text,
-              //   textInputAction: TextInputAction.done,
-              //   onChange: (e){
-              //     setTime();
-              //     if(this.mounted) setState((){});
-              //   },
-              // ),
               SizedBox(height: scale.getHeight(1)),
               Text("Konten",style: Theme.of(context).textTheme.headline2),
               Container(
@@ -400,10 +395,18 @@ class _FormProductContributorComponentState extends State<FormProductContributor
               backgroundColor: check?ColorConfig.redColor:ColorConfig.graySecondaryColor,
               color: check?ColorConfig.graySecondaryColor:ColorConfig.grayPrimaryColor,
               title: "Simpan",
-              callback: (){
+              callback: ()async{
                 product.timeUpFlag = true;
                 product.timer.cancel();
-                product.storeAutoSaveProduct(context: context,status:statusProduct.toString(),loading: true);
+                await product.storeAutoSaveProduct(context: context,status:statusProduct.toString(),loading: true);
+                contentController.clear();
+                descriptionController.text="";
+                previewController.text="";
+                nameController.text="";
+                base64Image="-";
+                setState(() {
+
+                });
               },
             ),
           ),
