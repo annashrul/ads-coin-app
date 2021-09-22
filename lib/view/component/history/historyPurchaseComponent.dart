@@ -72,6 +72,7 @@ class _HistoryPurchaseComponentState extends State<HistoryPurchaseComponent> {
               itemBuilder: (context,index){
                 final val = history.historyPurchaseModel.result[index];
                 String tag = "historyPurchaseComponent" + val.idProduct;
+                print(val.rating);
                 return FunctionalWidget.wrapContent(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,

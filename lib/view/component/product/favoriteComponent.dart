@@ -36,7 +36,7 @@ class _FavoriteComponentState extends State<FavoriteComponent> {
             return ProductWidget1(
               marginWidth: index==0?0:0,
               heroTag: "produkFavorite"+val[TableString.idProduct],
-              isFavorite:val["checled"]=="0"?false:true,
+              isFavorite:val["checked"]=="0"?false:true,
               id:val[TableString.idProduct],
               title:val[TableString.titleProduct],
               price:val[TableString.priceProduct],

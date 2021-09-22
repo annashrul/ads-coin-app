@@ -204,7 +204,6 @@ class _ProductComponentState extends State<ProductComponent> {
     return RefreshIndicator(
         child: new StaggeredGridView.countBuilder(
           padding: EdgeInsets.all(0.0),
-
           crossAxisCount: 4,
           itemCount:product.listProductModel.result.length,
           staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),

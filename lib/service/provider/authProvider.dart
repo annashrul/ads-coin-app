@@ -133,7 +133,7 @@ class AuthProvider with ChangeNotifier{
           );
         }
         else{
-          setTimer(10);
+          setTimer(120);
           notifyListeners();
           timerUpdate();
           print("tidak redirect");

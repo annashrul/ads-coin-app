@@ -25,7 +25,7 @@ class _ModalActionHistoryPurchaseWidgetState extends State<ModalActionHistoryPur
 
   @override
   Widget build(BuildContext context) {
-    print(widget.dataJson);
+    print(widget.dataJson["rating"]);
     ScreenScaler scale = ScreenScaler()..init(context);
     final product = Provider.of<ProductProvider>(context);
     return Container(

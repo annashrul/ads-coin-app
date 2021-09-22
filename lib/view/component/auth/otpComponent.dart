@@ -45,7 +45,7 @@ class _OtpComponentState extends State<OtpComponent> {
     hidePhoneNumber();
     final auth = Provider.of<AuthProvider>(context, listen: false);
     auth.timerUpdate();
-    auth.timeCounter=10;
+    auth.timeCounter=120;
     auth.isTrue=false;
   }
 

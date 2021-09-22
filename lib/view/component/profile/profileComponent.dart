@@ -399,10 +399,12 @@ class _ModalFormPinState extends State<ModalFormPin> {
              if(checkPin&&checkConfirmPin){
                String noTelp = user.mobileNo;
                print(noTelp);
+               // Navigator.of(context).pop();
                await auth.postOtp(
                    context: context,
                    data: {"phoneNumber":noTelp,"isLogin":"1"},
                    callback: (finishPin)async{
+
                      FunctionalWidget.modal(context: context,child: OtpComponent(callback: (code)async{
                        await user.store(context: context,fields: {
                          "pin":"${pinController.text}",
