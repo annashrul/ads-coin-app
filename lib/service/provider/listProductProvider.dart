@@ -66,7 +66,7 @@ class ListProductProvider with ChangeNotifier{
 
     }
   }
-  loadMoreContributor(BuildContext context){
+  loadMoreProduct(BuildContext context){
     if(perPage<listProductModel.meta.total){
       isLoadMore=true;
       perPage+=10;

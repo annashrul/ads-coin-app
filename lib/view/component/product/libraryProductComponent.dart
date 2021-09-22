@@ -1,10 +1,14 @@
 import 'package:adscoin/config/color_config.dart';
+import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/favoriteProvider.dart';
+import 'package:adscoin/service/provider/listProductProvider.dart';
 import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/noDataWidget.dart';
 import 'package:adscoin/view/widget/product/productWidget1.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
@@ -19,19 +23,33 @@ class LibraryProductComponent extends StatefulWidget {
 
 class _LibraryProductComponentState extends State<LibraryProductComponent> {
   TextEditingController anyController = new TextEditingController();
-
+  ScrollController controller;
+  void scrollListener() {
+    final product = Provider.of<ProductProvider>(context, listen: false);
+    if (!product.isLoadingLibrary) {
+      if (controller.position.pixels == controller.position.maxScrollExtent) {
+        product.loadMoreProductLibrary(context);
+      }
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     final product = Provider.of<ProductProvider>(context, listen: false);
     product.getLibrary(context: context);
+    final favorite = Provider.of<FavoriteProvider>(context, listen: false);
+    favorite.get();
+    controller = new ScrollController()..addListener(scrollListener);
     this.setState(() {
       anyController.text = product.anyProductLibrary;
-
     });
   }
-
+  @override
+  void dispose() {
+    super.dispose();
+    controller.removeListener(scrollListener);
+  }
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
@@ -103,12 +121,17 @@ class _LibraryProductComponentState extends State<LibraryProductComponent> {
             ),
           ),
         ),
-        body: buildContent(context)
+        body: buildContent(context),
+      bottomNavigationBar: product.isLoadMoreProductLibrary?Container(
+        padding: scale.getPadding(1,0),
+        child: CupertinoActivityIndicator(),
+      ):SizedBox(),
     );
   }
   Widget buildContent(BuildContext context){
     ScreenScaler scale= ScreenScaler()..init(context);
     final product = Provider.of<ProductProvider>(context);
+    final favorite = Provider.of<FavoriteProvider>(context);
     return RefreshIndicator(
         child: product.isLoadingLibrary?LoadingProduct():product.productLibraryModel==null?NoDataWidget():new StaggeredGridView.countBuilder(
           padding:scale.getPadding(1,2.5),
@@ -119,12 +142,22 @@ class _LibraryProductComponentState extends State<LibraryProductComponent> {
           staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
           mainAxisSpacing: 10.0,
           crossAxisSpacing: 10.0,
+          controller: controller,
           itemBuilder: (context,index){
+            if(favorite.data.length>0){
+              for(int i=0;i<favorite.data.length;i++){
+                if(favorite.data[i][TableString.idProduct] == product.productLibraryModel.result[index].id){
+                  product.productLibraryModel.result[index].isFavorite = "1";
+                  break;
+                }
+                continue;
+              }
+            }
             return ProductWidget1(
               marginWidth: index==0?0:0,
-              heroTag: "mainProduk"+index.toString(),
-              isFavorite: index==0?true:false,
-              id:"mainProduk"+index.toString(),
+              heroTag: "mainProduk"+product.productLibraryModel.result[index].id,
+              isFavorite:product.productLibraryModel.result[index].isFavorite=="0"?false:true,
+              id: product.productLibraryModel.result[index].id,
               title:  product.productLibraryModel.result[index].title,
               price:  product.productLibraryModel.result[index].price,
               productSale:"${ product.productLibraryModel.result[index].terjual} terjual" ,

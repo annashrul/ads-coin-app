@@ -31,7 +31,7 @@ class _ProductComponentState extends State<ProductComponent> {
     final product = Provider.of<ListProductProvider>(context, listen: false);
     if (!product.isLoading) {
       if (controller.position.pixels == controller.position.maxScrollExtent) {
-        product.loadMoreContributor(context);
+        product.loadMoreProduct(context);
       }
     }
   }
@@ -182,7 +182,7 @@ class _ProductComponentState extends State<ProductComponent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                    child:TabBarView(children:historyView),
+                    child:TabBarView(physics: NeverScrollableScrollPhysics(),children:historyView),
                 ),
                 product.isLoadMore?Container(
                     alignment: Alignment.center,
@@ -204,7 +204,7 @@ class _ProductComponentState extends State<ProductComponent> {
     return RefreshIndicator(
         child: new StaggeredGridView.countBuilder(
           padding: EdgeInsets.all(0.0),
-          physics: AlwaysScrollableScrollPhysics(),
+
           crossAxisCount: 4,
           itemCount:product.listProductModel.result.length,
           staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),

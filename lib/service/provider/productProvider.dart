@@ -23,7 +23,7 @@ import 'package:http/http.dart' show Client;
 class ProductProvider with ChangeNotifier{
   bool isNoDataProductContributor=false;
   bool isAdd =true,isLoadingNew=true,isLoadingBestSeller=true,isLoadingLibrary=true,isLoadMoreLibrary=false,isLoadingDetailProduct=true;
-  bool isLoadingProductContributor=true,isLoadMoreProductContributor=false;
+  bool isLoadingProductContributor=true,isLoadMoreProductContributor=false,isLoadMoreProductLibrary=false;
   ProductNewModel productNewModel;
   ProductBestSellerModel productBestSellerModel;
   ProductLibraryModel productLibraryModel;
@@ -31,8 +31,11 @@ class ProductProvider with ChangeNotifier{
   DetailProductModel detailProductModel;
   int perPageLibrary=10;
   int perPageProductContributor=10;
+  int perPageProductLibrary=10;
+
   ScrollController controllerLibrary;
   ScrollController controllerProductContributor;
+
   DatabaseInit db = new DatabaseInit();
   int statusProduct=0;
   int filterStatusProduct=0;
@@ -106,7 +109,7 @@ class ProductProvider with ChangeNotifier{
   }
   Future getLibrary({BuildContext context,String type="home"})async{
     if(productLibraryModel==null) isLoadingLibrary=true;
-    String url = "product/library?page=1";
+    String url = "product/library?page=1&perpage=$perPageProductLibrary";
     if(anyProductLibrary!="") url+="&q=$anyProductLibrary";
     final res = await HttpService().get(url:url,context: context);
     if(res["result"].length>0){
@@ -115,10 +118,11 @@ class ProductProvider with ChangeNotifier{
     }else{
       productLibraryModel=null;
     }
-
     isLoadingLibrary=false;
+    isLoadMoreProductLibrary=false;
     notifyListeners();
   }
+
   Future getDetailProduct({BuildContext context,String id=""})async{
     if(detailProductModel==null) isLoadingDetailProduct=true;
     final res = await HttpService().get(url: "product/get/$id",context: context);
@@ -235,6 +239,17 @@ class ProductProvider with ChangeNotifier{
     }
     else{
       isLoadMoreProductContributor=false;
+    }
+    notifyListeners();
+  }
+  loadMoreProductLibrary(BuildContext context){
+    if(perPageProductLibrary<productLibraryModel.meta.total){
+      isLoadMoreProductLibrary=true;
+      perPageProductLibrary+=10;
+      getLibrary(context: context);
+    }
+    else{
+      isLoadMoreProductLibrary=false;
     }
     notifyListeners();
   }

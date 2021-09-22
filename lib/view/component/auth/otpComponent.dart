@@ -64,7 +64,7 @@ class _OtpComponentState extends State<OtpComponent> {
             children: [
               Center(child: Image.asset(GeneralString.imgLocal+"logo.png",height: scale.getHeight(10))),
               SizedBox(height: scale.getHeight(5)),
-              Text(auth.dataOtp["otp"],style: Theme.of(context).textTheme.headline1),
+              // Text(auth.dataOtp["otp"],style: Theme.of(context).textTheme.headline1),
               Text("Masukkan Kode OTP",style: Theme.of(context).textTheme.headline1),
               Text("Kami telah mengirimkan kode OTP pada ponsel anda",style: Theme.of(context).textTheme.subtitle1),
               Text(joinString,style: Theme.of(context).textTheme.subtitle1,textAlign: TextAlign.center,),
