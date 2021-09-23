@@ -5,7 +5,6 @@ import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/model/generalModel.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' show Client;
 import 'package:provider/provider.dart';

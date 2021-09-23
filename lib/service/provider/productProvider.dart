@@ -13,7 +13,6 @@ import 'package:adscoin/model/product/productContributorModel.dart';
 import 'package:adscoin/model/product/productLibraryModel.dart';
 import 'package:adscoin/model/product/productNewModel.dart';
 import 'package:adscoin/service/httpService.dart';
-import 'package:adscoin/service/httpWithDio.dart';
 import 'package:adscoin/service/provider/categoryProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:flutter/cupertino.dart';

@@ -75,8 +75,7 @@ class _MyAppState extends State<MyApp> {
     };
     OneSignal.shared.init(ApiString.onesignalAppId, iOSSettings: settings);
 
-    final user = Provider.of<UserProvider>(context, listen: false);
-    user.getDataUser();
+
   }
 
   @override

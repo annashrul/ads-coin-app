@@ -20,15 +20,18 @@ class _SplashComponentState extends State<SplashComponent> {
     await userStorage.getDataUser();
     print("userStorage.isLogin ${userStorage.isLogin}");
     if(userStorage.isLogin==null || userStorage.isLogin==StatusRoleString.baruInstall){
+      print("########################## USER BARU MENGGUNAKAN APLIKASI");
       Navigator.of(context).pushNamedAndRemoveUntil(RouteString.onBoarding, (route) => false);
     }
     else{
       if(userStorage.isLogin==StatusRoleString.keluarAplikasi){
+        print("########################## USER MELAKUKAN LOGOUT");
         Navigator.of(context).pushNamedAndRemoveUntil(RouteString.signIn, (route) => false);
       }
       else{
         final isToken = await FunctionalWidget.isTokenExpired(context);
         if(isToken){
+          print("########################## TOKEN EXPIRED");
           FunctionalWidget.processLogout(context);
         }else{
           await userStorage.getDetailMember(context: context);
@@ -38,6 +41,7 @@ class _SplashComponentState extends State<SplashComponent> {
               print("########################## STATUS USER SUDAH TIDAK AKTIF");
               FunctionalWidget.processLogout(context);
             }else{
+              print(" ####################### USER BOLEH MASUK KE HALAMAN UTAMA APLIKASI ########################################");
               Navigator.of(context).pushNamedAndRemoveUntil(RouteString.main, (route) => false,arguments: TabIndexString.tabHome);
             }
           }else{

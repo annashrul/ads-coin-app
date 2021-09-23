@@ -349,8 +349,6 @@ class _OnBoardingComponentState extends State<OnBoardingComponent> {
                       ),
                     ),
                   ),
-
-
                 ]),
           ),
         ));

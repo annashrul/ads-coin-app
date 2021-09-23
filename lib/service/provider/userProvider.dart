@@ -84,8 +84,8 @@ class UserProvider with ChangeNotifier{
       referral =getUser[0][SessionString.sessReferral];
       status =getUser[0][SessionString.sessStatus];
       type =getUser[0][SessionString.sessType];
-      notifyListeners();
     }
+    notifyListeners();
   }
   ValidateFormHelper valid = new ValidateFormHelper();
   store({BuildContext context,fields,isPin=false})async{
