@@ -344,7 +344,14 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                 },
               ),
               SizedBox(height: scale.getHeight(1)),
-              Text("Konten",style: Theme.of(context).textTheme.headline2),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Konten",style: Theme.of(context).textTheme.headline2),
+                  Text("* double tap untuk blok tulisan",style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.bold)),
+                ],
+              ),
+
               Container(
                 height: scale.getHeight(51),
                 child: HtmlEditor(
