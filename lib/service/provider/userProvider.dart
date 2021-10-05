@@ -116,7 +116,7 @@ class UserProvider with ChangeNotifier{
     if(memberSearchModel==null) isLoadingSearchMember=true;
     if(anySearchMember!="") url+="&q=$anySearchMember";
     final res = await HttpService().get(url: url,context: context);
-
+    print("################### SEARCG MEMBER ${res["result"]}");
     if(res["result"].length>0){
       MemberSearchModel result=MemberSearchModel.fromJson(res);
       memberSearchModel=result;

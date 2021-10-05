@@ -248,7 +248,7 @@ class _SearchComponentState extends State<SearchComponent> {
   Widget memberSearch(BuildContext context){
     final user = Provider.of<UserProvider>(context);
     ScreenScaler scale= ScreenScaler()..init(context);
-    return user.isLoadingSearchMember?user.memberSearchModel==null?NoDataWidget():Container(
+    return user.isLoadingSearchMember?Container(
       padding: scale.getPadding(0,2.5),
       child: ListView.separated(
           padding: EdgeInsets.zero,
@@ -261,7 +261,7 @@ class _SearchComponentState extends State<SearchComponent> {
           separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(0.5),);},
 
     ),
-    ):ListView.separated(
+    ):user.memberSearchModel==null?NoDataWidget():ListView.separated(
         controller: memberController,
         padding: scale.getPadding(0,2.5),
         primary: false,

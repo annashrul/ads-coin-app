@@ -91,8 +91,13 @@ class ProductProvider with ChangeNotifier{
   Future getBestSeller({BuildContext context})async{
     if(productBestSellerModel==null) isLoadingBestSeller=true;
     final res = await HttpService().get(url: "product/list/best_seller?page=1",context: context);
-    ProductBestSellerModel result = ProductBestSellerModel.fromJson(res);
-    productBestSellerModel = result;
+    if(res["result"].length>0){
+      ProductBestSellerModel result = ProductBestSellerModel.fromJson(res);
+      productBestSellerModel = result;
+    }else{
+      productBestSellerModel = null;
+    }
+
     isLoadingBestSeller=false;
     notifyListeners();
   }
@@ -101,8 +106,14 @@ class ProductProvider with ChangeNotifier{
     String url  =  "product?page=1";
     if(where!="") url+="&$where";
     final res = await HttpService().get(url: url,context: context);
-    ProductNewModel result = ProductNewModel.fromJson(res);
-    productNewModel = result;
+    if(res["result"].length>0){
+      ProductNewModel result = ProductNewModel.fromJson(res);
+      productNewModel = result;
+    }else{
+      productNewModel = null;
+
+    }
+
     isLoadingNew=false;
     notifyListeners();
   }

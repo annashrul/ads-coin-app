@@ -7,6 +7,7 @@ import 'package:adscoin/service/provider/promoProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/appBarWithActionWidget.dart';
+import 'package:adscoin/view/widget/general/noDataWidget.dart';
 import 'package:adscoin/view/widget/general/titleSectionWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:adscoin/view/widget/home/cardSaldoWidget.dart';
@@ -157,7 +158,7 @@ class _HomeComponentState extends State<HomeComponent> {
                 Container(
                   padding: scale.getPadding(0.5,2.5),
                   height: scale.getHeight(30),
-                  child:  product.isLoadingBestSeller?LoadingProductHorizontal():ListView.builder(
+                  child:  product.isLoadingBestSeller?LoadingProductHorizontal():product.productBestSellerModel==null?NoDataWidget():ListView.builder(
                     padding: EdgeInsets.all(0.0),
                     physics: ClampingScrollPhysics(),
                     shrinkWrap: true,
@@ -197,7 +198,7 @@ class _HomeComponentState extends State<HomeComponent> {
                     callback: ()=>Navigator.of(context).pushReplacementNamed(RouteString.main,arguments: TabIndexString.tabProduct),
                   ),
                 ),
-                product.isLoadingNew?LoadingProduct():Container(
+                product.isLoadingNew?LoadingProduct():product.productNewModel==null?NoDataWidget():Container(
                   padding: scale.getPadding(0.5,2.5),
                   child: new StaggeredGridView.countBuilder(
                     padding: EdgeInsets.all(0.0),
@@ -235,7 +236,7 @@ class _HomeComponentState extends State<HomeComponent> {
                     },
                   ),
                 ),
-                if(!user.isLoadingLeaderBoard&&user.leaderBoardModel.result.length>0)Padding(
+                if(!user.isLoadingLeaderBoard&&user.leaderBoardModel!=null)Padding(
                   padding: scale.getPadding(0,2.5),
                   child: TitleSectionWidget(
                     title: "Leaderboard",
@@ -243,7 +244,7 @@ class _HomeComponentState extends State<HomeComponent> {
                     isAction: false,
                   ),
                 ),
-                if(!user.isLoadingLeaderBoard&&user.leaderBoardModel.result.length>0)Container(
+                if(!user.isLoadingLeaderBoard&&user.leaderBoardModel!=null)Container(
                   padding: scale.getPadding(0.5,2.5),
                   child:ListView.separated(
                       padding: EdgeInsets.zero,

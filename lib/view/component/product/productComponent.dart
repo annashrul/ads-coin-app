@@ -68,7 +68,7 @@ class _ProductComponentState extends State<ProductComponent> {
     final product = Provider.of<ListProductProvider>(context);
     final category = Provider.of<CategoryProvider>(context);
     final member = Provider.of<UserProvider>(context,listen: false);
-    int max = category.isLoading?10:category.categoryProductModel.result.length;
+    int max = category.isLoading?10:category.categoryProductModel==null?0:category.categoryProductModel.result.length;
     ScreenScaler scale= ScreenScaler()..init(context);
     List<Widget> historyTab = [];
     List<Widget> historyView = [];
@@ -83,9 +83,9 @@ class _ProductComponentState extends State<ProductComponent> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  category.isLoading?BaseLoading(height: 1, width: 10):ImageRoundedWidget(img:category.categoryProductModel.result[i].icon,height: scale.getHeight(1),),
-                  if(!category.isLoading)SizedBox(width: scale.getWidth(1)),
-                  if(!category.isLoading)Text(category.categoryProductModel.result[i].title)
+                  category.isLoading?BaseLoading(height: 1, width: 10):category.categoryProductModel==null?Container():ImageRoundedWidget(img:category.categoryProductModel.result[i].icon,height: scale.getHeight(1),),
+                  if(!category.isLoading&&category.categoryProductModel!=null)SizedBox(width: scale.getWidth(1)),
+                  if(!category.isLoading&&category.categoryProductModel!=null)Text(category.categoryProductModel.result[i].title)
                 ],
               ),
             ),
@@ -152,11 +152,6 @@ class _ProductComponentState extends State<ProductComponent> {
                       ),
                       child:Icon(FlutterIcons.share_alt_faw,color: Color(0xFF219653),),
                     ),
-                    // child: Icon(
-                    //     FlutterIcons.share_alt_faw,
-                    //     size: scale.getTextSize(15),
-                    //     color:ColorConfig.graySecondaryColor
-                    // ),
                   )
                 ],
               ),
@@ -175,7 +170,7 @@ class _ProductComponentState extends State<ProductComponent> {
               },
             ),
           ),
-          body:  product.isLoading?LoadingProduct(): Container(
+          body:  product.isLoading?LoadingProduct(): product.listProductModel==null?NoDataWidget():Container(
             padding: scale.getPadding(1,2.5),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,

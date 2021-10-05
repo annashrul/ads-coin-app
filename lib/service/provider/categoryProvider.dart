@@ -11,10 +11,16 @@ class CategoryProvider with ChangeNotifier{
   Future getCategoryProduct({BuildContext context,bool isFilter=false})async{
     if(categoryProductModel==null) isLoading=true;
     final res = await HttpService().get(url: "category/product",context: context);
-    CategoryProductModel result = CategoryProductModel.fromJson(res);
-    categoryProductModel = result;
+    if(res["result"].length>0){
+      CategoryProductModel result = CategoryProductModel.fromJson(res);
+      categoryProductModel = result;
+      if(isFilter)categoryProductModel.result.insert(0,Result(totalrecords: "0",id: "",title: "semua",idType: 0,icon: GeneralString.dummyImgUser,createdAt: null,updatedAt: null));
+
+    }else{
+      categoryProductModel=null;
+    }
+
     isLoading=false;
-    if(isFilter)categoryProductModel.result.insert(0,Result(totalrecords: "0",id: "",title: "semua",idType: 0,icon: GeneralString.dummyImgUser,createdAt: null,updatedAt: null));
 
     notifyListeners();
   }
