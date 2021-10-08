@@ -23,14 +23,13 @@ class FormFintechWidget extends StatefulWidget {
 
 class _FormFintechWidgetState extends State<FormFintechWidget> {
   int idx=10;
-  MoneyMaskedTextControllerQ amountController = MoneyMaskedTextControllerQ(initialValue:0.0,decimalSeparator: '', thousandSeparator: ',');
-
+  // MoneyMaskedTextControllerQ amountController = MoneyMaskedTextControllerQ(initialValue:0.0,decimalSeparator: '', thousandSeparator: ',');
+  TextEditingController amountController = new TextEditingController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
 
   @override
@@ -39,15 +38,28 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
     final config = Provider.of<SiteProvider>(context);
     bool isValid = false;
     final user = Provider.of<UserProvider>(context);
-    if(amountController.text!=""&&int.parse(amountController.text.replaceAll(",",""))>0){
+    if(amountController.text!=""){
       isValid=true;
     }
+    if(!widget.type){
+      if(double.parse(user.saldo.toString()) < double.parse(widget.minWd.toString())){
+        isValid=false;
+      }
+      else{
+        if(amountController.text!=""){
+          if(double.parse(amountController.text.toString()) < double.parse(widget.minWd.toString()) ){
+            isValid=false;
+          }
+        }
+      }
+    }
+
     return ListView(
       padding: scale.getPadding(1,2.5),
       children: [
-        Text("Cara cepat",style: Theme.of(context).textTheme.headline2),
-        SizedBox(height: scale.getHeight(1)),
-        NominalWidget(
+        if(widget.type)Text("Cara cepat",style: Theme.of(context).textTheme.headline2),
+        if(widget.type)SizedBox(height: scale.getHeight(1)),
+        if(widget.type)NominalWidget(
           callback: (amount,index){
             setState(() {
               amountController.text=amount;
@@ -58,25 +70,34 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
           idx: idx,
         ),
         if(!widget.type)FunctionalWidget.wrapContent(
-            child: FlatButton(
-              color:amountController.text==user.saldo?ColorConfig.yellowColor:Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)
+            child: Padding(
+              padding: scale.getPadding(1,2),
+              child: Column(
+                children: [
+                  Text("Saldo anda",style: Theme.of(context).textTheme.headline2,),
+                  Text("${user.saldo} coin",style: Theme.of(context).textTheme.headline1.copyWith(fontSize: 24),),
+                  FlatButton(
+                    color:ColorConfig.yellowColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)
+                    ),
+                    // padding: scale.getPadding(1,1),
+                    onPressed: (){
+                      print(double.parse(user.saldo.toString()));
+                      print(widget.minWd.toString());
+                      if(double.parse(user.saldo.toString()) < double.parse(widget.minWd.toString())){
+                        FunctionalWidget.toast(context: context,msg: "maaf saldo anda kurang dari ${widget.minWd.toString()} coin");
+                      }else{
+                        setState(() {
+                          amountController.text=user.saldo;
+                          isValid=true;
+                        });
+                      }
+                    },
+                    child: Text("Tarik semua saldo",style: Theme.of(context).textTheme.subtitle1.copyWith(color:Colors.white),),
+                  )
+                ],
               ),
-              padding: scale.getPadding(1,1),
-              onPressed: (){
-                print(double.parse(user.saldo.toString()));
-                print(widget.minWd.toString());
-                if(double.parse(user.saldo.toString()) < double.parse(widget.minWd.toString())){
-                  FunctionalWidget.toast(context: context,msg: "maaf saldo anda kurang dari ${widget.minWd.toString()} coin");
-                }else{
-                  setState(() {
-                    amountController.text=user.saldo;
-                    isValid=true;
-                  });
-                }
-              },
-              child: Text("Tarik semua saldo anda : ${user.saldo} coin",style: Theme.of(context).textTheme.subtitle1.copyWith(color:ColorConfig.grayPrimaryColor),),
             )
         ),
         SizedBox(height: scale.getHeight(1)),
@@ -96,8 +117,9 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
                 border: InputBorder.none,
               ),
               inputFormatters: <TextInputFormatter>[
+                // BlacklistingTextInputFormatter.singleLineFormatter
                 // WhitelistingTextInputFormatter.digitsOnly,
-                // BlacklistingTextInputFormatter.singleLineFormatter,
+                // if(widget.type)BlacklistingTextInputFormatter.singleLineFormatter,
               ],
               onChanged: (e){
                 int index = 10;
@@ -112,9 +134,10 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
                   }
                   idx = amount!=null?amount:10;
                   setState(() {});
-                }else{
+                }
+                else{
                   index=10;
-                  amountController = MoneyMaskedTextControllerQ(initialValue:0.0,decimalSeparator: '', thousandSeparator: ',');
+                  // amountController.text="";
                   this.setState(() {});
                 }
               },
@@ -122,7 +145,8 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
           )
         ),
         SizedBox(height: scale.getHeight(1)),
-        Text("Total  Rp ${MoneyFormat.toFormat(double.parse(config.configModel.result[0].konversiCoin)*double.parse(amountController.text.replaceAll(",","")))}",style: Theme.of(context).textTheme.headline2),
+        if(amountController.text!="")Text("Total  Rp ${MoneyFormat.toFormat(double.parse(config.configModel.result[0].konversiCoin)*double.parse(amountController.text))}",style: Theme.of(context).textTheme.headline2),
+        if(amountController.text=="")Text("Total  Rp 0",style: Theme.of(context).textTheme.headline2),
         SizedBox(height: scale.getHeight(2)),
         BackroundButtonWidget(
           backgroundColor: isValid?ColorConfig.redColor:ColorConfig.graySecondaryColor,
