@@ -2,6 +2,7 @@ import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/helper/formatCurrencyHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/siteProvider.dart';
+import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/fintech/nominalWidget.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
@@ -14,7 +15,8 @@ import 'package:provider/provider.dart';
 class FormFintechWidget extends StatefulWidget {
   Function(int amount) callback;
   bool type;
-  FormFintechWidget({this.callback,this.type=true});
+  dynamic minWd;
+  FormFintechWidget({this.callback,this.type=true,this.minWd});
   @override
   _FormFintechWidgetState createState() => _FormFintechWidgetState();
 }
@@ -36,6 +38,7 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
     ScreenScaler scale = ScreenScaler()..init(context);
     final config = Provider.of<SiteProvider>(context);
     bool isValid = false;
+    final user = Provider.of<UserProvider>(context);
     if(amountController.text!=""&&int.parse(amountController.text.replaceAll(",",""))>0){
       isValid=true;
     }
@@ -46,7 +49,6 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
         SizedBox(height: scale.getHeight(1)),
         NominalWidget(
           callback: (amount,index){
-            print(amount);
             setState(() {
               amountController.text=amount;
               idx=index;
@@ -54,6 +56,28 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
             });
           },
           idx: idx,
+        ),
+        if(!widget.type)FunctionalWidget.wrapContent(
+            child: FlatButton(
+              color:amountController.text==user.saldo?ColorConfig.yellowColor:Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+              ),
+              padding: scale.getPadding(1,1),
+              onPressed: (){
+                print(double.parse(user.saldo.toString()));
+                print(widget.minWd.toString());
+                if(double.parse(user.saldo.toString()) < double.parse(widget.minWd.toString())){
+                  FunctionalWidget.toast(context: context,msg: "maaf saldo anda kurang dari ${widget.minWd.toString()} coin");
+                }else{
+                  setState(() {
+                    amountController.text=user.saldo;
+                    isValid=true;
+                  });
+                }
+              },
+              child: Text("Tarik semua saldo anda : ${user.saldo} coin",style: Theme.of(context).textTheme.subtitle1.copyWith(color:ColorConfig.grayPrimaryColor),),
+            )
         ),
         SizedBox(height: scale.getHeight(1)),
         Text("Jumlah coin",style: Theme.of(context).textTheme.headline2),
@@ -72,8 +96,8 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
                 border: InputBorder.none,
               ),
               inputFormatters: <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly,
-                BlacklistingTextInputFormatter.singleLineFormatter,
+                // WhitelistingTextInputFormatter.digitsOnly,
+                // BlacklistingTextInputFormatter.singleLineFormatter,
               ],
               onChanged: (e){
                 int index = 10;
@@ -99,7 +123,6 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
         ),
         SizedBox(height: scale.getHeight(1)),
         Text("Total  Rp ${MoneyFormat.toFormat(double.parse(config.configModel.result[0].konversiCoin)*double.parse(amountController.text.replaceAll(",","")))}",style: Theme.of(context).textTheme.headline2),
-
         SizedBox(height: scale.getHeight(2)),
         BackroundButtonWidget(
           backgroundColor: isValid?ColorConfig.redColor:ColorConfig.graySecondaryColor,

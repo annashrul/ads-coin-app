@@ -216,7 +216,10 @@ class _ProductContributorComponentState extends State<ProductContributorComponen
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(val.title,style: Theme.of(context).textTheme.headline2,),
+                                        Container(
+                                          width:scale.getWidth(50),
+                                          child: Text(val.title,style: Theme.of(context).textTheme.headline2,overflow: TextOverflow.ellipsis,maxLines: 1,),
+                                        ),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment: CrossAxisAlignment.start,

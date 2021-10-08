@@ -18,13 +18,13 @@ class _OptionActionProductWidgetState extends State<OptionActionProductWidget> {
     ScreenScaler scale = ScreenScaler()..init(context);
     final product = Provider.of<ProductProvider>(context);
     dynamic status = StatusProduct.funcStatusProduct(widget.dataJson["status"].toString());
-    print(status);
+    print(widget.dataJson);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        CardAction(
+        if(int.parse(widget.dataJson["terjual"])==0)CardAction(
           title: "Edit",
           callback: ()async{
             Navigator.of(context).pop();
@@ -34,14 +34,14 @@ class _OptionActionProductWidgetState extends State<OptionActionProductWidget> {
           },
           img: "Edit",
         ),
-        CardAction(
+        if(int.parse(widget.dataJson["terjual"])==0)CardAction(
           title: "Hapus",
           callback: ()async{
             product.deleteProductContributor(context: context,id: widget.dataJson["id"]);
           },
           img: "Delete1",
         ),
-        CardAction(
+        if(int.parse(widget.dataJson["terjual"])==0)CardAction(
           title: "Ubah menjadi ${widget.dataJson["status"]==1?"draft":"publish"}",
           callback: ()async{
             if(widget.dataJson["status"]==0){

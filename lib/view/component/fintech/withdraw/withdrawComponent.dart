@@ -38,6 +38,7 @@ class _WithdrawComponentState extends State<WithdrawComponent> {
     return Scaffold(
       appBar: FunctionalWidget.appBarHelper(context: context,title: "Penarikan"),
       body: FormFintechWidget(
+        minWd:config.configModel.result[0].wdMin ,
         type: false,
         callback: (amount){
           if(amount<int.parse(config.configModel.result[0].wdMin)){

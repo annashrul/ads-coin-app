@@ -120,27 +120,27 @@ class _FormProfileComponentState extends State<FormProfileComponent> {
             textInputAction: TextInputAction.done,
           ),
 
-          TextFormField(
-            readOnly: true,
-            style: Theme.of(context).textTheme.headline2,
-            controller: phoneController,
-            maxLength: 15,
-            buildCounter: (_, {currentLength, maxLength, isFocused}) => Padding(
-              padding: const EdgeInsets.all(0),
-              child: Container(alignment: Alignment.bottomRight,child: Text(currentLength.toString() + "/" + maxLength.toString())),
-            ),
-            decoration: InputDecoration(
-                labelText: "Nomor telepon",
-                labelStyle: Theme.of(context).textTheme.subtitle1,
-                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ColorConfig.yellowColor))
-            ),
-            cursorColor: ColorConfig.yellowColor,
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              LengthLimitingTextInputFormatter(14),
-              FilteringTextInputFormatter.digitsOnly
-            ],
-          ),
+          // TextFormField(
+          //   readOnly: true,
+          //   style: Theme.of(context).textTheme.headline2,
+          //   controller: phoneController,
+          //   maxLength: 15,
+          //   buildCounter: (_, {currentLength, maxLength, isFocused}) => Padding(
+          //     padding: const EdgeInsets.all(0),
+          //     child: Container(alignment: Alignment.bottomRight,child: Text(currentLength.toString() + "/" + maxLength.toString())),
+          //   ),
+          //   decoration: InputDecoration(
+          //       labelText: "Nomor telepon",
+          //       labelStyle: Theme.of(context).textTheme.subtitle1,
+          //       focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ColorConfig.yellowColor))
+          //   ),
+          //   cursorColor: ColorConfig.yellowColor,
+          //   keyboardType: TextInputType.number,
+          //   inputFormatters: <TextInputFormatter>[
+          //     LengthLimitingTextInputFormatter(14),
+          //     FilteringTextInputFormatter.digitsOnly
+          //   ],
+          // ),
           TextFormField(
             style: Theme.of(context).textTheme.headline2,
             controller: websiteController,

@@ -107,24 +107,20 @@ class _FormProductContributorComponentState extends State<FormProductContributor
       nameController.text=dataEdit["title"];
       previewController.text=dataEdit["preview"];
       descriptionController.text=dataEdit["content"];
-      Future.delayed(Duration(seconds: 3)).then((value){
-        contentController.setText("${dataEdit["content"]}");
-        print("############################ DATA EDIT ${dataEdit["content"]}");
-      }).whenComplete(() =>  print("############################ DATA EDIT COMPLETED"));
+      // Future.delayed(Duration(seconds: 3)).then((value){
+      //   contentController.setText("${dataEdit["content"]}");
+      //   print("############################ DATA EDIT ${dataEdit["content"]}");
+      // }).whenComplete(() =>  print("############################ DATA EDIT COMPLETED"));
     }
-    Future.delayed(Duration(seconds: 3)).then((value){
-     contentController.getText().then((value) => print("######################### VALUE $value"));
-     print("######################### VALUE ${nameController.text}");
-     print("######################### VALUE ${previewController.text}");
-     print("######################### VALUE ${descriptionController.text}");
-
-    }).whenComplete(() =>  print("############################ DATA EDIT COMPLETED"));
+    // Future.delayed(Duration(seconds: 3)).then((value){
+    //  contentController.getText().then((value) => print("######################### VALUE $value"));
+    //  print("######################### VALUE ${nameController.text}");
+    //  print("######################### VALUE ${previewController.text}");
+    //  print("######################### VALUE ${descriptionController.text}");
+    //
+    // }).whenComplete(() =>  print("############################ DATA EDIT COMPLETED"));
   }
-  // @override
-  // void dispose() {
-  //   WidgetsBinding.instance.removeObserver(this);
-  //   super.dispose();
-  // }
+
   @mustCallSuper
   @protected
   void dispose() {
@@ -348,51 +344,60 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Konten",style: Theme.of(context).textTheme.headline2),
-                  Text("* double tap untuk blok tulisan",style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.bold)),
                 ],
               ),
+              FieldWidget(
+                maxLines: 20,
+                controller: descriptionController,
+                textInputType: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                onChange: (e){
+                  setTime();
+                  if(this.mounted) setState((){});
+                },
+              ),
 
-              Container(
-                height: scale.getHeight(51),
-                child: HtmlEditor(
-                    options: HtmlEditorOptions(
-                      adjustHeightForKeyboard: false,
-                      autoAdjustHeight: false
-                    ),
-                    hint: "tulis konten disini ..",
-                    controller: contentController,
-                    callbacks: Callbacks(
-                      onChange: (String changed)async {
-                        setState(() {
-                          descriptionController.text = changed;
-                        });
-                      },
-                      onEnter: () {
-
-                      },
-                      onFocus: () {
-                      },
-                      onBlur: () {
-                      },
-                      onBlurCodeview: () {
-                      },
-                      onKeyDown: (keyCode) {
-                      },
-                      onKeyUp: (keyCode) {
-                      },
-                      onPaste: () {
-                        print("################################## ACTION onPaste");
-                      },
-                    ),
-                    toolbar: [
-                      Style(),
-                      Paragraph(),
-                      FontSetting(),
-                      Font(buttons: [FontButtons.bold, FontButtons.underline, FontButtons.italic,FontButtons.clear])
-                    ]
-
-                ),
-              )
+              // Container(
+              //   height: scale.getHeight(51),
+              //   child: HtmlEditor(
+              //       options: HtmlEditorOptions(
+              //         adjustHeightForKeyboard: false,
+              //         autoAdjustHeight: false
+              //       ),
+              //       hint: "tulis konten disini ..",
+              //       controller: contentController,
+              //       callbacks: Callbacks(
+              //         onChange: (String changed)async {
+              //           setState(() {
+              //             descriptionController.text = changed;
+              //           });
+              //         },
+              //         onEnter: () {
+              //
+              //         },
+              //         onFocus: () {
+              //         },
+              //         onBlur: () {
+              //         },
+              //         onBlurCodeview: () {
+              //         },
+              //         onKeyDown: (keyCode) {
+              //         },
+              //         onKeyUp: (keyCode) {
+              //         },
+              //         onPaste: () {
+              //           print("################################## ACTION onPaste");
+              //         },
+              //       ),
+              //       toolbar: [
+              //         Style(),
+              //         Paragraph(),
+              //         FontSetting(),
+              //         Font(buttons: [FontButtons.bold, FontButtons.underline, FontButtons.italic,FontButtons.clear])
+              //       ]
+              //
+              //   ),
+              // )
 
             ],
           ),

@@ -10,7 +10,7 @@ class CategoryProvider with ChangeNotifier{
 
   Future getCategoryProduct({BuildContext context,bool isFilter=false})async{
     if(categoryProductModel==null) isLoading=true;
-    final res = await HttpService().get(url: "category/product",context: context);
+    final res = await HttpService().get(url: "category/product?page=1&perpage=10000",context: context);
     if(res["result"].length>0){
       CategoryProductModel result = CategoryProductModel.fromJson(res);
       categoryProductModel = result;

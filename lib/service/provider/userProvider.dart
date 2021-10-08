@@ -100,11 +100,11 @@ class UserProvider with ChangeNotifier{
   Future getListReferral({BuildContext context})async{
     if(listReferralMember==null) isLoadingListReferral=true;
     final res = await HttpService().get(url: "member/referral?page=1&perpage=$perPageListReferral",context: context);
-    print("TOTAL ${res["meta"]["total"]}");
     if(res["result"].length>0){
       ListReferralMember result=ListReferralMember.fromJson(res);
       listReferralMember=result;
-    }else{
+    }
+    else{
       listReferralMember=null;
     }
     isLoadingListReferral=false;
@@ -112,7 +112,7 @@ class UserProvider with ChangeNotifier{
     notifyListeners();
   }
   Future getSearchMember({BuildContext context})async{
-    String url = "member?kontributor=true";
+    String url = "member?kontributor=true&perpage=$perPageSearchMember";
     if(memberSearchModel==null) isLoadingSearchMember=true;
     if(anySearchMember!="") url+="&q=$anySearchMember";
     final res = await HttpService().get(url: url,context: context);
