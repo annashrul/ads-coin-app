@@ -80,7 +80,7 @@ class _UploadWidgetState extends State<UploadWidget> {
           decoration: BoxDecoration(
             borderRadius:  BorderRadius.circular(10.0),
           ),
-          child: _image == null ?Image.network(GeneralString.dummyImgUser,width: double.infinity,fit: BoxFit.contain): new Image.file(_image["file"],width: MediaQuery.of(context).size.width/1,height: MediaQuery.of(context).size.height/2,filterQuality: FilterQuality.high,),
+          child: _image == null ?SizedBox(): new Image.file(_image["file"],width: MediaQuery.of(context).size.width/1,height: MediaQuery.of(context).size.height/2,filterQuality: FilterQuality.high,),
         ),
 
       ],

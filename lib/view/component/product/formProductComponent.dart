@@ -116,16 +116,14 @@ class _FormProductContributorComponentState extends State<FormProductContributor
     db.delete(ProductTable.TABLE_NAME).then((value) => null);
     if(!product.isAdd){
       final dataEdit = product.dataEditProductContributor;
-      print("####################### ${dataEdit["id_category"]}");
       nameController.text=dataEdit["title"];
       previewController.text=dataEdit["preview"];
       descriptionController.text=dataEdit["content"];
       categoryController.text = dataEdit["category"];
-    }else{
-      if(category.categoryProductModel!=null){
-        if(!category.isLoading){
-          categoryController.text = category.categoryProductModel.result[product.isAdd?0:category.indexSelectedCategoryForm].title;
-        }
+    }
+    else{
+      if(!category.isLoading&&category.categoryProductModel!=null){
+        categoryController.text = category.categoryProductModel.result[product.isAdd?0:category.indexSelectedCategoryForm].title;
       }
     }
   }

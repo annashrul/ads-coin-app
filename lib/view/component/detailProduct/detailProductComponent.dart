@@ -56,9 +56,10 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
         context: context,
         title: "Detail produk",
         action: [
-         if( member.idUser==product.detailProductModel.result.idSeller)FunctionalWidget.iconAppbar(
+         if(!isLoading&& member.idUser==product.detailProductModel.result.idSeller)FunctionalWidget.iconAppbar(
               context: context,
               callback: (){
+                product.setDataEditProductContributor(product.detailProductModel.result.toJson());
                 product.setIsAdd(false);
                 product.setStatusProduct(product.detailProductModel.result.status);
                 Navigator.of(context).pushNamed(RouteString.formProductContributor);
@@ -190,7 +191,7 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           desc: isLoading?"loading ......":FunctionalWidget.toCoin(double.parse(product.detailProductModel.result.price)),
           btnText: isLoading?"loading ......":product.detailProductModel.result.statusBeli==1?"Ambil tulisan":"Beli sekarang",
           callback: ()async{
-            if(product.detailProductModel.result.statusBeli==1){
+            if(!isLoading&&product.detailProductModel.result.statusBeli==1){
               FunctionalWidget.modal(
                 context: context,
                 child: ModalShare(obj: {

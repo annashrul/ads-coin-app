@@ -51,6 +51,8 @@ class Result {
     this.preview,
     this.idSeller,
     this.status,
+    this.idCategory,
+    this.category,
     this.price,
     this.rating,
     this.terjual,
@@ -68,6 +70,8 @@ class Result {
   String preview;
   String idSeller;
   int status;
+  String idCategory;
+  String category;
   String price;
   dynamic rating;
   String terjual;
@@ -85,8 +89,10 @@ class Result {
     preview: json["preview"],
     idSeller: json["id_seller"],
     status: json["status"],
+    idCategory: json["id_category"],
+    category: json["category"],
     price: json["price"],
-    rating: json["rating"],
+    rating: json["rating"].toDouble(),
     terjual: json["terjual"],
     image: json["image"],
     createdAt: DateTime.parse(json["created_at"]),
@@ -103,6 +109,8 @@ class Result {
     "preview": preview,
     "id_seller": idSeller,
     "status": status,
+    "id_category": idCategory,
+    "category": category,
     "price": price,
     "rating": rating,
     "terjual": terjual,
