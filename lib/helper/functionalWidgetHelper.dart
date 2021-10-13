@@ -140,7 +140,7 @@ class FunctionalWidget{
     );
   }
 
-  static nofitDialog({BuildContext context,String msg="",Function callback1,Function callback2,String label1="kembali",String label2="oke"}){
+  static nofitDialog({BuildContext context,String msg="",Function callback1,Function callback2,String label1="batal",String label2="oke"}){
     return dialog(
       context: context,
       child: AlertDialog(
