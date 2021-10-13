@@ -11,6 +11,7 @@ class FieldWidget extends StatelessWidget {
   TextInputAction textInputAction = TextInputAction.done;
   String hintText;
   double width;
+  double height;
   int maxLines;
   bool readOnly;
   bool isIcon;
@@ -23,6 +24,7 @@ class FieldWidget extends StatelessWidget {
     this.textInputAction,
     this.hintText,
     this.width,
+    this.height,
     this.maxLines=1,
     this.readOnly=false,
     this.isIcon=false,
@@ -40,7 +42,7 @@ class FieldWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: ColorConfig.graySecondaryColor
       ),
-      child: TextFormField(
+      child: TextField(
         maxLines: maxLines,
         controller: controller,
         readOnly: readOnly,

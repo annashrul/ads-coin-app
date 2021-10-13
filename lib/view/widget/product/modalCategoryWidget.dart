@@ -10,7 +10,8 @@ import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
 
 class ModalCategoryWidget extends StatefulWidget {
-
+  final void Function() callback;
+  ModalCategoryWidget({this.callback});
   @override
   _ModalCategoryWidgetState createState() => _ModalCategoryWidgetState();
 }
@@ -43,6 +44,7 @@ class _ModalCategoryWidgetState extends State<ModalCategoryWidget> {
                   return InTouchWidget(
                       callback: ()async{
                         category.setIndexSelectedCategoryForm(index);
+                        widget.callback();
                         // await product.autoSaveProduct({
                         //   TableString.idProduct:"${category.categoryProductModel.result[index].id}",
                         // });

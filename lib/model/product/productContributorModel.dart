@@ -87,8 +87,11 @@ class Result {
     this.seller,
     this.sellerFoto,
     this.sellerBio,
+    this.sellerWebsite,
     this.content,
     this.preview,
+    this.idCategory,
+    this.category,
     this.idSeller,
     this.status,
     this.price,
@@ -104,12 +107,15 @@ class Result {
   String seller;
   String sellerFoto;
   String sellerBio;
+  String sellerWebsite;
   String content;
   String preview;
+  String idCategory;
+  String category;
   String idSeller;
   int status;
   String price;
-  dynamic rating;
+  int rating;
   String terjual;
   int statusBeli;
   String image;
@@ -121,8 +127,11 @@ class Result {
     seller: json["seller"],
     sellerFoto: json["seller_foto"],
     sellerBio: json["seller_bio"],
+    sellerWebsite: json["seller_website"],
     content: json["content"],
     preview: json["preview"],
+    idCategory: json["id_category"],
+    category: json["category"],
     idSeller: json["id_seller"],
     status: json["status"],
     price: json["price"],
@@ -139,8 +148,11 @@ class Result {
     "seller": seller,
     "seller_foto": sellerFoto,
     "seller_bio": sellerBio,
+    "seller_website": sellerWebsite,
     "content": content,
     "preview": preview,
+    "id_category": idCategory,
+    "category": category,
     "id_seller": idSeller,
     "status": status,
     "price": price,

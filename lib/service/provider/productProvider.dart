@@ -37,7 +37,7 @@ class ProductProvider with ChangeNotifier{
 
   DatabaseInit db = new DatabaseInit();
   int statusProduct=0;
-  int filterStatusProduct=0;
+  int filterStatusProduct=2;
   String anyProductContributor="",anyProductLibrary="";
   dynamic detailCheckout;
   setAnyProductContributor(BuildContext context,input){
@@ -196,9 +196,8 @@ class ProductProvider with ChangeNotifier{
         if(loading){
           // Navigator.of(context).pop();
           FunctionalWidget.toast(context: context,msg:"Data berhasil disimpan");
-          if(!isAdd){
-            Navigator.of(context).pop();
-          }
+          Navigator.of(context).pushNamed(RouteString.productContributor);
+
         }
         await db.delete(ProductTable.TABLE_NAME);
         await getProductContributor(context: context);

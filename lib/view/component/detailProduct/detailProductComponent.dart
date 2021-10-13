@@ -7,6 +7,7 @@ import 'package:adscoin/service/provider/productProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
+import 'package:adscoin/view/widget/general/cardAction.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +18,8 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_share_me/flutter_share_me.dart';
 
 
 // ignore: must_be_immutable
@@ -49,9 +52,21 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
     bool isLoading=product.isLoadingDetailProduct;
     ScreenScaler scale= ScreenScaler()..init(context);
     return Scaffold(
-      appBar: FunctionalWidget.appBarHelper(
+      appBar: FunctionalWidget.appBarWithFilterHelper(
         context: context,
         title: "Detail produk",
+        action: [
+         if( member.idUser==product.detailProductModel.result.idSeller)FunctionalWidget.iconAppbar(
+              context: context,
+              callback: (){
+                product.setIsAdd(false);
+                product.setStatusProduct(product.detailProductModel.result.status);
+                Navigator.of(context).pushNamed(RouteString.formProductContributor);
+              },
+              image: "Edit",
+              color:general.conditionFilterProductContributor?ColorConfig.bluePrimaryColor:ColorConfig.grayPrimaryColor
+          ),
+        ]
       ),
       body: ListView(
         padding: scale.getPadding(1,2),
@@ -63,7 +78,7 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
               tag: widget.data["heroTag"] + widget.data["id"],
               child:ImageRoundedWidget(
                 img: widget.data["image"],
-                height: scale.getHeight(30),
+                // height: scale.getHeight(30),
                 width: double.infinity,
                 fit: BoxFit.cover,
             )
@@ -73,7 +88,10 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              isLoading?BaseLoading(height: 1, width: 50):Text(product.detailProductModel.result.title,style: Theme.of(context).textTheme.headline1),
+              isLoading?BaseLoading(height: 1, width: 50):Container(
+                width: scale.getWidth(50),
+                child: Text(product.detailProductModel.result.title,style: Theme.of(context).textTheme.headline1),
+              ),
               isLoading?BaseLoading(height: 1.5, width: 4,radius: 100,):InkResponse(
                 onTap: (){
                   favorite.store(
@@ -131,21 +149,39 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           ),
 
           SizedBox(height: scale.getHeight(1)),
-          isLoading?BaseLoading(height: 1, width: 100):Text(product.detailProductModel.result.statusBeli==1?"Konten":"Preview",style: Theme.of(context).textTheme.headline1),
-          SizedBox(height: scale.getHeight(1)),
-          isLoading?BaseLoading(height: 1, width: 100):Html(
-            data: product.detailProductModel.result.statusBeli==1?product.detailProductModel.result.content:product.detailProductModel.result.preview,
-            onLinkTap: (String url){
-              print(url);
-            },
-            style: {
-              "body": Style(
-                  fontSize: FontSize(16.0),
-                  fontWeight: FontWeight.w400,
-                  margin: EdgeInsets.zero,
-              ),
-            },
-          ),
+          if(isLoading)BaseLoading(height: 1, width: 100),
+          if(isLoading)BaseLoading(height: 1, width: 100),
+          if(!isLoading&&member.idUser==product.detailProductModel.result.idSeller)Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Preview",style: Theme.of(context).textTheme.headline1),
+              Text(product.detailProductModel.result.preview,style: Theme.of(context).textTheme.headline2,),
+              SizedBox(height: scale.getHeight(1)),
+              Text("Konten",style: Theme.of(context).textTheme.headline1),
+              Text(product.detailProductModel.result.content,style: Theme.of(context).textTheme.headline2,),
+            ],
+          )
+          else if(!isLoading&&member.idUser!=product.detailProductModel.result.idSeller) Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(product.detailProductModel.result.statusBeli==1?"Konten":"Preview",style: Theme.of(context).textTheme.headline1),
+              Text(product.detailProductModel.result.statusBeli==1?product.detailProductModel.result.content:product.detailProductModel.result.preview,style: Theme.of(context).textTheme.headline2,)
+            ],
+          )
+
+          // Html(
+          //   data: product.detailProductModel.result.statusBeli==1?product.detailProductModel.result.content:product.detailProductModel.result.preview,
+          //   onLinkTap: (String url){
+          //     print(url);
+          //   },
+          //   style: {
+          //     "body": Style(
+          //         fontSize: FontSize(16.0),
+          //         fontWeight: FontWeight.w400,
+          //         margin: EdgeInsets.zero,
+          //     ),
+          //   },
+          // ),
         ],
       ),
       bottomNavigationBar: FunctionalWidget.bottomBar(
@@ -155,7 +191,13 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           btnText: isLoading?"loading ......":product.detailProductModel.result.statusBeli==1?"Ambil tulisan":"Beli sekarang",
           callback: ()async{
             if(product.detailProductModel.result.statusBeli==1){
-              await Share.share(removeAllHtmlTags(product.detailProductModel.result.content));
+              FunctionalWidget.modal(
+                context: context,
+                child: ModalShare(obj: {
+                  "link":"https://adscoin.id/",
+                  "msg": product.detailProductModel.result.content
+                })
+              );
             }else{
               general.setConditionCheckoutAndDetail(true);
               Navigator.of(context).pushNamed(RouteString.checkout);
@@ -172,5 +214,65 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
         caseSensitive: true
     );
     return htmlText.replaceAll(exp, '');
+  }
+}
+
+
+class ModalShare extends StatelessWidget {
+  final dynamic obj;
+  ModalShare({this.obj});
+  @override
+  Widget build(BuildContext context) {
+    final FlutterShareMe flutterShareMe = FlutterShareMe();
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CardAction(
+          title: "Facebook",
+          callback: ()async{
+            final res = await flutterShareMe.shareToFacebook(url:obj["link"], msg:obj["msg"]);
+
+          },
+          img: "",
+          imgNetwork: "https://1.bp.blogspot.com/-Gk7PJfZlTKM/YI0265VKDVI/AAAAAAAAE20/tSbccfFLIPAGclfx2il52vPUdwR8TJJsQCLcBGAsYHQ/s1600/Logo%2BFacebook%2BFormat%2BPNG.png",
+        ),
+        CardAction(
+          title: "WhatsApp",
+          callback: ()async{
+            final res =  await flutterShareMe.shareToWhatsApp(msg: obj["msg"]);
+            if(res=="false"){
+              FunctionalWidget.nofitDialog(context: context,msg: "aplikasi tidak ditemukan",callback2: ()=>Navigator.of(context).pop());
+            }
+            print("RESPONSE SHARE ${res.runtimeType}");
+          },
+          img: "",
+          imgNetwork: "https://www.freepnglogos.com/uploads/whatsapp-logo-light-green-png-0.png",
+        ),
+
+        CardAction(
+          title: "Twitter",
+          callback: ()async{
+            final res= await flutterShareMe.shareToTwitter(url: obj["url"], msg: obj["msg"]);
+            if(res=="false"){
+              FunctionalWidget.nofitDialog(context: context,msg: "aplikasi tidak ditemukan",callback2: ()=>Navigator.of(context).pop());
+            }
+          },
+          img: "",
+          imgNetwork: "https://4.bp.blogspot.com/-WYBZhMb9BMw/V-s6c2P9uXI/AAAAAAAABN8/dRa9fkfvz6A-nf3i2QAZIm8X87O5ja9GQCEw/s1600/logo-twitter-t-bulat-348x348.png",
+        ),
+
+        CardAction(
+          title: "Clipboard",
+          callback: ()async{
+            FunctionalWidget.copy(context: context,text: obj["msg"]);
+            FunctionalWidget.nofitDialog(context: context,msg: "konten berhasil disalin",callback2: ()=>Navigator.of(context).pop());
+
+          },
+          img: "",
+          imgNetwork: "https://www.freeiconspng.com/uploads/copy-icon-23.png",
+        ),
+      ],
+    );
   }
 }

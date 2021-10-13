@@ -29,7 +29,7 @@ class FormProductContributorComponent extends StatefulWidget {
   _FormProductContributorComponentState createState() => _FormProductContributorComponentState();
 }
 
-class _FormProductContributorComponentState extends State<FormProductContributorComponent> with WidgetsBindingObserver  {
+class _FormProductContributorComponentState extends State<FormProductContributorComponent>{
   TextEditingController nameController = new TextEditingController();
   TextEditingController descriptionController = new TextEditingController();
   TextEditingController categoryController = new TextEditingController();
@@ -39,7 +39,6 @@ class _FormProductContributorComponentState extends State<FormProductContributor
   String result = "-";
   File _image;
   String base64Image="-";
-  MoneyMaskedTextControllerQ priceController = new MoneyMaskedTextControllerQ();
   void setTime(){
     final product = Provider.of<ProductProvider>(context, listen: false);
     if(product.timeUpFlag){
@@ -50,21 +49,36 @@ class _FormProductContributorComponentState extends State<FormProductContributor
   }
   saveData(BuildContext context){
     final product = Provider.of<ProductProvider>(context, listen: false);
-    FunctionalWidget.nofitDialog(
-      context: context,
-      msg: "simpan data sebagai draft ?",
-      callback1: (){
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
-      },
-      callback2: ()async{
-        await product.storeAutoSaveProduct(context: context,status: "0");
-        Future.delayed(Duration(seconds: 1)).whenComplete((){
+    if(product.isAdd){
+      FunctionalWidget.nofitDialog(
+        context: context,
+        msg: "simpan data sebagai draft ?",
+        callback1: (){
           Navigator.of(context).pop();
           Navigator.of(context).pop();
-        });
-      },
-    );
+        },
+        callback2: ()async{
+          await product.storeAutoSaveProduct(context: context,status: "0");
+          Future.delayed(Duration(seconds: 1)).whenComplete((){
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          });
+        },
+      );
+    }else{
+      FunctionalWidget.nofitDialog(
+        context: context,
+        msg: "apakah akan kembali? perubahan anda mungkin akan hilang",
+        callback1: (){
+          Navigator.of(context).pop();
+        },
+        callback2: ()async{
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        },
+      );
+    }
+
   }
   checkForm(){
     if(nameController.text!=""&&previewController.text!=""&&descriptionController.text!=""){
@@ -96,64 +110,23 @@ class _FormProductContributorComponentState extends State<FormProductContributor
     final product = Provider.of<ProductProvider>(context, listen: false);
     final category = Provider.of<CategoryProvider>(context, listen: false);
     category.getCategoryProduct(context: context);
-    priceController = MoneyMaskedTextControllerQ(decimalSeparator: '', thousandSeparator: ',');
-    WidgetsBinding.instance.addObserver(this);
     product.timerUpdate();
     product.timeUpFlag = false;
     product.timeCounter=1;
     db.delete(ProductTable.TABLE_NAME).then((value) => null);
     if(!product.isAdd){
       final dataEdit = product.dataEditProductContributor;
+      print("####################### ${dataEdit["id_category"]}");
       nameController.text=dataEdit["title"];
       previewController.text=dataEdit["preview"];
       descriptionController.text=dataEdit["content"];
-      // Future.delayed(Duration(seconds: 3)).then((value){
-      //   contentController.setText("${dataEdit["content"]}");
-      //   print("############################ DATA EDIT ${dataEdit["content"]}");
-      // }).whenComplete(() =>  print("############################ DATA EDIT COMPLETED"));
-    }
-    // Future.delayed(Duration(seconds: 3)).then((value){
-    //  contentController.getText().then((value) => print("######################### VALUE $value"));
-    //  print("######################### VALUE ${nameController.text}");
-    //  print("######################### VALUE ${previewController.text}");
-    //  print("######################### VALUE ${descriptionController.text}");
-    //
-    // }).whenComplete(() =>  print("############################ DATA EDIT COMPLETED"));
-  }
-
-  @mustCallSuper
-  @protected
-  void dispose() {
-    // TODO: implement dispose
-    WidgetsBinding.instance.removeObserver(this);
-    print('######################################  DISPOSE ################################');
-    super.dispose();
-  }
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    int resumed=0;
-    super.didChangeAppLifecycleState(state);
-    switch (state) {
-      case AppLifecycleState.inactive:
-        print("######################################  AppLifecycleState.inactive ################################}");
-        // store();
-        break;
-      case AppLifecycleState.resumed:
-        print("######################################  AppLifecycleState.resumed ################################}");
-
-        // store();
-        break;
-      case AppLifecycleState.paused:
-        print("######################################  AppLifecycleState.paused ################################}");
-
-        // store();
-        break;
-      case AppLifecycleState.detached:
-        print("######################################  AppLifecycleState.detached ################################}");
-
-        // store();
-
-        break;
+      categoryController.text = dataEdit["category"];
+    }else{
+      if(category.categoryProductModel!=null){
+        if(!category.isLoading){
+          categoryController.text = category.categoryProductModel.result[product.isAdd?0:category.indexSelectedCategoryForm].title;
+        }
+      }
     }
   }
 
@@ -167,18 +140,13 @@ class _FormProductContributorComponentState extends State<FormProductContributor
     final check = checkForm();
     int indexCategory=category.indexSelectedCategoryForm;
     int statusProduct=product.statusProduct;
-    if(category.categoryProductModel!=null){
-        if(!category.isLoading){
-          categoryController.text = category.categoryProductModel.result[indexCategory].title;
-        }
-      }
+
+
     if(product.timeUpFlag){
       if(nameController.text!=""||previewController.text!=""||descriptionController.text!="") autoSaveProduct(base64Image);
     }
     if(statusProduct==0)statusController.text="Draft";
     else statusController.text="Publish";
-
-
 
     return Listener(
       onPointerDown: (_)=>setTime(), // best place to reset timer imo
@@ -201,6 +169,7 @@ class _FormProductContributorComponentState extends State<FormProductContributor
             primary: true,
             padding: scale.getPadding(1,2.5),
             children: [
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -298,7 +267,11 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                 onTap: (){
                   FunctionalWidget.modal(
                       context: context,
-                      child: ModalCategoryWidget()
+                      child: ModalCategoryWidget(
+                        callback: (){
+                          categoryController.text = category.categoryProductModel.result[category.indexSelectedCategoryForm].title;
+                        },
+                      )
                   );
                 },
 
@@ -332,8 +305,8 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                 controller: previewController,
                 maxLines: 5,
                 maxLength: 200,
-                textInputType: TextInputType.text,
-                textInputAction: TextInputAction.done,
+                textInputType: TextInputType.multiline,
+                textInputAction: TextInputAction.newline,
                 onChange: (e){
                   setTime();
                   if(this.mounted) setState((){});
@@ -346,59 +319,17 @@ class _FormProductContributorComponentState extends State<FormProductContributor
                   Text("Konten",style: Theme.of(context).textTheme.headline2),
                 ],
               ),
+
               FieldWidget(
                 maxLines: 20,
                 controller: descriptionController,
-                textInputType: TextInputType.text,
-                textInputAction: TextInputAction.done,
+                textInputType: TextInputType.multiline,
+                textInputAction: TextInputAction.newline,
                 onChange: (e){
                   setTime();
                   if(this.mounted) setState((){});
                 },
               ),
-
-              // Container(
-              //   height: scale.getHeight(51),
-              //   child: HtmlEditor(
-              //       options: HtmlEditorOptions(
-              //         adjustHeightForKeyboard: false,
-              //         autoAdjustHeight: false
-              //       ),
-              //       hint: "tulis konten disini ..",
-              //       controller: contentController,
-              //       callbacks: Callbacks(
-              //         onChange: (String changed)async {
-              //           setState(() {
-              //             descriptionController.text = changed;
-              //           });
-              //         },
-              //         onEnter: () {
-              //
-              //         },
-              //         onFocus: () {
-              //         },
-              //         onBlur: () {
-              //         },
-              //         onBlurCodeview: () {
-              //         },
-              //         onKeyDown: (keyCode) {
-              //         },
-              //         onKeyUp: (keyCode) {
-              //         },
-              //         onPaste: () {
-              //           print("################################## ACTION onPaste");
-              //         },
-              //       ),
-              //       toolbar: [
-              //         Style(),
-              //         Paragraph(),
-              //         FontSetting(),
-              //         Font(buttons: [FontButtons.bold, FontButtons.underline, FontButtons.italic,FontButtons.clear])
-              //       ]
-              //
-              //   ),
-              // )
-
             ],
           ),
           bottomNavigationBar: Container(

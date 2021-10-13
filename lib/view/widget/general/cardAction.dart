@@ -12,7 +12,8 @@ class CardAction extends StatelessWidget {
   Color colorIcon;
   String img;
   Widget actionIcon;
-  CardAction({this.icon,this.title,this.colorIcon,this.callback,this.img,this.actionIcon});
+  String imgNetwork;
+  CardAction({this.icon,this.title,this.colorIcon,this.callback,this.img,this.actionIcon,this.imgNetwork});
   @override
   Widget build(BuildContext context) {
     ScreenScaler scale= ScreenScaler()..init(context);
@@ -26,7 +27,11 @@ class CardAction extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  icon==null?Image.asset(GeneralString.imgLocalPng+"$img.png",height: scale.getHeight(2)):Icon(icon,size: scale.getTextSize(10),color:colorIcon==null?ColorConfig.graySecondaryColor:colorIcon),
+                  icon==null?imgNetwork==null?Image.asset(GeneralString.imgLocalPng+"$img.png",height: scale.getHeight(2)):CircleAvatar(
+                    backgroundImage: NetworkImage(this.imgNetwork),
+                    radius: 20,
+                    backgroundColor: Colors.transparent,
+                  ):Icon(icon,size: scale.getTextSize(10),color:colorIcon==null?ColorConfig.graySecondaryColor:colorIcon),
                   SizedBox(width: scale.getWidth(3)),
                   Text(title,style: Theme.of(context).textTheme.headline2),
                 ],
