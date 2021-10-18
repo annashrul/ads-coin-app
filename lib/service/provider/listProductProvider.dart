@@ -19,7 +19,6 @@ class ListProductProvider with ChangeNotifier{
     notifyListeners();
   }
   setAnySearchProduct({BuildContext context,input}){
-    isLoadingProductSearch=true;
     anySearchProduct=input;
     getSearchProduct(context: context);
     notifyListeners();

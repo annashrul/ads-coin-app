@@ -141,7 +141,6 @@ class UserProvider with ChangeNotifier{
 
 
   setAnySearchMember(context,input){
-    isLoadingSearchMember=true;
     anySearchMember=input;
     getSearchMember(context: context);
     notifyListeners();

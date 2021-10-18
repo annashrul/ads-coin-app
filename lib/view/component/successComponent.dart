@@ -52,7 +52,8 @@ class _SuccessComponentState extends State<SuccessComponent> {
           ),
         ),
         onWillPop: (){
-          FunctionalWidget.toast(context: context,msg: "Gunakan tombol kembali yang ada di aplikasi ini");
+          FunctionalWidget.backToHome(context);
+          // FunctionalWidget.toast(context: context,msg: "Gunakan tombol kembali yang ada di aplikasi ini");
           return;
 
         }

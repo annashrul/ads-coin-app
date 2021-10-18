@@ -58,7 +58,10 @@ class _CheckoutComponentState extends State<CheckoutComponent> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(product.detailProductModel.result.title,style: Theme.of(context).textTheme.headline2,),
+                          Container(
+                            width:scale.getWidth(60),
+                            child: Text(product.detailProductModel.result.title,style: Theme.of(context).textTheme.headline2,),
+                          ),
                           FunctionalWidget.spaceText(
                               context: context,
                               title: "Rating",

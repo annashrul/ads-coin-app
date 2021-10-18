@@ -52,7 +52,6 @@ class ProductProvider with ChangeNotifier{
     getLibrary(context: context);
     notifyListeners();
   }
-
   dynamic dataEditProductContributor;
   setStatusProduct(input){
     statusProduct=input;
@@ -134,7 +133,8 @@ class ProductProvider with ChangeNotifier{
   }
 
   Future getDetailProduct({BuildContext context,String id=""})async{
-    if(detailProductModel==null) isLoadingDetailProduct=true;
+    isLoadingDetailProduct=true;
+    // if(detailProductModel==null) isLoadingDetailProduct=true;
     final res = await HttpService().get(url: "product/get/$id",context: context);
     DetailProductModel result = DetailProductModel.fromJson(res);
     detailProductModel = result;

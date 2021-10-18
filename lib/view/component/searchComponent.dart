@@ -157,39 +157,20 @@ class _SearchComponentState extends State<SearchComponent> {
 
                 ],
               ),
-              // InkResponse(
-              //   onTap: ()async{
-              //     FunctionalWidget.modal(
-              //         context: context,
-              //         child: ModalSearchWidget(
-              //           callback: (e){
-              //             print(e);
-              //             setState(() {
-              //               searchBy = e;
-              //               anyFocus.requestFocus();
-              //             });
-              //           },
-              //           any: searchBy,
-              //         )
-              //     );
-              //   },
-              //   child: Icon(
-              //     FlutterIcons.filter_ant,
-              //     size: scale.getTextSize(15),
-              //   ),
-              // )
             ],
           ),
         ),
       ),
-      body: Padding(
-        padding: scale.getPadding(1,0),
-        child: Column(
-          children: [
-            Expanded(
-                child:searchBy=="produk"?productSearch(context):memberSearch(context)
-            )
-          ],
+      body: Scrollbar(
+        child: Padding(
+          padding: scale.getPadding(1,0),
+          child: Column(
+            children: [
+              Expanded(
+                  child:searchBy=="produk"?productSearch(context):memberSearch(context)
+              )
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: product.isLoadMoreProductSearch||user.isLoadMoreSearchMember?CupertinoActivityIndicator():SizedBox(),

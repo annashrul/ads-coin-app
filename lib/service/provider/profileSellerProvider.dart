@@ -10,7 +10,8 @@ class ProfileSellerProvider with ChangeNotifier{
   bool isLoadMoreProduct=false;
   int perPageProduct=10;
   Future getProfile({BuildContext context,String id})async{
-    if(profilePerMemberModel==null) isLoadingProfile=true;
+    isLoadingProfile=true;
+    // if(profilePerMemberModel==null) isLoadingProfile=true;
     final res = await HttpService().get(url: "member/get/$id",context: context);
     isLoadingProfile=false;
     ProfilePerMemberModel result=ProfilePerMemberModel.fromJson(res);
@@ -18,7 +19,10 @@ class ProfileSellerProvider with ChangeNotifier{
     notifyListeners();
   }
   Future getProduct({BuildContext context,String id})async{
-    if(profilePerMemberModel==null) isLoadingProduct=true;
+    // if(profilePerMemberModel==null) isLoadingProduct=true;
+    if(!isLoadMoreProduct){
+      isLoadingProduct=true;
+    }
     final res = await HttpService().get(url: "product?page=1&id_seller=$id&perpage=$perPageProduct",context: context);
     if(res["result"].length>0){
       ProductSellerModel result=ProductSellerModel.fromJson(res);
