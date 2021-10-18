@@ -63,6 +63,15 @@ class FintechProvider with ChangeNotifier{
     FunctionalWidget.nofitDialog(context: context,msg: "upload bukti transfer berhasil",callback2: ()=>FunctionalWidget.backToHome(context),label2: "Beranda");
     notifyListeners();
   }
+  Future getPayment({BuildContext context,dynamic invoiceCode})async{
+    FunctionalWidget.loadingDialog(context);
+    final res = await HttpService().get(url:"transaction/get_payment/${FunctionalWidget.btoa(invoiceCode)}",context: context);
+    Navigator.of(context).pop();
+    DetailTopUpModel result = DetailTopUpModel.fromJson(res);
+    detailTopUpModel = result;
+    Navigator.of(context).pushNamed(RouteString.detailTopUp);
+    notifyListeners();
+  }
 
 
 

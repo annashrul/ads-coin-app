@@ -50,6 +50,8 @@ class Result {
     this.tfMin,
     this.chargeWd,
     this.chargeTf,
+    this.trxDp,
+    this.trxWd,
     this.konversiCoin,
     this.hargaCopy,
     this.komisiKontributor,
@@ -67,6 +69,8 @@ class Result {
   String tfMin;
   String chargeWd;
   String chargeTf;
+  String trxDp;
+  String trxWd;
   String konversiCoin;
   String hargaCopy;
   String komisiKontributor;
@@ -84,6 +88,8 @@ class Result {
     tfMin: json["tf_min"],
     chargeWd: json["charge_wd"],
     chargeTf: json["charge_tf"],
+    trxDp: json["trx_dp"],
+    trxWd: json["trx_wd"],
     konversiCoin: json["konversi_coin"],
     hargaCopy: json["harga_copy"],
     komisiKontributor: json["komisi_kontributor"],
@@ -102,6 +108,8 @@ class Result {
     "tf_min": tfMin,
     "charge_wd": chargeWd,
     "charge_tf": chargeTf,
+    "trx_dp": trxDp,
+    "trx_wd": trxWd,
     "konversi_coin": konversiCoin,
     "harga_copy": hargaCopy,
     "komisi_kontributor": komisiKontributor,

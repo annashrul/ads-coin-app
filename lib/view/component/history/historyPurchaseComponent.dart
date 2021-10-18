@@ -129,7 +129,10 @@ class _HistoryPurchaseComponentState extends State<HistoryPurchaseComponent> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(val.title,style: Theme.of(context).textTheme.headline2,),
+                                  Container(
+                                    width:scale.getWidth(40),
+                                    child: Text(val.title,style: Theme.of(context).textTheme.headline2,),
+                                  ),
                                   FunctionalWidget.spaceText(
                                       context: context,
                                       title: "Seller",

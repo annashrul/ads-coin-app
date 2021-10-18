@@ -192,13 +192,14 @@ class _DetailProductComponentState extends State<DetailProductComponent> {
           btnText: isLoading?"loading ......":product.detailProductModel.result.statusBeli==1?"Ambil tulisan":"Beli sekarang",
           callback: ()async{
             if(!isLoading&&product.detailProductModel.result.statusBeli==1){
-              FunctionalWidget.modal(
-                context: context,
-                child: ModalShare(obj: {
-                  "link":"https://adscoin.id/",
-                  "msg": product.detailProductModel.result.content
-                })
-              );
+              await Share.share(removeAllHtmlTags(product.detailProductModel.result.content));
+              // FunctionalWidget.modal(
+              //   context: context,
+              //   child: ModalShare(obj: {
+              //     "link":"https://adscoin.id/",
+              //     "msg": product.detailProductModel.result.content
+              //   })
+              // );
             }else{
               general.setConditionCheckoutAndDetail(true);
               Navigator.of(context).pushNamed(RouteString.checkout);

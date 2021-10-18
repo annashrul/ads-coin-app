@@ -32,6 +32,7 @@ class _TopUpComponentState extends State<TopUpComponent> {
     final config = Provider.of<SiteProvider>(context);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: FunctionalWidget.appBarHelper(context: context,title: "Top up"),
       body: FormFintechWidget(
         callback: (amount){

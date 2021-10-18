@@ -1,6 +1,9 @@
 import 'package:adscoin/config/color_config.dart';
+import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/formatCurrencyHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/httpService.dart';
+import 'package:adscoin/service/provider/fintechProvider.dart';
 import 'package:adscoin/service/provider/siteProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
@@ -53,7 +56,13 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
         }
       }
     }
+    Widget trxPending;
 
+    if(widget.type){
+      if(config.configModel.result[0].trxDp!="-"){
+        return topUpPending();
+      }
+    }
     return ListView(
       padding: scale.getPadding(1,2.5),
       children: [
@@ -166,4 +175,34 @@ class _FormFintechWidgetState extends State<FormFintechWidget> {
       ],
     );
   }
+
+
+  Widget topUpPending(){
+    ScreenScaler scale = ScreenScaler()..init(context);
+    final config = Provider.of<SiteProvider>(context);
+    final fintech = Provider.of<FintechProvider>(context);
+
+    return Center(
+      child: ListView(
+        padding: scale.getPadding(1,2),
+        shrinkWrap: true,
+        children: [
+          Image.asset(GeneralString.imgLocalPng+"pending.png"),
+          Text("Masih ada transaksi aktif, silahkan selesaikan transaksi sebelumnya",style: Theme.of(context).textTheme.headline1,textAlign: TextAlign.center,),
+          SizedBox(height: scale.getHeight(2),),
+          BackroundButtonWidget(
+            backgroundColor:ColorConfig.redColor,
+            color: ColorConfig.graySecondaryColor,
+            title: "Lihat detail transaksi",
+            callback: ()async{
+              // String inv = FunctionalWidget.btoa(config.configModel.result[0].trxDp);
+              // print(inv);
+              await fintech.getPayment(context: context,invoiceCode: config.configModel.result[0].trxDp);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
 }

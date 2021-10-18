@@ -59,19 +59,19 @@ class Result {
     this.instruction,
   });
 
-  String invoiceNo;
-  String paymentMethod;
-  String paymentName;
-  String promo;
-  String amount;
-  String amountRupiah;
-  String admin;
-  String totalPay;
-  String kodeUnik;
-  String payCode;
-  String accName;
+  dynamic invoiceNo;
+  dynamic paymentMethod;
+  dynamic paymentName;
+  dynamic promo;
+  dynamic amount;
+  dynamic amountRupiah;
+  dynamic admin;
+  dynamic totalPay;
+  dynamic kodeUnik;
+  dynamic payCode;
+  dynamic accName;
   DateTime expiredDate;
-  int paymentType;
+  dynamic paymentType;
   String expiredTime;
   List<Instruction> instruction;
 

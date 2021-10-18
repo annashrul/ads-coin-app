@@ -96,7 +96,10 @@ class _ProfilePerMemberState extends State<ProfilePerMember> {
                         ),
                         Text(":",style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).textTheme.subtitle2.color)),
                         SizedBox(width: scale.getWidth(1)),
-                        seller.isLoadingProfile?BaseLoading(height: 1, width:20):Text( seller.profilePerMemberModel.result.fullname,style: Theme.of(context).textTheme.subtitle1)
+                        seller.isLoadingProfile?BaseLoading(height: 1, width:20):Container(
+                          width: scale.getWidth(30),
+                          child: Text( seller.profilePerMemberModel.result.fullname,style: Theme.of(context).textTheme.subtitle1,maxLines: 1),
+                        )
                       ],
                     ),
                     Row(
@@ -141,7 +144,10 @@ class _ProfilePerMemberState extends State<ProfilePerMember> {
                               _launchURL(seller.profilePerMemberModel.result.website);
                             }
                           },
-                          child: Text(seller.profilePerMemberModel.result.website==null?"-":seller.profilePerMemberModel.result.website,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.bluePrimaryColor)),
+                          child:Container(
+                            width: scale.getWidth(35),
+                            child:  Text(seller.profilePerMemberModel.result.website==null?"-":seller.profilePerMemberModel.result.website,style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.bluePrimaryColor),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                          ),
                         )
                       ],
                     ),
