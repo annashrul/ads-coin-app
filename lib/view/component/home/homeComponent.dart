@@ -262,9 +262,15 @@ class _HomeComponentState extends State<HomeComponent> {
                               ),
                               title: Text(val.fullname,style: Theme.of(context).textTheme.headline2),
                               subtitle: Text(val.bio!=null?val.bio:"-",style: Theme.of(context).textTheme.subtitle1,maxLines: 1,overflow: TextOverflow.ellipsis),
-                              trailing: Container(
-                                width: scale.getWidth(10),
-                                child: FunctionalWidget.rating(context: context,rate:double.parse(val.rating.toString())),
+                              trailing: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: scale.getWidth(10),
+                                    child: FunctionalWidget.rating(context: context,rate:double.parse(val.rating.toString())),
+                                  ),
+                                  Text(val.copyTerjual+" copy",style: Theme.of(context).textTheme.subtitle1.copyWith(color: ColorConfig.bluePrimaryColor),maxLines: 1,overflow: TextOverflow.ellipsis),
+                                ],
                               ),
                             )
                         );
