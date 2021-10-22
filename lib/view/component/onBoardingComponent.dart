@@ -172,7 +172,7 @@ class _OnBoardingComponentState extends State<OnBoardingComponent> {
                                 top: 9.381384558082573e-15,
                                 right: null,
                                 bottom: null,
-                                width: 300.0,
+                                width: 350.0,
                                 // height: 26.0,
                                 child: TransformHelper.rotate(
                                     a: 1.00,
@@ -183,13 +183,41 @@ class _OnBoardingComponentState extends State<OnBoardingComponent> {
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text("Selamat datang di",style: Theme.of(context).textTheme.headline1),
-                                        Text("Ads coin",style: Theme.of(context).textTheme.headline1),
+                                        Text("Selamat datang di",style: Theme.of(context).textTheme.headline1.copyWith(fontSize: 24)),
+                                        Text("Ads coin",style: Theme.of(context).textTheme.headline1.copyWith(fontSize: 24)),
                                         SizedBox(height: scale.getHeight(1)),
-                                        Text("Marketplace pertama & terbaik untuk belanja tulisan iklan. Kamu bisa pilih tulisan iklan yang paling menarik untuk meningkatkan enjualan produk dalam bisnis kamu.",style: Theme.of(context).textTheme.subtitle1),
+                                        Text("Marketplace pertama & terbaik untuk belanja tulisan iklan. Kamu bisa pilih tulisan iklan yang paling menarik untuk meningkatkan penjualan produk dalam bisnis kamu.",style: Theme.of(context).textTheme.headline1.copyWith(fontWeight: FontWeight.normal)),
                                         SizedBox(height: scale.getHeight(1)),
-                                        Text("Urusan tulisan iklan, serahkan pada kami.",style: Theme.of(context).textTheme.subtitle1),
-                                        Text("Kamu tinggal posting, lalu terima orderan.",style: Theme.of(context).textTheme.subtitle1),
+                                        Text("Urusan tulisan iklan, serahkan pada kami.",style: Theme.of(context).textTheme.headline1.copyWith(fontWeight: FontWeight.normal)),
+                                        Text("Kamu tinggal posting, lalu terima orderan.",style: Theme.of(context).textTheme.headline1.copyWith(fontWeight: FontWeight.normal)),
+                                        SizedBox(height: scale.getHeight(3),),
+                                        InkWell(
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Container(
+                                              margin: scale.getMarginLTRB(0,0,0,10),
+                                              width: scale.getWidth(30),
+                                              padding: scale.getPadding(1,4),
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  color: Colors.red
+                                                // gradient: LinearGradient(
+                                                //     begin: Alignment.topCenter,
+                                                //     end: Alignment.bottomCenter,
+                                                //     colors: [Colors.lightBlue, Colors.white]
+                                                // )
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text("LOGIN",style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white),textAlign: TextAlign.center,),
+                                                  Icon(Icons.arrow_right_alt_rounded,color: Colors.white,)
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          onTap: ()=>Navigator.pushNamed(context,RouteString.signIn),
+                                        )
                                       ],
                                     )
                                 ),
@@ -203,24 +231,7 @@ class _OnBoardingComponentState extends State<OnBoardingComponent> {
             ),
           )
       ),
-      floatingActionButton: InkWell(
-        child: Container(
-          margin: scale.getMarginLTRB(0,0,0,10),
-          width: scale.getWidth(30),
-          padding: scale.getPadding(1,4),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.lightBlue, Colors.white]
-              )
-          ),
-          child: Text("LOGIN",style: Theme.of(context).textTheme.headline1,textAlign: TextAlign.center,),
-        ),
-        onTap: ()=>Navigator.pushNamed(context,RouteString.signIn),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
     );
   }
 }
