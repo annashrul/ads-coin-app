@@ -93,8 +93,8 @@ class _CardSaldoWidgetState extends State<CardSaldoWidget> {
                         Navigator.of(context).pushNamed(RouteString.topUp);
                       }
                   ),
-                  if(!user.isLoadingDetailMember&&user.detailMemberModel.result.idType==1)SizedBox(width: scale.getWidth(3)),
-                  if(!user.isLoadingDetailMember&&user.detailMemberModel.result.idType==1)cardWallet(
+                  SizedBox(width: scale.getWidth(3)),
+                  cardWallet(
                       context: context,
                       title: "Penarikan",
                       image: "topup",

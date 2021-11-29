@@ -1,6 +1,7 @@
 import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
+import 'package:adscoin/service/provider/siteProvider.dart';
 import 'package:adscoin/service/provider/userProvider.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
 import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
@@ -36,7 +37,8 @@ class _ReferralComponentState extends State<ReferralComponent> {
     final referral = Provider.of<UserProvider>(context,listen: false);
     referral.getListReferral(context: context);
     controller = new ScrollController()..addListener(scrollListener);
-
+    final config = Provider.of<SiteProvider>(context,listen: false);
+    config.getConfig(context: context);
   }
   @override
   void dispose() {
@@ -47,6 +49,8 @@ class _ReferralComponentState extends State<ReferralComponent> {
   Widget build(BuildContext context) {
     final member = Provider.of<UserProvider>(context);
     ScreenScaler scale = ScreenScaler()..init(context);
+    final config = Provider.of<SiteProvider>(context);
+
     return Scaffold(
       appBar: FunctionalWidget.appBarHelper(context: context,title: "Kode referral"),
       body: SingleChildScrollView(
@@ -64,7 +68,7 @@ class _ReferralComponentState extends State<ReferralComponent> {
             ),
             SizedBox(height: scale.getHeight(1)),
             Center(
-              child: Text("Dapatkan cashback senilai Rp 25.000 untuk setiap teman yang mendaftar dan bertransaksi di AdsCoin menggunakan kode referal kamu.",style: Theme.of(context).textTheme.headline2,textAlign: TextAlign.center,),
+              child: Text("Dapatkan cashback senilai ${config.configModel.result[0].komisiReferral}% untuk setiap teman yang mendaftar dan bertransaksi di AdsCoin menggunakan kode referal kamu.",style: Theme.of(context).textTheme.headline2,textAlign: TextAlign.center,),
             ),
             SizedBox(height: scale.getHeight(3)),
             Text("Bagikan kode referral kamu",style: Theme.of(context).textTheme.subtitle1),
