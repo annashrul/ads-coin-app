@@ -2,24 +2,16 @@ import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/formatCurrencyHelper.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
-import 'package:adscoin/model/fintech/topUp/detailTopUpModel.dart';
 import 'package:adscoin/service/provider/fintechProvider.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
-import 'package:adscoin/view/widget/general/cardTitleAction.dart';
-import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:adscoin/view/widget/general/uploadWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/style.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:getwidget/components/accordion/gf_accordion.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../successComponent.dart';
 
 class DetailTopUpComponent extends StatefulWidget {
   @override
@@ -158,18 +150,19 @@ class _DetailTopUpComponentState extends State<DetailTopUpComponent> with Ticker
                                 itemCount: resParent.steps.length,
                                 itemBuilder: (c,i){
                                   final resChild=resParent.steps[i];
-                                  return Html(
-                                    data: resChild,
-                                    style: {
-                                      "body": Style(
-                                        fontSize: FontSize(14.0),
-                                        fontWeight: FontWeight.w400,
-                                        margin: EdgeInsets.zero,
-                                      ),
-                                    },
-                                    // defaultTextStyle: config.MyFont.style(context: context,color:Theme.of(context).textTheme.caption.color,style: Theme.of(context).textTheme.subtitle1,fontWeight: FontWeight.normal),
-                                    onLinkTap: (String url){},
-                                  );
+                                  return Text(resChild,style: Theme.of(context).textTheme.subtitle1);
+                                  // return Html(
+                                  //   data: resChild,
+                                  //   style: {
+                                  //     "body": Style(
+                                  //       fontSize: FontSize(14.0),
+                                  //       fontWeight: FontWeight.w400,
+                                  //       margin: EdgeInsets.zero,
+                                  //     ),
+                                  //   },
+                                  //   // defaultTextStyle: config.MyFont.style(context: context,color:Theme.of(context).textTheme.caption.color,style: Theme.of(context).textTheme.subtitle1,fontWeight: FontWeight.normal),
+                                  //   onLinkTap: (String url){},
+                                  // );
                                 },
                                 separatorBuilder: (c,i){return Divider(color:Theme.of(context).textTheme.caption.color);},
                               )

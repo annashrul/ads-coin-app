@@ -92,7 +92,7 @@ class _ProductComponentState extends State<ProductComponent> with SingleTickerPr
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  category.isLoading?BaseLoading(height: 1, width: 10):category.categoryProductModel==null?Container():ImageRoundedWidget(img:category.categoryProductModel.result[i].icon,height: scale.getHeight(1),),
+                  category.isLoading?BaseLoading(height: 1, width: 10):category.categoryProductModel==null?Container():ImageRoundedWidget(img:category.categoryProductModel.result[i].icon,height: scale.getHeight(1),width:scale.getHeight(2),),
                   if(!category.isLoading&&category.categoryProductModel!=null)SizedBox(width: scale.getWidth(1)),
                   if(!category.isLoading&&category.categoryProductModel!=null)Text(category.categoryProductModel.result[i].title)
                 ],

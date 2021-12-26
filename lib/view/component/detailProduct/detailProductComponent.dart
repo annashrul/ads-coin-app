@@ -12,13 +12,10 @@ import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
 import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/style.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 
 

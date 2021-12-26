@@ -1,4 +1,5 @@
 import 'package:adscoin/config/color_config.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -18,6 +19,8 @@ class FieldWidget extends StatelessWidget {
   Function onTap;
   Function(String e) onChange;
   int maxLength;
+  bool isPhone;
+  final void Function(String code) onTapCountry;
   FieldWidget({
     @required this.controller,
     this.textInputType,
@@ -31,6 +34,8 @@ class FieldWidget extends StatelessWidget {
     this.onTap,
     this.onChange,
     this.maxLength,
+    this.isPhone,
+    this.onTapCountry
   });
   @override
   Widget build(BuildContext context) {
@@ -42,30 +47,58 @@ class FieldWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: ColorConfig.graySecondaryColor
       ),
-      child: TextField(
-        maxLines: maxLines,
-        controller: controller,
-        readOnly: readOnly,
-        decoration: InputDecoration(
-          hintText:hintText,
-          border: InputBorder.none,
-        ),
-        keyboardType: textInputType,
-        textInputAction: textInputAction,
-        inputFormatters: <TextInputFormatter>[
-          if(maxLength!=null)LengthLimitingTextInputFormatter(maxLength),
-          if(textInputType == TextInputType.number) FilteringTextInputFormatter.digitsOnly
-        ],
-        onTap: (){
-          if(onTap!=null){
-            onTap();
-            print("onTap");
-          }
-        },
-        onChanged: (e){
-          if(onChange!=null) onChange(e);
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (isPhone)
+            Container(
+              width: scale.getWidth(20),
+              child: CountryCodePicker(
+                onInit:(CountryCode e) {
+                  onTapCountry(e.dialCode.replaceAll('+', ''));
+                  // countryCode="${e.dialCode.replaceAll('+', '')}";
+                },
+                onChanged: (CountryCode e) {
+                  onTapCountry(e.dialCode.replaceAll('+', ''));
+                  // countryCode="${e.dialCode.replaceAll('+', '')}";
+                },
+                initialSelection: 'ID',
+                favorite: ['+62', 'ID'],
+                showCountryOnly: true,
+                showOnlyCountryWhenClosed: false,
+                alignLeft: true,
+                textStyle: Theme.of(context).textTheme.subtitle1,
+              ),
+            ),
+          Expanded(
+            child: TextField(
+              maxLines: maxLines,
+              controller: controller,
+              readOnly: readOnly,
+              decoration: InputDecoration(
+                hintText:hintText,
+                border: InputBorder.none,
+              ),
+              keyboardType: textInputType,
+              textInputAction: textInputAction,
+              inputFormatters: <TextInputFormatter>[
+                if(maxLength!=null)LengthLimitingTextInputFormatter(maxLength),
+                if(textInputType == TextInputType.number) FilteringTextInputFormatter.digitsOnly
+              ],
+              onTap: (){
+                if(onTap!=null){
+                  onTap();
+                  print("onTap");
+                }
+              },
+              onChanged: (e){
+                if(onChange!=null) onChange(e);
 
-        },
+              },
+            ),
+          )
+        ],
       ),
     );
   }

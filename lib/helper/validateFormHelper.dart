@@ -13,6 +13,7 @@ class ValidateFormHelper {
 
   validateEmptyForm({BuildContext context, field}){
     bool forEachDone=true;
+
     field.forEach((key, value) {
       if(forEachDone){
         if(value==""){
@@ -20,13 +21,12 @@ class ValidateFormHelper {
           forEachDone=false;
           return forEachDone;
         }
-        else if(key=="nomor"){
+        else if(key=="nomor_ponsel"){
           if(value.length<10){
             FunctionalWidget.toast(context: context,msg: "no telepon terlalu pendek");
             forEachDone=false;
             return forEachDone;
           }
-
         }
         else if(key=="compare"){
           if(value["pin"]!=value["confirm_pin"]){

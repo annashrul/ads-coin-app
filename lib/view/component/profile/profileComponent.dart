@@ -143,8 +143,8 @@ class _ProfileComponentState extends State<ProfileComponent> {
                               colorIcon: ColorConfig.bluePrimaryColor,
                               callback: ()=>Navigator.of(context).pushNamed(RouteString.referral),
                             ),
-                            if(!isLoading&&user.detailMemberModel.result.idType==1)divid(),
-                            if(!isLoading&&user.detailMemberModel.result.idType==1)CardAction(
+                            if(!isLoading)divid(),
+                            if(!isLoading)CardAction(
                               img:"Home1" ,
                               title: "Bank",
                               colorIcon: ColorConfig.bluePrimaryColor,

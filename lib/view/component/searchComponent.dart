@@ -85,7 +85,7 @@ class _SearchComponentState extends State<SearchComponent> {
     final user = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar:AppBar(
-        backgroundColor: Colors.transparent,
+
         elevation: 0,
         automaticallyImplyLeading: false,
         title:  Container(

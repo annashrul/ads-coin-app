@@ -82,11 +82,15 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     TextStyle style = GoogleFonts.poppins();
     return MaterialApp(
-      title: 'n-shop',
+      title: 'ads coin',
       initialRoute: RouteString.splash,
       onGenerateRoute: RouteGenerator.generateRoute,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+            backgroundColor: Colors.white,
+            elevation: 1
+        ),
         primaryColor: Colors.white,
         brightness: Brightness.light,
         // accentColor: config.Colors().mainColor(1),

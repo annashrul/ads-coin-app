@@ -2,12 +2,14 @@ import 'package:adscoin/config/color_config.dart';
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/service/provider/authProvider.dart';
 import 'package:adscoin/view/widget/general/fieldWidget.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
 import '../../widget/general/buttonWidget.dart';
 import '../../widget/general/touchWidget.dart';
 import 'package:flutter/material.dart';
+
 
 class SignInComponent extends StatefulWidget {
   @override
@@ -17,7 +19,7 @@ class SignInComponent extends StatefulWidget {
 class _SignInComponentState extends State<SignInComponent> {
 
   TextEditingController phoneNumberController = TextEditingController();
-
+  String countryCode="";
   @override
   void initState() {
     // TODO: implement initState
@@ -49,16 +51,26 @@ class _SignInComponentState extends State<SignInComponent> {
                     controller: phoneNumberController,
                     textInputType: TextInputType.number,
                     width: 60,
+                    isPhone: true,
+                    onTapCountry: (code){
+                      countryCode=code;
+                      // setState(() {
+                      //
+                      // });
+                    },
+
                   ),
                   RedButtonWidget(
                     callback: ()async{
                       final data = {
+                        "countryCode":countryCode,
                         "nomor":phoneNumberController.text,
                         "type":"sms",
                         "nama":"tatang",
                         "islogin":"1",
                         "isRegister":"0",
                       };
+                      // print("############### $countryCode${phoneNumberController.text}");
                       auth.sendOtp(context: context,fields: data,isRedirect: true);
                     },
                     child:Icon(Icons.arrow_right_alt,color: ColorConfig.graySecondaryColor),

@@ -14,7 +14,7 @@ class CategoryProvider with ChangeNotifier{
     if(res["result"].length>0){
       CategoryProductModel result = CategoryProductModel.fromJson(res);
       categoryProductModel = result;
-      if(isFilter)categoryProductModel.result.insert(0,Result(totalrecords: "0",id: "",title: "semua",idType: 0,icon: GeneralString.dummyImgUser,createdAt: null,updatedAt: null));
+      if(isFilter)categoryProductModel.result.insert(0,Result(totalrecords: "0",id: "",title: "semua",idType: 0,icon: "https://admin.adscoin.id/static/media/logo.828d2c16.png",createdAt: null,updatedAt: null));
 
     }else{
       categoryProductModel=null;

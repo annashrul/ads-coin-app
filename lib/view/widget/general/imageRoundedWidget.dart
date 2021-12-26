@@ -1,5 +1,6 @@
 import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/view/component/loadingComponent.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 
@@ -15,6 +16,15 @@ class ImageRoundedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return CachedNetworkImage(
+      width: width,
+      height: height,
+      imageUrl: img,
+      fit: fit,
+      filterQuality: FilterQuality.high,
+      placeholder: (context, url) => BaseLoading(height: 20, width: width),
+      errorWidget: (context, url, error) => Image.asset(GeneralString.imgLocal+"logo.png",width: width,height: height,)
+    );
     return Image.network(
       img,
       height: height,

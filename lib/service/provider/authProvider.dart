@@ -71,15 +71,27 @@ class AuthProvider with ChangeNotifier{
   }
 
   Future<void> sendOtp({BuildContext context, dynamic fields,bool isRedirect=true})async{
+    print(fields);
+
     final isValid = valid.validateEmptyForm(context: context,field:{"nomor_ponsel":fields["nomor"]});
+
     if(isValid){
+      String nohp=fields["nomor"];
+      if (nohp[0] == "0") {
+        String replaceIndex0 = fields["countryCode"].replaceAll("0", "");
+        nohp =  replaceIndex0+nohp.substring(1, nohp.length);
+      }else{
+        nohp = "${fields["countryCode"]}${fields["nomor"]}";
+        print("######################################## $nohp");
+      }
+      fields["nomor"] = nohp;
+
       final res = await service.post(
           url: "auth/otp",
           data: fields,
           context: context
       );
-      print(res);
-      if(res["result"]["note"] == "gagal"){
+      if(res["result"]["note"] == "Gagal."){
         FunctionalWidget.toast(context: context,msg: res["msg"]);
       }else{
         fields["otp"] = res["result"]["otp_anying"];
@@ -93,7 +105,7 @@ class AuthProvider with ChangeNotifier{
                       url: "auth",
                       data: {
                         "type":"otp",
-                        "nohp":fields["nomor"],
+                        "nohp":nohp,
                         "otp_code":otp,
                         "deviceid":"$devideId"
                       },

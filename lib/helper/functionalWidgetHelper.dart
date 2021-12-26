@@ -205,7 +205,7 @@ class FunctionalWidget{
         onTap: (){
           callback!=null?callback():Navigator.of(context).pop();
         },
-        child: Icon(Ionicons.ios_arrow_back),
+        child: Icon(Ionicons.ios_arrow_back,color: Colors.black,),
       ),
       centerTitle: true,
       title: Text(title,style: Theme.of(context).textTheme.headline1,textAlign: TextAlign.center),

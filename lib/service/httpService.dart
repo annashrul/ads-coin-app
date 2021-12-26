@@ -25,7 +25,7 @@ class HttpService{
         head["Authorization"] = "Bearer ${userStorage.token}";
       }
       Client client = new Client();
-      final response = await client.get(ApiString.url+url, headers:head).timeout(Duration(seconds: ApiString.timeOut));
+      final response = await client.get(Uri.parse(ApiString.url+url), headers:head).timeout(Duration(seconds: ApiString.timeOut));
       print("################################ URL = $url, STATUS = ${response.statusCode}");
       if (response.statusCode == 200){
         final jsonResponse = json.decode(response.body);
@@ -56,7 +56,7 @@ class HttpService{
       }
       print("=================== POST DATA $url = $head ============================");
       Client client = new Client();
-      final response = await client.post( ApiString.url+url,headers:head,body:data);
+      final response = await client.post(Uri.parse(ApiString.url+url),headers:head,body:data);
       print("=================== POST DATA $url ${response.statusCode} ============================");
       if(response.statusCode==200){
         final jsonResponse =  json.decode(response.body);
@@ -117,7 +117,7 @@ class HttpService{
       print("=================== PUT DATA $url ============================");
 
       Client client = new Client();
-      final response = await client.put( ApiString.url+url,headers:head,body:data);
+      final response = await client.put(Uri.parse(ApiString.url+url),headers:head,body:data);
       print("=================== PUT DATA $url ${response.statusCode} ============================");
       if(response.statusCode==200){
         final jsonResponse =  json.decode(response.body);
@@ -171,7 +171,7 @@ class HttpService{
         head["Authorization"] = "Bearer ${userStorage.token}";
       }
       Client client = new Client();
-      final response = await client.delete(ApiString.url+url,headers:head).timeout(Duration(seconds: ApiString.timeOut));
+      final response = await client.delete(Uri.parse(ApiString.url+url),headers:head).timeout(Duration(seconds: ApiString.timeOut));
       Navigator.of(context).pop();
       print("=================== DELETE DATA $url ${response.statusCode} ============================");
 
