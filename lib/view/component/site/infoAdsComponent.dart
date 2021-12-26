@@ -1,6 +1,7 @@
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class InfoAdsComponent extends StatefulWidget {
   final String title;
@@ -22,20 +23,21 @@ class _InfoAdsComponentState extends State<InfoAdsComponent> {
           children: [
             Padding(
               padding: scale.getPadding(1,2.5),
-              child: Text(widget.desc,style: Theme.of(context).textTheme.subtitle1),
-              // child: Html(
-              //   data:  widget.desc,
-              //   onLinkTap: (String url){
-              //     print(url);
-              //   },
-              //   style: {
-              //     "body": Style(
-              //       fontSize: FontSize(16.0),
-              //       fontWeight: FontWeight.w400,
-              //       margin: EdgeInsets.zero,
-              //     ),
-              //   },
-              // ),
+              // child: Text(widget.desc,style: Theme.of(context).textTheme.subtitle1),
+              child: Html(
+                data:  widget.desc,
+                onLinkTap: (String url){
+                  print(url);
+                },
+                defaultTextStyle: Theme.of(context).textTheme.subtitle1,
+                // style: {
+                //   "body": Style(
+                //     fontSize: FontSize(16.0),
+                //     fontWeight: FontWeight.w400,
+                //     margin: EdgeInsets.zero,
+                //   ),
+                // },
+              ),
             ),
 
           ],

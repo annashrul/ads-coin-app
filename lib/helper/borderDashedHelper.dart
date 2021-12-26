@@ -1,5 +1,3 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -18,7 +16,7 @@ class DashedRect extends StatelessWidget {
         padding: EdgeInsets.all(strokeWidth / 2),
         child: CustomPaint(
           painter:
-          DashRectPainter(color: color, strokeWidth: strokeWidth, gap: gap),
+              DashRectPainter(color: color, strokeWidth: strokeWidth, gap: gap),
         ),
       ),
     );

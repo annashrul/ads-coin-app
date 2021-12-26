@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class MaskedTextControllerQ extends TextEditingController {
-  MaskedTextControllerQ({String text, this.mask, Map<String, RegExp> translator})
+  MaskedTextControllerQ(
+      {String text, this.mask, Map<String, RegExp> translator})
       : super(text: text) {
-    this.translator = translator ?? MaskedTextControllerQ.getDefaultTranslator();
+    this.translator =
+        translator ?? MaskedTextControllerQ.getDefaultTranslator();
 
     this.addListener(() {
       var previous = this._lastUpdatedText;
@@ -33,10 +33,9 @@ class MaskedTextControllerQ extends TextEditingController {
   String _lastUpdatedText = '';
 
   void updateText(String text) {
-    if(text != null){
+    if (text != null) {
       this.text = this._applyMask(this.mask, text);
-    }
-    else {
+    } else {
       this.text = '';
     }
 
@@ -127,11 +126,11 @@ class MaskedTextControllerQ extends TextEditingController {
 class MoneyMaskedTextControllerQ extends TextEditingController {
   MoneyMaskedTextControllerQ(
       {double initialValue = 0.0,
-        this.decimalSeparator = ',',
-        this.thousandSeparator = '.',
-        this.rightSymbol = '',
-        this.leftSymbol = '',
-        this.precision = 0}) {
+      this.decimalSeparator = ',',
+      this.thousandSeparator = '.',
+      this.rightSymbol = '',
+      this.leftSymbol = '',
+      this.precision = 0}) {
     _validateConfig();
 
     this.addListener(() {
@@ -156,8 +155,7 @@ class MoneyMaskedTextControllerQ extends TextEditingController {
     double valueToUse = value;
     if (value.toStringAsFixed(0).length > 12) {
       valueToUse = _lastValue;
-    }
-    else {
+    } else {
       _lastValue = value;
     }
 
@@ -181,7 +179,8 @@ class MoneyMaskedTextControllerQ extends TextEditingController {
   }
 
   double get numberValue {
-    List<String> parts = _getOnlyNumbers(this.text).split('').toList(growable: true);
+    List<String> parts =
+        _getOnlyNumbers(this.text).split('').toList(growable: true);
 
     parts.insert(parts.length - precision, '');
 
@@ -207,7 +206,8 @@ class MoneyMaskedTextControllerQ extends TextEditingController {
   }
 
   String _applyMask(double value) {
-    List<String> textRepresentation = value.toStringAsFixed(precision)
+    List<String> textRepresentation = value
+        .toStringAsFixed(precision)
         .replaceAll('.', '')
         .split('')
         .reversed
@@ -218,8 +218,7 @@ class MoneyMaskedTextControllerQ extends TextEditingController {
     for (var i = precision + 4; true; i = i + 4) {
       if (textRepresentation.length > i) {
         textRepresentation.insert(i, thousandSeparator);
-      }
-      else {
+      } else {
         break;
       }
     }
@@ -228,14 +227,11 @@ class MoneyMaskedTextControllerQ extends TextEditingController {
   }
 }
 
-
-class MoneyFormat{
+class MoneyFormat {
   static final formatter = new NumberFormat("#,###");
-  static final dataNominal=["50","100","150","200","250","300"];
+  static final dataNominal = ["50", "100", "150", "200", "250", "300"];
 
-
-
-  static toFormat(num n){
+  static toFormat(num n) {
     var forFractions = new NumberFormat();
     var forInts = new NumberFormat();
     forFractions.minimumFractionDigits = 2;
@@ -243,23 +239,23 @@ class MoneyFormat{
     return n == n.truncate() ? forInts.format(n) : forFractions.format(n);
   }
 
-  static toCurrency(x){
+  static toCurrency(x) {
     var forInts = new NumberFormat();
     var forFractions = new NumberFormat();
     forFractions.minimumFractionDigits = 2;
     forFractions.maximumFractionDigits = 2;
-    format(num n) => n == n.truncate() ? forInts.format(n) : forFractions.format(n);
+    format(num n) =>
+        n == n.truncate() ? forInts.format(n) : forFractions.format(n);
     return format(x);
   }
 
-
-  moneyToLocal(int price){
+  moneyToLocal(int price) {
     return NumberFormat.compact(locale: 'ID').format(price);
   }
 
-  moneyToInt(String price){
-    var prc =  price.replaceAll('Rp ', '').replaceAll('.00','').replaceAll(',', '');
+  moneyToInt(String price) {
+    var prc =
+        price.replaceAll('Rp ', '').replaceAll('.00', '').replaceAll(',', '');
     return int.parse(prc);
   }
-
 }

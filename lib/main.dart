@@ -28,32 +28,34 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<GeneralProvider>(create: (_) => GeneralProvider()),
   ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
   ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
-  ChangeNotifierProvider<ListProductProvider>(create: (_) => ListProductProvider()),
+  ChangeNotifierProvider<ListProductProvider>(
+      create: (_) => ListProductProvider()),
   ChangeNotifierProvider<ProductProvider>(create: (_) => ProductProvider()),
   ChangeNotifierProvider<HistoryProvider>(create: (_) => HistoryProvider()),
   ChangeNotifierProvider<CategoryProvider>(create: (_) => CategoryProvider()),
   ChangeNotifierProvider<FavoriteProvider>(create: (_) => FavoriteProvider()),
-  ChangeNotifierProvider<ChannelPaymentProvider>(create: (_) => ChannelPaymentProvider()),
+  ChangeNotifierProvider<ChannelPaymentProvider>(
+      create: (_) => ChannelPaymentProvider()),
   ChangeNotifierProvider<FintechProvider>(create: (_) => FintechProvider()),
   ChangeNotifierProvider<SiteProvider>(create: (_) => SiteProvider()),
-  ChangeNotifierProvider<BankMemberProvider>(create: (_) => BankMemberProvider()),
-  ChangeNotifierProvider<ProfileSellerProvider>(create: (_) => ProfileSellerProvider()),
+  ChangeNotifierProvider<BankMemberProvider>(
+      create: (_) => BankMemberProvider()),
+  ChangeNotifierProvider<ProfileSellerProvider>(
+      create: (_) => ProfileSellerProvider()),
   ChangeNotifierProvider<PromoProvider>(create: (_) => PromoProvider()),
 ];
-void main()  async  {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // transparent status bar
   ));
   runApp(
     MultiProvider(
-      providers:providers,
+      providers: providers,
       child: MyApp(),
     ),
   );
 }
-
-
 
 class MyApp extends StatefulWidget {
   @override
@@ -65,17 +67,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _db.openDB();
-    OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.notification);
+    OneSignal.shared
+        .setInFocusDisplayType(OSNotificationDisplayType.notification);
     var settings = {
       OSiOSSettings.autoPrompt: false,
       OSiOSSettings.promptBeforeOpeningPushUrl: true
     };
     OneSignal.shared.init(ApiString.onesignalAppId, iOSSettings: settings);
-
-
   }
 
   @override
@@ -87,44 +87,65 @@ class _MyAppState extends State<MyApp> {
       onGenerateRoute: RouteGenerator.generateRoute,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        appBarTheme: AppBarTheme(
-            backgroundColor: Colors.white,
-            elevation: 1
-        ),
+        appBarTheme: AppBarTheme(backgroundColor: Colors.white, elevation: 1),
         primaryColor: Colors.white,
         brightness: Brightness.light,
         // accentColor: config.Colors().mainColor(1),
         // focusColor: config.Colors().accentColor(1),
         // hintColor: config.Colors().secondColor(1),
         unselectedWidgetColor: Colors.grey[300],
-        bottomSheetTheme: BottomSheetThemeData(backgroundColor:Colors.white,modalBackgroundColor:Colors.white),
+        bottomSheetTheme: BottomSheetThemeData(
+            backgroundColor: Colors.white, modalBackgroundColor: Colors.white),
         textTheme: TextTheme(
           button: style.copyWith(color: Colors.white),
-          headline1: style.copyWith(fontSize: 20.0, fontWeight: FontWeight.w600, color: ColorConfig.blackPrimaryColor),
-          headline2: style.copyWith(fontSize: 18.0, fontWeight: FontWeight.w500, color: ColorConfig.blackPrimaryColor),
-          headline3: style.copyWith(fontSize: 16.0, fontWeight: FontWeight.w400, color: ColorConfig.blackPrimaryColor),
-          headline4: style.copyWith(fontSize: 14.0, fontWeight: FontWeight.w400, color: ColorConfig.blackPrimaryColor),
-          headline5: style.copyWith(fontSize: 9.0, fontWeight: FontWeight.w200, color: ColorConfig.blackPrimaryColor),
-          subtitle1: style.copyWith(fontSize: 16.0, fontWeight: FontWeight.w500, color: ColorConfig.grayPrimaryColor),
-          subtitle2: style.copyWith(fontSize: 14.0, fontWeight: FontWeight.w500, color:ColorConfig.grayPrimaryColor),
-          bodyText1: style.copyWith(fontSize: 12.0, color: ColorConfig.grayPrimaryColor),
-          bodyText2: style.copyWith(fontSize: 10.0, fontWeight: FontWeight.w600, color: ColorConfig.grayPrimaryColor),
-          caption: style.copyWith(fontSize: 9.0, color: ColorConfig.grayPrimaryColor),
+          headline1: style.copyWith(
+              fontSize: 20.0,
+              fontWeight: FontWeight.w600,
+              color: ColorConfig.blackPrimaryColor),
+          headline2: style.copyWith(
+              fontSize: 18.0,
+              fontWeight: FontWeight.w500,
+              color: ColorConfig.blackPrimaryColor),
+          headline3: style.copyWith(
+              fontSize: 16.0,
+              fontWeight: FontWeight.w400,
+              color: ColorConfig.blackPrimaryColor),
+          headline4: style.copyWith(
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400,
+              color: ColorConfig.blackPrimaryColor),
+          headline5: style.copyWith(
+              fontSize: 9.0,
+              fontWeight: FontWeight.w200,
+              color: ColorConfig.blackPrimaryColor),
+          subtitle1: style.copyWith(
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
+              color: ColorConfig.grayPrimaryColor),
+          subtitle2: style.copyWith(
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
+              color: ColorConfig.grayPrimaryColor),
+          bodyText1: style.copyWith(
+              fontSize: 12.0, color: ColorConfig.grayPrimaryColor),
+          bodyText2: style.copyWith(
+              fontSize: 10.0,
+              fontWeight: FontWeight.w600,
+              color: ColorConfig.grayPrimaryColor),
+          caption: style.copyWith(
+              fontSize: 9.0, color: ColorConfig.grayPrimaryColor),
         ),
       ),
-      builder: (BuildContext context, Widget child){
+      builder: (BuildContext context, Widget child) {
         final MediaQueryData data = MediaQuery.of(context);
         ScreenScaler scaler = ScreenScaler()..init(context);
         return MediaQuery(
-          data: data.copyWith(textScaleFactor:scaler.getTextSize(2),viewPadding: scaler.getPadding(0, 0)),
+          data: data.copyWith(
+              textScaleFactor: scaler.getTextSize(2),
+              viewPadding: scaler.getPadding(0, 0)),
           child: child,
         );
       },
     );
   }
 }
-
-
-
-
-

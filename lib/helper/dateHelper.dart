@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
 
 typedef PickerConfirmCallback = void Function(DateTime start, DateTime end);
 
@@ -31,19 +29,19 @@ class DateHelper {
 
   DateHelper(
       {Key key,
-        this.onCancel,
-        this.onConfirm,
-        this.startText = "Start",
-        this.endText = "End",
-        this.doneText = "Done",
-        this.cancelText = "Cancel",
-        this.initialStartTime,
-        this.initialEndTime,
-        this.mode = DateTimeRangePickerMode.dateAndTime,
-        this.minimumTime,
-        this.maximumTime,
-        this.interval = 15,
-        this.use24hFormat = false});
+      this.onCancel,
+      this.onConfirm,
+      this.startText = "Start",
+      this.endText = "End",
+      this.doneText = "Done",
+      this.cancelText = "Cancel",
+      this.initialStartTime,
+      this.initialEndTime,
+      this.mode = DateTimeRangePickerMode.dateAndTime,
+      this.minimumTime,
+      this.maximumTime,
+      this.interval = 15,
+      this.use24hFormat = false});
 
   void showPicker(BuildContext context) {
     if (initialStartTime == null) {
@@ -178,7 +176,6 @@ class _PickerWidgetState extends State<PickerWidget>
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -205,15 +202,15 @@ class _PickerWidgetState extends State<PickerWidget>
                     use24hFormat: widget._use24hFormat,
                     minuteInterval: widget._interval,
                     minimumDate: widget._minimumTime != null &&
-                        tab.text == widget._tabs.first.text
+                            tab.text == widget._tabs.first.text
                         ? widget._minimumTime
                         : null,
                     maximumDate: widget._maximumTime != null &&
-                        tab.text == widget._tabs.last.text
+                            tab.text == widget._tabs.last.text
                         ? widget._maximumTime
                         : null,
                     initialDateTime:
-                    tab.text == widget._tabs.first.text ? _start : _end,
+                        tab.text == widget._tabs.first.text ? _start : _end,
                     onDateTimeChanged: (DateTime newDateTime) {
                       if (tab.text == widget._tabs.first.text) {
                         setState(() {
@@ -234,7 +231,7 @@ class _PickerWidgetState extends State<PickerWidget>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  FlatButton(
+                  TextButton(
                     onPressed: () {
                       Navigator.pop(context);
                       if (widget._onCancel != null) {
@@ -243,7 +240,7 @@ class _PickerWidgetState extends State<PickerWidget>
                     },
                     child: Text(widget._cancelText),
                   ),
-                  FlatButton(
+                  TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                       if (widget._onConfirm != null) {

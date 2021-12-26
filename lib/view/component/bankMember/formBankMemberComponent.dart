@@ -1,22 +1,18 @@
 import 'package:adscoin/config/color_config.dart';
-import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/bankMemberProvider.dart';
 import 'package:adscoin/service/provider/siteProvider.dart';
 import 'package:adscoin/view/component/site/allBankComponent.dart';
 import 'package:adscoin/view/widget/general/buttonWidget.dart';
-import 'package:adscoin/view/widget/general/fieldWidget.dart';
-import 'package:adscoin/view/widget/general/imageRoundedWidget.dart';
-import 'package:adscoin/view/widget/general/touchWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:provider/provider.dart';
 
 class FormBankMemberComponent extends StatefulWidget {
   @override
-  _FormBankMemberComponentState createState() => _FormBankMemberComponentState();
+  _FormBankMemberComponentState createState() =>
+      _FormBankMemberComponentState();
 }
 
 class _FormBankMemberComponentState extends State<FormBankMemberComponent> {
@@ -27,17 +23,17 @@ class _FormBankMemberComponentState extends State<FormBankMemberComponent> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    final site = Provider.of<SiteProvider>(context,listen:false);
-    final bank = Provider.of<BankMemberProvider>(context,listen:false);
+    final site = Provider.of<SiteProvider>(context, listen: false);
+    final bank = Provider.of<BankMemberProvider>(context, listen: false);
     site.getAllBank(context: context);
-    if(!bank.isAdd){
-      accNameController.text = bank.bankMemberModel.result[bank.indexBank].accName;
+    if (!bank.isAdd) {
+      accNameController.text =
+          bank.bankMemberModel.result[bank.indexBank].accName;
       accNoController.text = bank.bankMemberModel.result[bank.indexBank].accNo;
-      nameBankController.text = bank.bankMemberModel.result[bank.indexBank].bankName;
+      nameBankController.text =
+          bank.bankMemberModel.result[bank.indexBank].bankName;
     }
-
   }
 
   @override
@@ -46,52 +42,51 @@ class _FormBankMemberComponentState extends State<FormBankMemberComponent> {
     final bank = Provider.of<BankMemberProvider>(context);
     final site = Provider.of<SiteProvider>(context);
     int indexAllBank = site.indexAllBank;
-    if(indexAllBank!=10000){
-      nameBankController.text = site.isLoadingAllBank?"":site.allBankModel.result[indexAllBank].name;
+    if (indexAllBank != 10000) {
+      nameBankController.text = site.isLoadingAllBank
+          ? ""
+          : site.allBankModel.result[indexAllBank].name;
     }
     return Scaffold(
-      appBar: FunctionalWidget.appBarHelper(context: context,title:bank.isAdd? "Tambah bank":"Ubah bank",callback: (){
-        Navigator.of(context).pop();
-        bank.setIndexBank(10000);
-      }),
+      appBar: FunctionalWidget.appBarHelper(
+          context: context,
+          title: bank.isAdd ? "Tambah bank" : "Ubah bank",
+          callback: () {
+            Navigator.of(context).pop();
+            bank.setIndexBank(10000);
+          }),
       body: Column(
         children: [
           Padding(
-              padding: scale.getPadding(1,2),
-              child:Column(
+              padding: scale.getPadding(1, 2),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   customField(
                       label: "Atas nama",
                       maxLength: 80,
-                      controller: accNameController
-                  ),
+                      controller: accNameController),
                   SizedBox(height: scale.getHeight(0.5)),
                   customField(
-                    label: "No rekening",
-                    maxLength: 20,
-                    controller: accNoController,
-                    textInputType: TextInputType.number
-                  ),
+                      label: "No rekening",
+                      maxLength: 20,
+                      controller: accNoController,
+                      textInputType: TextInputType.number),
                   SizedBox(height: scale.getHeight(0.5)),
                   customField(
-                    readOnly: true,
-                    label: "Bank",
-
-                    controller: nameBankController,
-                    textInputType: TextInputType.number,
-                    onTap: (){
-                      FunctionalWidget.modal(
-                          context: context,
-                          child: Container(
-                            height: scale.getHeight(90),
-                            child: AllBankComponent(),
-                          )
-                      );
-                    }
-                  )
-
+                      readOnly: true,
+                      label: "Bank",
+                      controller: nameBankController,
+                      textInputType: TextInputType.number,
+                      onTap: () {
+                        FunctionalWidget.modal(
+                            context: context,
+                            child: Container(
+                              height: scale.getHeight(90),
+                              child: AllBankComponent(),
+                            ));
+                      })
 
                   // Text("Atas nama",style: Theme.of(context).textTheme.subtitle1),
                   // FieldWidget(
@@ -146,57 +141,70 @@ class _FormBankMemberComponentState extends State<FormBankMemberComponent> {
                   //   backgroundColor:ColorConfig.redColor,
                   // )
                 ],
-              )
-          )
+              ))
         ],
       ),
       bottomNavigationBar: Container(
-        padding: scale.getPadding(1,2.5),
+        padding: scale.getPadding(1, 2.5),
         child: BackroundButtonWidget(
-          callback: (){
+          callback: () {
             final data = {
-              "bank_name":"-",
-              "id":bank.isAdd?"":bank.bankMemberModel.result[bank.indexBank].id,
-              "id_bank":site.allBankModel.result[indexAllBank].id,
-              "acc_name":accNameController.text,
-              "acc_no":accNoController.text
+              "bank_name": "-",
+              "id": bank.isAdd
+                  ? ""
+                  : bank.bankMemberModel.result[bank.indexBank].id,
+              "id_bank": site.allBankModel.result[indexAllBank].id,
+              "acc_name": accNameController.text,
+              "acc_no": accNoController.text
             };
-            bank.store(context: context,data: data);
+            bank.store(context: context, data: data);
           },
           color: ColorConfig.graySecondaryColor,
           title: "Simpan",
-          backgroundColor:ColorConfig.redColor,
+          backgroundColor: ColorConfig.redColor,
         ),
       ),
     );
   }
 
-
-  Widget customField({Function onTap,bool readOnly=false,String label,int maxLength,TextEditingController controller,TextInputType textInputType=TextInputType.text,TextCapitalization textCapitalization = TextCapitalization.words}){
-    ScreenScaler scale= ScreenScaler()..init(context);
+  Widget customField(
+      {Function onTap,
+      bool readOnly = false,
+      String label,
+      int maxLength,
+      TextEditingController controller,
+      TextInputType textInputType = TextInputType.text,
+      TextCapitalization textCapitalization = TextCapitalization.words}) {
+    ScreenScaler scale = ScreenScaler()..init(context);
     return Wrap(
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("$label *",style: Theme.of(context).textTheme.subtitle1,),
-            if(maxLength!=null)Text("${controller.text.length}/$maxLength",style: Theme.of(context).textTheme.subtitle2,)
+            Text(
+              "$label *",
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+            if (maxLength != null)
+              Text(
+                "${controller.text.length}/$maxLength",
+                style: Theme.of(context).textTheme.subtitle2,
+              )
           ],
         ),
         Container(
           padding: scale.getPadding(0, 2),
-          width:double.infinity,
+          width: double.infinity,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: ColorConfig.graySecondaryColor
-          ),
+              color: ColorConfig.graySecondaryColor),
           child: TextFormField(
-            onTap: (){
-              if(onTap!=null) onTap();
+            onTap: () {
+              if (onTap != null) onTap();
             },
             readOnly: readOnly,
-            textCapitalization:textCapitalization,
+            textCapitalization: textCapitalization,
             controller: controller,
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -204,17 +212,13 @@ class _FormBankMemberComponentState extends State<FormBankMemberComponent> {
             keyboardType: textInputType,
             inputFormatters: <TextInputFormatter>[
               LengthLimitingTextInputFormatter(maxLength),
-              if(textInputType==TextInputType.number) FilteringTextInputFormatter.digitsOnly
+              if (textInputType == TextInputType.number)
+                FilteringTextInputFormatter.digitsOnly
             ],
-            onChanged: (e)=>this.setState(() {}),
+            onChanged: (e) => this.setState(() {}),
           ),
         )
       ],
     );
   }
-
 }
-
-
-
-

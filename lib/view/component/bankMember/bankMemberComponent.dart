@@ -20,9 +20,8 @@ class BankMemberComponent extends StatefulWidget {
 class _BankMemberComponentState extends State<BankMemberComponent> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    final bank = Provider.of<BankMemberProvider>(context,listen:false);
+    final bank = Provider.of<BankMemberProvider>(context, listen: false);
     bank.get(context: context);
   }
 
@@ -31,60 +30,79 @@ class _BankMemberComponentState extends State<BankMemberComponent> {
     final bank = Provider.of<BankMemberProvider>(context);
     ScreenScaler scale = ScreenScaler()..init(context);
     return Scaffold(
-      appBar: FunctionalWidget.appBarHelper(context: context,title: "Daftar akun bank anda"),
+      appBar: FunctionalWidget.appBarHelper(
+          context: context, title: "Daftar akun bank anda"),
       body: Column(
         children: [
           Padding(
             padding: scale.getPadding(1, 2.5),
             child: InTouchWidget(
-                callback: ()async{
+                callback: () async {
                   bank.setIsAdd(true);
                   Navigator.of(context).pushNamed(RouteString.formBankMember);
                 },
                 child: Row(
                   children: [
-                    Image.asset(GeneralString.imgLocalPng+"PaperPlus.png",height: scale.getHeight(1.5),color:ColorConfig.bluePrimaryColor,),
+                    Image.asset(
+                      GeneralString.imgLocalPng + "PaperPlus.png",
+                      height: scale.getHeight(1.5),
+                      color: ColorConfig.bluePrimaryColor,
+                    ),
                     SizedBox(width: scale.getWidth(1)),
-                    Text("Tambah bank",style: Theme.of(context).textTheme.headline2.copyWith(color:ColorConfig.bluePrimaryColor))
+                    Text("Tambah bank",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline2
+                            .copyWith(color: ColorConfig.bluePrimaryColor))
                   ],
-                )
-            ),
+                )),
           ),
           Expanded(
               child: RefreshIndicator(
-                onRefresh: ()=>bank.get(context: context),
-                child: bank.isLoading?LoadingBankMember():bank.bankMemberModel==null?NoDataWidget():ListView.separated(
-                    padding: scale.getPadding(0,2.5),
-                    itemBuilder: (context,index){
-                      final val = bank.bankMemberModel.result[index];
-                      return InTouchWidget(
-                          radius: 10,
-                          callback: (){
-                            bank.setIndexBank(index);
-                            FunctionalWidget.modal(context: context,child: ModalActionBankMember());
-                          },
-                          child: FunctionalWidget.wrapContent(
-                              child: ListTile(
+            onRefresh: () => bank.get(context: context),
+            child: bank.isLoading
+                ? LoadingBankMember()
+                : bank.bankMemberModel == null
+                    ? NoDataWidget()
+                    : ListView.separated(
+                        padding: scale.getPadding(0, 2.5),
+                        itemBuilder: (context, index) {
+                          final val = bank.bankMemberModel.result[index];
+                          return InTouchWidget(
+                              radius: 10,
+                              callback: () {
+                                bank.setIndexBank(index);
+                                FunctionalWidget.modal(
+                                    context: context,
+                                    child: ModalActionBankMember());
+                              },
+                              child: FunctionalWidget.wrapContent(
+                                  child: ListTile(
                                 leading: ImageRoundedWidget(
                                   img: val.bankLogo,
                                   height: scale.getHeight(3),
                                   width: scale.getWidth(8),
                                 ),
-                                title: Text(val.accName,style: Theme.of(context).textTheme.headline2),
-                                subtitle: Text(val.accNo,style: Theme.of(context).textTheme.subtitle1),
+                                title: Text(val.accName,
+                                    style:
+                                        Theme.of(context).textTheme.headline2),
+                                subtitle: Text(val.accNo,
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1),
                                 trailing: InTouchWidget(
-                                    callback: (){FunctionalWidget.modal(context: context,child: ModalActionBankMember());},
-                                    child: Icon(FlutterIcons.ios_more_ion)
-                                ),
-                              )
-                          )
-                      );
-                    },
-                    separatorBuilder: (context,index){return SizedBox(height: scale.getHeight(1));},
-                    itemCount: bank.bankMemberModel.result.length
-                ),
-              )
-          )
+                                    callback: () {
+                                      FunctionalWidget.modal(
+                                          context: context,
+                                          child: ModalActionBankMember());
+                                    },
+                                    child: Icon(FlutterIcons.ios_more_ion)),
+                              )));
+                        },
+                        separatorBuilder: (context, index) {
+                          return SizedBox(height: scale.getHeight(1));
+                        },
+                        itemCount: bank.bankMemberModel.result.length),
+          ))
         ],
       ),
     );

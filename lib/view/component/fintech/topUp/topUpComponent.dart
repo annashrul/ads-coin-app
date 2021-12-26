@@ -1,4 +1,3 @@
-import 'package:adscoin/config/string_config.dart';
 import 'package:adscoin/helper/functionalWidgetHelper.dart';
 import 'package:adscoin/service/provider/fintechProvider.dart';
 import 'package:adscoin/service/provider/siteProvider.dart';
@@ -15,13 +14,10 @@ class TopUpComponent extends StatefulWidget {
 }
 
 class _TopUpComponentState extends State<TopUpComponent> {
-
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    final config = Provider.of<SiteProvider>(context,listen: false);
+    final config = Provider.of<SiteProvider>(context, listen: false);
     config.getConfig(context: context);
   }
 
@@ -33,31 +29,31 @@ class _TopUpComponentState extends State<TopUpComponent> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: FunctionalWidget.appBarHelper(context: context,title: "Top up"),
+      appBar: FunctionalWidget.appBarHelper(context: context, title: "Top up"),
       body: FormFintechWidget(
-        callback: (amount){
-          if(amount<int.parse(config.configModel.result[0].dpMin)){
-            FunctionalWidget.toast(context: context,msg: "top up minimal ${config.configModel.result[0].dpMin} coin");
-          }
-          else{
+        callback: (amount) {
+          if (amount < int.parse(config.configModel.result[0].dpMin)) {
+            FunctionalWidget.toast(
+                context: context,
+                msg:
+                    "top up minimal ${config.configModel.result[0].dpMin} coin");
+          } else {
             FunctionalWidget.modal(
-              context: context,
-              child: Container(
-                height: scale.getHeight(80),
-                child: MethodChannelComponent(callback: (code){
-                  FunctionalWidget.modal(
-                    context: context,
-                    child: PinComponent(callback: (pin)async{
-                      await fintech.createTopUp(context: context,field: {
-                        "paymentCode":code,
-                        "pin":pin,
-                        "amount":amount
-                      });
-                    })
-                  );
-                }),
-              )
-            );
+                context: context,
+                child: Container(
+                  height: scale.getHeight(80),
+                  child: MethodChannelComponent(callback: (code) {
+                    FunctionalWidget.modal(
+                        context: context,
+                        child: PinComponent(callback: (pin) async {
+                          await fintech.createTopUp(context: context, field: {
+                            "paymentCode": code,
+                            "pin": pin,
+                            "amount": amount
+                          });
+                        }));
+                  }),
+                ));
           }
         },
       ),

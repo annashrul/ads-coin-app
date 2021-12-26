@@ -1,7 +1,7 @@
 name: adscoin
 description: ads coin app
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.6+7 #tambah satu semua untuk publish ke playstore
+version: 1.0.7+8 #tambah satu semua untuk publish ke playstore
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -34,6 +34,7 @@ dependencies:
   flutter_share_me: ^1.2.0
   country_code_picker: ^1.1.7
   cached_network_image: ^2.4.1
+  flutter_html:
 
 
 #  dio: ^3.0.10

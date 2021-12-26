@@ -1,7 +1,4 @@
-
-
 import 'package:adscoin/config/string_config.dart';
-import 'package:adscoin/view/component/auth/otpComponent.dart';
 import 'package:adscoin/view/component/auth/pinComponent.dart';
 import 'package:adscoin/view/component/auth/signInComponent.dart';
 import 'package:adscoin/view/component/auth/signUpComponent.dart';
@@ -20,7 +17,6 @@ import 'package:adscoin/view/component/history/detailHistoryPurchaseComponent.da
 import 'package:adscoin/view/component/history/detailHistorySaleComponent.dart';
 import 'package:adscoin/view/component/history/historyPurchaseComponent.dart';
 import 'package:adscoin/view/component/history/historySaleComponent.dart';
-import 'package:adscoin/view/component/home/homeComponent.dart';
 import 'package:adscoin/view/component/mainComponent.dart';
 import 'package:adscoin/view/component/onBoardingComponent.dart';
 import 'package:adscoin/view/component/product/favoriteComponent.dart';
@@ -31,12 +27,11 @@ import 'package:adscoin/view/component/profile/profilePerMember.dart';
 import 'package:adscoin/view/component/profile/referralComponent.dart';
 import 'package:adscoin/view/component/promo/detailPromoComponent.dart';
 import 'package:adscoin/view/component/searchComponent.dart';
-import 'package:adscoin/view/component/site/infoAdsComponent.dart';
 import 'package:adscoin/view/component/splashComponent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class RouteGenerator{
+class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
 
@@ -56,7 +51,8 @@ class RouteGenerator{
       case '${RouteString.main}':
         return CupertinoPageRoute(builder: (_) => MainComponent(index: args));
       case '${RouteString.detailProduct}':
-        return CupertinoPageRoute(builder: (_) => DetailProductComponent(data: args));
+        return CupertinoPageRoute(
+            builder: (_) => DetailProductComponent(data: args));
       case '${RouteString.checkout}':
         return CupertinoPageRoute(builder: (_) => CheckoutComponent());
       case '${RouteString.detailCheckout}':
@@ -66,15 +62,19 @@ class RouteGenerator{
       case '${RouteString.historyPurchase}':
         return CupertinoPageRoute(builder: (_) => HistoryPurchaseComponent());
       case '${RouteString.detailHistoryPurchase}':
-        return CupertinoPageRoute(builder: (_) => DetailHistoryPurchaseComponent(id: args));
+        return CupertinoPageRoute(
+            builder: (_) => DetailHistoryPurchaseComponent(id: args));
       case '${RouteString.historySale}':
         return CupertinoPageRoute(builder: (_) => HistorySaleComponent());
       case '${RouteString.detailHistorSale}':
-        return CupertinoPageRoute(builder: (_) => DetailHistorySaleComponent(id: args));
+        return CupertinoPageRoute(
+            builder: (_) => DetailHistorySaleComponent(id: args));
       case '${RouteString.productContributor}':
-        return CupertinoPageRoute(builder: (_) => ProductContributorComponent());
+        return CupertinoPageRoute(
+            builder: (_) => ProductContributorComponent());
       case '${RouteString.formProductContributor}':
-        return CupertinoPageRoute(builder: (_) => FormProductContributorComponent());
+        return CupertinoPageRoute(
+            builder: (_) => FormProductContributorComponent());
       case '${RouteString.indexFintechComponent}':
         return CupertinoPageRoute(builder: (_) => IndexFintechComponent());
       case '${RouteString.historyMutation}':
@@ -102,7 +102,6 @@ class RouteGenerator{
       case '${RouteString.search}':
         return CupertinoPageRoute(builder: (_) => SearchComponent(any: args));
 
-
       default:
         return _errorRoute(callback: args);
     }
@@ -116,9 +115,7 @@ class RouteGenerator{
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text("Error")
-            ],
+            children: [Text("Error")],
           ),
         ),
       );
