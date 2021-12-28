@@ -144,11 +144,12 @@ class _ProductComponentState extends State<ProductComponent> with SingleTickerPr
                     ),
                     InkResponse(
                       onTap: ()async{
-                        if(member.detailMemberModel.result.idType==1){
-                          await Share.share("https://reg.adscoin.id/${member.referral}");
-                        }else{
-                          FunctionalWidget.toast(context: context,msg: "anda belum menjadi kontributor");
-                        }
+                        await Share.share("https://reg.adscoin.id/${member.referral}");
+
+                        // if(member.detailMemberModel.result.idType==1){
+                        // }else{
+                        //   FunctionalWidget.toast(context: context,msg: "anda belum menjadi kontributor");
+                        // }
                       },
                       child: Container(
                         padding: scale.getPadding(0.7,2),

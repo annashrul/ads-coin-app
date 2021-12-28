@@ -73,7 +73,7 @@ class _CardSaldoWidgetState extends State<CardSaldoWidget> {
                             ],
                           ),
                           SizedBox(height: scale.getHeight(0.2),),
-                          Text("Saldo AdsCoin",style: Theme.of(context).textTheme.subtitle1),
+                          Text("Saldo Adscoin",style: Theme.of(context).textTheme.subtitle1),
                         ],
                       )
                     ],

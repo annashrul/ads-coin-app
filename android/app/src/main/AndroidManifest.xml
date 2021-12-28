@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
    <application
-        android:label="Ads Coin"
+        android:label="Adscoin"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

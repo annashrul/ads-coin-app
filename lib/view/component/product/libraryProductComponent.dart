@@ -95,12 +95,13 @@ class _LibraryProductComponentState extends State<LibraryProductComponent> {
                 ),
                 InkResponse(
                   onTap: ()async{
-                    if(member.detailMemberModel.result.idType==1){
-                      await Share.share("https://reg.adscoin.id/${member.referral}");
+                    await Share.share("https://reg.adscoin.id/${member.referral}");
 
-                    }else{
-                      FunctionalWidget.toast(context: context,msg: "anda belum menjadi kontributor");
-                    }
+                    // if(member.detailMemberModel.result.idType==1){
+                    //
+                    // }else{
+                    //   FunctionalWidget.toast(context: context,msg: "anda belum menjadi kontributor");
+                    // }
                   },
                   child: Container(
                     padding: scale.getPadding(0.7,2),

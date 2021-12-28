@@ -33,7 +33,7 @@ class _IndexFintechComponentState extends State<IndexFintechComponent> {
       backgroundColor: Color(0xFFE5E5E5),
       appBar: FunctionalWidget.appBarHelper(
           context: context,
-          title: "Ads Coin Wallet",
+          title: "Adscoin Wallet",
           backgroundColor: ColorConfig.redColor,
           titleColor: ColorConfig.graySecondaryColor),
       body: Column(

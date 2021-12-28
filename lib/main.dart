@@ -82,7 +82,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     TextStyle style = GoogleFonts.poppins();
     return MaterialApp(
-      title: 'ads coin',
+      title: 'adscoin',
       initialRoute: RouteString.splash,
       onGenerateRoute: RouteGenerator.generateRoute,
       debugShowCheckedModeBanner: false,

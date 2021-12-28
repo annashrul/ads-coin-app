@@ -55,6 +55,7 @@ class FieldWidget extends StatelessWidget {
             Container(
               width: scale.getWidth(20),
               child: CountryCodePicker(
+
                 onInit:(CountryCode e) {
                   onTapCountry(e.dialCode.replaceAll('+', ''));
                   // countryCode="${e.dialCode.replaceAll('+', '')}";

@@ -185,7 +185,7 @@ class _OnBoardingComponentState extends State<OnBoardingComponent> {
                                             .textTheme
                                             .headline1
                                             .copyWith(fontSize: 24)),
-                                    Text("Ads coin",
+                                    Text("Adscoin",
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline1
