@@ -61,7 +61,8 @@ class _FormProductContributorComponentState
           });
         },
       );
-    } else {
+    }
+    else {
       FunctionalWidget.nofitDialog(
         context: context,
         msg: "apakah akan kembali? perubahan anda mungkin akan hilang",

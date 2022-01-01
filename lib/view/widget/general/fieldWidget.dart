@@ -34,7 +34,7 @@ class FieldWidget extends StatelessWidget {
     this.onTap,
     this.onChange,
     this.maxLength,
-    this.isPhone,
+    this.isPhone=false,
     this.onTapCountry
   });
   @override

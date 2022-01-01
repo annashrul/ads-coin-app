@@ -1,7 +1,7 @@
 name: adscoin
 description: adscoin app
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.7+8 #tambah satu semua untuk publish ke playstore
+version: 1.0.8+9 #tambah satu semua untuk publish ke playstore
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
